@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'Mabook';
+    src: url(assets/fonts/Mabook/Mabook.ttf) format('truetype');
+    font-weight:normal;
+}
+
+@font-face {
+    font-family: 'Geologica-Regular';
+    src: url(assets/fonts/Geologica-Regular.ttf) format('truetype');
+    font-weight:normal;
+}
+
+@font-face {
+    font-family: 'JimmyCollinsDemoVersion';
+    src: url(assets/fonts/JimmyCollinsDemoVersion.ttf) format('truetype');
+    font-weight:normal;
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

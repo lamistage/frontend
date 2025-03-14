@@ -1,0 +1,339 @@
+.auth-container-sign-in {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Geologica-Regular', sans-serif;
+
+  .left-side, .right-side {
+    width: 50%;
+    height: 100vh;
+  }
+  
+  .left-side {
+    background-color: white; 
+  }
+  
+  .right-side {
+    background-color: #ffc0cb; 
+  }
+  
+  .sign-in-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    color: #ffc0cb; 
+  }
+  
+  .sign-in-form h2 {
+    font-size: 40px;
+    font-family: 'Mabook', sans-serif;
+    margin-bottom: 40px;
+  }
+  
+  .sign-in-form input {
+    width: 50%;
+    max-width: 300px;
+    height: 40px;
+    padding: 0px 20px;
+    border: 1px solid #ffd9df;
+    border-radius: 20px;
+    font-size: 16px;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+  
+  .sign-in-form input::placeholder {
+    color: #ffc0cb;
+  }
+  
+  .sign-in-form input:focus {
+    outline: none;
+    border: 2px solid #ffc0cb;
+    box-shadow: 0px 0px 10px rgba(255, 192, 203, 0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .sign-in-form button {
+    width: 180px;
+    height: 40px;
+    background-color: #ffc0cb;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Mabook', sans-serif;
+    margin-top: 20px;
+  }
+  
+  .sign-in-form button:hover {
+    background-color: #ffa7b6;
+  }
+
+  .sign-in-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .sign-up-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    height: 100%;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+  
+  .sign-up-screen h2 {
+    font-size: 40px;
+    font-family: 'Mabook', sans-serif;
+    margin-bottom: 20px;
+  }
+  
+  .sign-up-screen p {
+    font-size: 16px;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 30px;
+  }
+  
+  .sign-up-screen button {
+    width: 180px;
+    height: 40px;
+    background-color: white;
+    color: #ffc0cb;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Mabook', sans-serif;
+  }
+  
+  .sign-up-screen button:hover {
+    background-color: #ffa7b6;
+  }
+  
+  .error {
+    color: #ff8da1;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.5s ease-in-out;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .input-container input {
+    margin-bottom: 5px;
+  }
+  
+  .input-hint {
+    font-size: 12px;
+    color: #ffc0cb;
+    text-align: center;
+    width: 80%;
+    margin-bottom: 20px;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+}
+
+.auth-container-sign-up {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Geologica-Regular', sans-serif;
+
+  .left-side, .right-side {
+    width: 50%;
+    height: 100vh;
+  }
+  
+  .left-side {
+    background-color: #ffc0cb; 
+  }
+  
+  .right-side {
+    background-color: white; 
+  }
+  
+  .sign-up-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    color: #ffc0cb;
+  }
+  
+  .sign-up-form h2 {
+    font-size: 40px;
+    font-family: 'Mabook', sans-serif;
+    margin-bottom: 40px;
+  }
+  
+  .sign-up-form input {
+    width: 50%;
+    max-width: 300px;
+    height: 40px;
+    padding: 0px 20px;
+    border: 1px solid #ffd9df;
+    border-radius: 20px;
+    font-size: 16px;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+  
+  .sign-up-form input::placeholder {
+    color: #ffc0cb;
+  }
+  
+  .sign-up-form input:focus {
+    outline: none;
+    border: 2px solid #ffc0cb;
+    box-shadow: 0px 0px 10px rgba(255, 192, 203, 0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .sign-up-form button {
+    width: 180px;
+    height: 40px;
+    background-color: #ffc0cb;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Mabook', sans-serif;
+    margin-top: 20px;
+  }
+
+  .sign-up-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .sign-in-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white; 
+    height: 100%;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+  
+  .sign-in-screen h2 {
+    font-size: 40px;
+    font-family: 'Mabook', sans-serif;
+    margin-bottom: 20px;
+  }
+  
+  .sign-in-screen p {
+    font-size: 16px;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 30px;
+  }
+  
+  .sign-in-screen button {
+    width: 180px;
+    height: 40px;
+    background-color: white; 
+    color: #ffc0cb;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Mabook', sans-serif;
+  }
+  
+  .sign-in-screen button:hover {
+    background-color: #ffa7b6;
+  }
+  
+  .error {
+    color: #ff8da1;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.5s ease-in-out;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .input-container input {
+    margin-bottom: 5px;
+  }
+  
+  .input-hint {
+    font-size: 12px;
+    color: #ffc0cb;
+    text-align: center;
+    width: 80%;
+    margin-bottom: 20px;
+    font-family: 'Geologica-Regular', sans-serif;
+  }
+}
+
+.auth-container.active .sign-in-form {
+  display: none;
+}
+
+.auth-container.active .sign-up-screen {
+  display: block;
+}
+
+.auth-container.active .sign-in-screen {
+  display: none;
+}
+
+.auth-container.active .sign-up-form {
+  display: block;
+}

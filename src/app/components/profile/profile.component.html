@@ -1,0 +1,38 @@
+<p>profile</p>
+
+<mat-toolbar>
+    <button mat-icon-button class="menu">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Pick Me</span>
+</mat-toolbar>
+
+<div class="container">
+    <div class="search-item">
+        <mat-form-field class="tag-list">
+            <mat-label>tags</mat-label>
+            <mat-chip-grid #tagChipGrid aria-label="Enter tags">
+                @for (tag of tags(); track tag) {
+                    <mat-chip-row
+                        (removed)="remove_tag(tag)"
+                        [editable]="true"
+                        (edited)="edit_tag(tag, $event)"
+                        [aria-description]="'press enter to edit ' + tag.name"
+                    >
+                    {{tag.name}}
+                    <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+                    <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+                }
+                <input
+                placeholder="new tag..."
+                [matChipInputFor]="tagChipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add_tag($event)"
+                />  
+            </mat-chip-grid>
+        </mat-form-field>
+    </div>
+</div>

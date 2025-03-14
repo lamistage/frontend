@@ -1,3 +1,14 @@
-import { Routes } from '@angular/router';
+import { Route } from '@angular/router';
+import { AuthComponent } from './components/auth/auth.component';
+import { AddImageComponent } from './components/add-image/add-image.component';
+import { AuthGuard } from './services/auth.guard';
+import { GalleryComponent } from './components/gallery/gallery.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
-export const routes: Routes = [];
+export const routes: Route[] = [
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  { path: 'auth', component: AuthComponent },
+  { path: 'add-image', component: AddImageComponent, canActivate: [AuthGuard] },
+  { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
+];

@@ -1,0 +1,23 @@
+<div class="publication">
+    <div class="header">
+      <span class="user-login">{{ publication.user.login }}</span>
+      <button mat-icon-button class="copy-btn" (click)="copyImage()">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+  
+  <div *ngIf="imageLoaded && publication.filePath">
+    <img [src]="publication.filePath" alt="Publication Image" class="publication-image" />
+  </div>
+
+  <div *ngIf="!imageLoaded">
+    <p>Loading image...</p>
+  </div>
+  
+  <div class="tags">
+    <mat-chip-set>
+      <mat-chip *ngFor="let tag of publication.tags">{{ tag.name }}</mat-chip>
+    </mat-chip-set>
+  </div>
+</div>
+  

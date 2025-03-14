@@ -1,0 +1,94 @@
+<p>gallery</p>
+
+<mat-toolbar>
+    <button mat-icon-button class="menu">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span>Pick Me</span>
+    <span class="spacer"></span>
+    <button mat-button>sign up</button>
+    <button mat-flat-button>log in</button>
+</mat-toolbar>
+
+<div class="container">
+    <div class="search-item">
+        <mat-form-field class="tag-list">
+            <mat-label>tags</mat-label>
+            <mat-chip-grid #tagChipGrid aria-label="Enter tags">
+                @for (tag of tags(); track tag) {
+                    <mat-chip-row
+                        (removed)="remove_tag(tag)"
+                        [editable]="true"
+                        (edited)="edit_tag(tag, $event)"
+                        [aria-description]="'press enter to edit ' + tag.name"
+                    >
+                    {{tag.name}}
+                    <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+                    <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+                }
+                <input
+                placeholder="new tag..."
+                [matChipInputFor]="tagChipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add_tag($event)"
+                />  
+            </mat-chip-grid>
+        </mat-form-field>
+    </div>
+    
+    <div class="search-item">
+        <mat-form-field class="user-list">
+            <mat-label>users</mat-label>
+            <mat-chip-grid #userChipGrid aria-label="Enter users">
+                @for (user of users(); track user) {
+                    <mat-chip-row
+                        (removed)="remove_user(user)"
+                        [editable]="true"
+                        (edited)="edit_user(user, $event)"
+                        [aria-description]="'press enter to edit ' + user.login"
+                    >
+                    {{user.login}}
+                    <button matChipRemove [attr.aria-label]="'remove ' + user.login">
+                    <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+                }
+                <input
+                placeholder="new user..."
+                [matChipInputFor]="userChipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add_user($event)"
+                />  
+            </mat-chip-grid>
+        </mat-form-field>
+    </div>
+
+    <div class="search-item">
+        <mat-form-field>
+            <mat-label>sorting order</mat-label>
+            <mat-select [(value)]="selectedSort">
+                @for (sortType of sortTypes; track sortType) {
+                    <mat-option [value]="sortType.value">{{sortType.viewValue}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="search-item">
+        <button mat-flat-button (click)="loadImages()">
+            <mat-icon>search</mat-icon>
+        </button>
+    </div>
+
+    <div class="gallery">
+        <p *ngIf="isLoading()">loading..</p>
+
+        @for (publication of images(); track publication) {
+            <app-publication [publication]="publication"></app-publication>
+        }
+    </div>
+</div>

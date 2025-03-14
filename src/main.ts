@@ -4,13 +4,12 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { importProvidersFrom } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TokenInterceptor } from './app/interceptors/token.interceptor';
+import { provideHttpClient } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     importProvidersFrom(ReactiveFormsModule),
-    provideHttpClient(withInterceptors([TokenInterceptor]))
+    provideHttpClient()
   ]
 });
