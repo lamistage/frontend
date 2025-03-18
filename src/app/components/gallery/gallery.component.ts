@@ -13,6 +13,8 @@ import { ImageService } from '../../services/image.service';
 import { Image } from '../../models/image';
 import { NgIf } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
+import { MatMenuModule} from '@angular/material/menu';
+import { RouterModule } from '@angular/router';
 
 
 export interface Tag {
@@ -40,7 +42,9 @@ interface SortType {
     MatInputModule, 
     FormsModule,
     NgIf,
-    PublicationComponent
+    PublicationComponent,
+    MatMenuModule,
+    RouterModule
   ],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss'

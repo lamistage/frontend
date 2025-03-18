@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'; 
 import { Image } from '../models/image';
+import { switchMap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -37,5 +38,27 @@ export class ImageService {
     });
 
     return this.http.get<Blob>(`${this.apiUrl}/${imagePath}`, { headers, responseType: 'blob' as 'json' });
+  }
+
+  deleteImage(filePath: string): Observable<void> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.delete<void>(`${this.apiUrl}/${filePath}`, { headers, responseType: 'blob' as 'json' })
+  }
+
+  deletePublication(image: Image): Observable<void> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.delete<void>(`${this.apiUrl}/image/${image.id}`, { headers }).pipe(
+      switchMap(() => this.http.delete<void>(`${this.apiUrl}/${image.filePath}`, { headers }))
+    );
   }
 }

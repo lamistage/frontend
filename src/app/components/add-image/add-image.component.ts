@@ -7,6 +7,9 @@ import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule} from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
 
 
 export interface Tag {
@@ -21,7 +24,11 @@ export interface Tag {
     MatFormFieldModule, 
     MatChipsModule, 
     MatIconModule, 
-    MatButtonModule], 
+    MatButtonModule,
+    MatToolbarModule,
+    MatMenuModule,
+    RouterModule
+  ], 
   templateUrl: './add-image.component.html',
   styleUrls: ['./add-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,9 +45,10 @@ export class AddImageComponent {
 
   constructor(private addImageService: AddImageService) {}
 
-  onFileSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
     }
   }
 
@@ -61,14 +69,12 @@ export class AddImageComponent {
     }
 
     const userId = this.getUserIdFromToken(token);
-    alert(userId);
     if (!userId) {
       alert('Invalid token. Please log in again.');
       return;
     }
 
     const userLogin = this.getUserLoginFromToken(token);
-    alert(userLogin);
     if (!userLogin) {
       alert('Invalid token. Please log in again.');
       return;
@@ -96,7 +102,11 @@ export class AddImageComponent {
         this.addImageService.saveImage(imageData).subscribe({
           next: () => {
             alert('Image added successfully');
-            console.log('Image added successfully', imageData)
+            console.log('Image added successfully', imageData);
+            this.tags.set([]);
+            this.selectedFile =  null;
+            const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+            if (fileInput) fileInput.value = '';
           },
           error: (err) => {
             console.error('Error saving image:', err);

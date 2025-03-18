@@ -4,10 +4,18 @@
       <button mat-icon-button class="copy-btn" (click)="copyImage()">
         <mat-icon>content_copy</mat-icon>
       </button>
+      <ng-container *ngIf="isProfilePage">
+        <button mat-icon-button class="edit-btn">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button class="delete-btn" (click)="deletePublication()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </ng-container>
     </div>
   
   <div *ngIf="imageLoaded && publication.filePath">
-    <img [src]="publication.filePath" alt="Publication Image" class="publication-image" />
+    <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
   </div>
 
   <div *ngIf="!imageLoaded">
