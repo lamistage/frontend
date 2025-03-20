@@ -1,11 +1,11 @@
-<div class="publication">
+<div class="publication-container">
     <div class="header">
       <span class="user-login">{{ publication.user.login }}</span>
       <button mat-icon-button class="copy-btn" (click)="copyImage()">
         <mat-icon>content_copy</mat-icon>
       </button>
       <ng-container *ngIf="isProfilePage">
-        <button mat-icon-button class="edit-btn">
+        <button mat-icon-button class="edit-btn" (click)="startEditing()" *ngIf="!isEditing()">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button class="delete-btn" (click)="deletePublication()">
@@ -14,18 +14,45 @@
       </ng-container>
     </div>
   
-  <div *ngIf="imageLoaded && publication.filePath">
+  <div class="image-container" *ngIf="imageLoaded && publication.filePath">
     <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
   </div>
 
-  <div *ngIf="!imageLoaded">
+  <div class="image-container" *ngIf="!imageLoaded">
     <p>Loading image...</p>
   </div>
   
-  <div class="tags">
+  <div class="tags-container">
     <mat-chip-set>
       <mat-chip *ngFor="let tag of publication.tags">{{ tag.name }}</mat-chip>
     </mat-chip-set>
+
+    <div *ngIf="isEditing()">
+      <mat-form-field class="tag-list">
+        <mat-label>Tags</mat-label>
+        <mat-chip-grid #tagChipGrid aria-label="Edit tags">
+          <mat-chip-row 
+            *ngFor="let tag of editableTags()" 
+            [editable]="true" 
+            (edited)="editTag(tag, $event)" 
+            (removed)="removeTag(tag)"
+          >
+            {{ tag.name }}
+            <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input 
+            placeholder="new tag..."
+            [matChipInputFor]="tagChipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addTag($event)"
+          >
+        </mat-chip-grid>
+        <mat-error *ngIf="editableTags().length === 0">add at least one tag</mat-error>
+      </mat-form-field>
+      <button mat-button (click)="saveTags()" [disabled]="editableTags().length === 0">ok</button>
+    </div>
   </div>
 </div>
   

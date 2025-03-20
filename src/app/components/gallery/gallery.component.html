@@ -1,7 +1,6 @@
-<p>gallery</p>
-
 <mat-toolbar>
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icon-button with a menu">
+    <span class="pm-label">pm</span>
+    <button class="burger-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icon-button with a menu">
         <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -17,82 +16,103 @@
             <mat-icon>add_to_photos</mat-icon>
             <span>add-image</span>
         </button>
+        <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>logout</span>
+        </button>
     </mat-menu>
-    <span>Pick Me</span>
 </mat-toolbar>
 
+<h1>Gallery</h1>
+
 <div class="container">
-    <div class="search-item">
-        <mat-form-field class="tag-list">
-            <mat-label>tags</mat-label>
-            <mat-chip-grid #tagChipGrid aria-label="Enter tags">
-                @for (tag of tags(); track tag) {
-                    <mat-chip-row
-                        (removed)="remove_tag(tag)"
-                        [editable]="true"
-                        (edited)="edit_tag(tag, $event)"
-                        [aria-description]="'press enter to edit ' + tag.name"
-                    >
-                    {{tag.name}}
-                    <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
-                    <mat-icon>cancel</mat-icon>
-                    </button>
-                </mat-chip-row>
-                }
-                <input
-                placeholder="new tag..."
-                [matChipInputFor]="tagChipGrid"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="add_tag($event)"
-                />  
-            </mat-chip-grid>
-        </mat-form-field>
-    </div>
-    
-    <div class="search-item">
-        <mat-form-field class="user-list">
-            <mat-label>users</mat-label>
-            <mat-chip-grid #userChipGrid aria-label="Enter users">
-                @for (user of users(); track user) {
-                    <mat-chip-row
-                        (removed)="remove_user(user)"
-                        [editable]="true"
-                        (edited)="edit_user(user, $event)"
-                        [aria-description]="'press enter to edit ' + user.login"
-                    >
-                    {{user.login}}
-                    <button matChipRemove [attr.aria-label]="'remove ' + user.login">
-                    <mat-icon>cancel</mat-icon>
-                    </button>
-                </mat-chip-row>
-                }
-                <input
-                placeholder="new user..."
-                [matChipInputFor]="userChipGrid"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="add_user($event)"
-                />  
-            </mat-chip-grid>
-        </mat-form-field>
-    </div>
+    <div class="search-items">
+        <div class="search-item">
+            <mat-form-field class="tag-list">
+                <mat-label>tags</mat-label>
+                <mat-chip-grid #tagChipGrid aria-label="Enter tags">
+                    @for (tag of tags(); track tag) {
+                        <mat-chip-row
+                            (removed)="remove_tag(tag)"
+                            [editable]="true"
+                            (edited)="edit_tag(tag, $event)"
+                            [aria-description]="'press enter to edit ' + tag.name"
+                        >
+                        {{tag.name}}
+                        <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+                        <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                    }
+                    <input
+                    placeholder="new tag..."
+                    [formControl]="tagCtrl"
+                    [matChipInputFor]="tagChipGrid"
+                    [matAutocomplete]="tagAuto"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="add_tag($event)"
+                    />  
+                </mat-chip-grid>
+                <mat-autocomplete #tagAuto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                    @for (tag of filteredTags | async; track tag) {
+                        <mat-option [value]="tag.name">{{tag.name}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
 
-    <div class="search-item">
-        <mat-form-field>
-            <mat-label>sorting order</mat-label>
-            <mat-select [(value)]="selectedSort">
-                @for (sortType of sortTypes; track sortType) {
-                    <mat-option [value]="sortType.value">{{sortType.viewValue}}</mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
-    </div>
+        <div class="search-item">
+            <mat-form-field class="user-list">
+                <mat-label>users</mat-label>
+                <mat-chip-grid #userChipGrid aria-label="Enter users">
+                    @for (user of users(); track user) {
+                        <mat-chip-row
+                            (removed)="remove_user(user)"
+                            [editable]="true"
+                            (edited)="edit_user(user, $event)"
+                            [aria-description]="'press enter to edit ' + user.login"
+                        >
+                        {{user.login}}
+                        <button matChipRemove [attr.aria-label]="'remove ' + user.login">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip-row>
+                    }
+                    <input
+                    placeholder="new user..."
+                    [formControl]="userCtrl"
+                    [matChipInputFor]="userChipGrid"
+                    [matAutocomplete]="userAuto"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="add_user($event)"
+                    />  
+                </mat-chip-grid>
+                <mat-autocomplete #userAuto="matAutocomplete" (optionSelected)="selectedUser($event)">
+                    @for (user of filteredUsers | async; track user) {
+                        <mat-option [value]="user.login">{{user.login}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
 
-    <div class="search-item">
-        <button mat-flat-button (click)="loadImages()">
-            <mat-icon>search</mat-icon>
-        </button>
+        <div class="search-item">
+            <mat-form-field>
+                <mat-label>sorting order</mat-label>
+                <mat-select [(value)]="selectedSort">
+                    @for (sortType of sortTypes; track sortType) {
+                        <mat-option [value]="sortType.value">{{sortType.viewValue}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="search-item search-button">
+            <button (click)="loadImages()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
     </div>
 
     <div class="gallery">

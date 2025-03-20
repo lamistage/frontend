@@ -9,6 +9,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { SimpleChanges } from '@angular/core';
+import { Tag } from '../../models/image';
 
 
 
@@ -33,7 +34,7 @@ export class PublicationComponent {
   imageLoaded = false;
   originalFilePath!: string;
   isEditing = signal(false);
-  editableTags = signal<Image['tags']>([]);
+  editableTags = signal<Tag[]>([]);
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(private clipboard: Clipboard, private imageService: ImageService) {}
@@ -48,6 +49,7 @@ export class PublicationComponent {
     if (changes['publication'] && changes['publication'].currentValue) {
       this.originalFilePath = this.publication.filePath;
       this.loadImage();
+      this.editableTags.set([...this.publication.tags]);
     }
   }
 
@@ -92,5 +94,69 @@ export class PublicationComponent {
         }
       });
     }
+  }
+
+  startEditing() {
+    this.isEditing.set(true);
+  }
+
+  saveTags() {
+    if (this.editableTags().length === 0) {
+      console.warn('no tags to save');
+      return
+    }
+    const updatedImage = { 
+      id: this.publication.id, 
+      filePath: this.originalFilePath, 
+      user: this.publication.user,
+      tags: this.editableTags() 
+    };
+    console.log('sending to server:', updatedImage);
+    this.imageService.saveImage(updatedImage).subscribe({
+      next: (updated) => {
+        console.log('server response:', updated);
+        if (updated && updated.tags) {
+          this.publication.tags = updated.tags;
+          this.publication.date = updated.date;
+        } else {
+          console.warn('server returned null, using local tags');
+          this.publication.tags = this.editableTags();
+        }
+        this.isEditing.set(false);
+        alert('Tags updated successfully!');
+      },
+      error: (err) => {
+        console.error('Failed to update tags:', err);
+        alert('Failed to update tags. Please try again.')
+      }
+    });
+  }
+
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.editableTags.update(tags => [...tags, { name: value}]);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeTag(tag: Tag): void {
+    this.editableTags.update(tags => tags.filter(t => t !== tag));
+  }
+
+  editTag(tag: Tag, event: MatChipEditedEvent): void {
+    const value = event.value.trim();
+    if (!value) {
+      this.removeTag(tag);
+      return;
+    }
+    this.editableTags.update(tags => {
+      const index = tags.indexOf(tag);
+      if (index >= 0) {
+        tags[index] = { name: value };
+        return [...tags];
+      }
+      return tags;
+    });
   }
 }

@@ -16,6 +16,10 @@
     font-weight:normal;
 }
 
+@font-face {
+    font-family: 'neoda';
+    src: url(assets/fonts/neoda.ttf) format('truetype');
+    font-weight: bold;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0;}

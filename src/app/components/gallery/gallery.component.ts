@@ -11,10 +11,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ImageService } from '../../services/image.service';
 import { Image } from '../../models/image';
-import { NgIf } from '@angular/common';
+import { NgIf, CommonModule } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
 import { MatMenuModule} from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { map, startWith } from 'rxjs/operators';
 
 
 export interface Tag {
@@ -33,6 +39,7 @@ interface SortType {
 @Component({
   selector: 'app-gallery',
   imports: [
+    CommonModule,
     MatToolbarModule, 
     MatButtonModule, 
     MatIconModule, 
@@ -44,7 +51,9 @@ interface SortType {
     NgIf,
     PublicationComponent,
     MatMenuModule,
-    RouterModule
+    RouterModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule
   ],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss'
@@ -56,6 +65,8 @@ export class GalleryComponent {
   readonly users = signal<User[]>([]);
   readonly announcer = inject(LiveAnnouncer);
   private readonly imageService = inject(ImageService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   sortTypes: SortType[] = [
     {value: 'date,desc', viewValue: 'newest first'},
@@ -66,8 +77,60 @@ export class GalleryComponent {
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
 
+  tagCtrl = new FormControl('');
+  allTags: Tag[] = [];
+  filteredTags: Observable<Tag[]>;
+
+  userCtrl = new FormControl('');
+  allUsers: User[] = [];
+  filteredUsers: Observable<User[]>;
+
   constructor() {
+    this.loadAllTags();
+    this.loadAllUsers();
     this.loadImages();
+
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterTags(value || ''))
+    );
+
+    this.filteredUsers = this.userCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterUsers(value || ''))
+    );
+  }
+
+  loadAllTags() {
+    this.imageService.getAllTags().subscribe({
+      next: (tags) => {
+        this.allTags = tags;
+      },
+      error: (err) => {
+        console.error('error loading tags:', err);
+      }
+    });
+  }
+
+  loadAllUsers() {
+    this.imageService.getAllUsers().subscribe({
+      next: (users) => {
+        this.allUsers = users;
+      },
+      error: (err) => {
+        console.error('error loading users:', err)
+      }
+    });
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+    return this.allTags.filter(tag => tag.name.toLowerCase().includes(filterValue));
+  }
+
+  private _filterUsers(value: string): User[] {
+    const filterValue = value.toLowerCase();
+    return this.allUsers.filter(user => user.login.toLowerCase().includes(filterValue));
   }
 
   public loadImages() {
@@ -130,6 +193,12 @@ export class GalleryComponent {
     });
   }
 
+  selectedTag(event: MatAutocompleteSelectedEvent): void {
+    const value = event.option.value;
+    this.tags.update(tags => [...tags, { name: value }]);
+    this.tagCtrl.setValue('');
+  }
+
   add_user(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
@@ -171,8 +240,26 @@ export class GalleryComponent {
     });
   }
 
+  selectedUser(event: MatAutocompleteSelectedEvent): void {
+    const value = event.option.value;
+    this.users.update(users => [...users, { login: value }]);
+    this.userCtrl.setValue('');
+  }
+
   changeSort(newSort: string) {
     this.selectedSort.set(newSort);
     this.loadImages();
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+
+      },
+      error: (err) => {
+        console.error('logout failed', err);
+        alert('failed to logout. please try again');
+      }
+    })
   }
 }

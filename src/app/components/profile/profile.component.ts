@@ -11,10 +11,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ImageService } from '../../services/image.service';
 import { Image } from '../../models/image';
-import { NgIf } from '@angular/common';
+import { NgIf, CommonModule } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
 import { MatMenuModule} from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { map, startWith } from 'rxjs/operators';
 
 
 export interface Tag {
@@ -33,6 +39,7 @@ interface SortType {
 @Component({
   selector: 'app-profile',
   imports: [
+    CommonModule,
     MatToolbarModule, 
     MatButtonModule, 
     MatIconModule, 
@@ -44,7 +51,9 @@ interface SortType {
     NgIf,
     PublicationComponent,
     MatMenuModule,
-    RouterModule
+    RouterModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -55,6 +64,8 @@ export class ProfileComponent {
   readonly tags = signal<Tag[]>([]);
   readonly announcer = inject(LiveAnnouncer);
   private readonly imageService = inject(ImageService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   sortTypes: SortType[] = [
     {value: 'date,desc', viewValue: 'newest first'},
@@ -65,8 +76,34 @@ export class ProfileComponent {
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
 
+  tagCtrl = new FormControl('');
+  allTags: Tag[] = [];
+  filteredTags: Observable<Tag[]>;
+
   constructor() {
+    this.loadAllTags();
     this.loadImages();
+
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterTags(value || ''))
+    );
+  }
+
+  loadAllTags() {
+    this.imageService.getAllTags().subscribe({
+      next: (tags) => {
+        this.allTags = tags;
+      },
+      error: (err) => {
+        console.error('error loading tags', err);
+      }
+    })
+  }
+
+  private _filterTags(value: string): Tag[] {
+    const filterValue = value.toLowerCase();
+    return this.allTags.filter(tag => tag.name.toLowerCase().includes(filterValue));
   }
 
   public loadImages() {
@@ -75,6 +112,7 @@ export class ProfileComponent {
     const token = localStorage.getItem('token');
     if (!token) {
       alert('no token found. please log in.');
+      this.router.navigate(['/auth']);
       return;
     }
 
@@ -141,6 +179,12 @@ export class ProfileComponent {
     });
   }
 
+  selectedTag(event: MatAutocompleteSelectedEvent): void {
+    const value = event.option.value;
+    this.tags.update(tags => [...tags, { name: value }]);
+    this.tagCtrl.setValue('');
+  }
+
   changeSort(newSort: string) {
     this.selectedSort.set(newSort);
     this.loadImages();
@@ -158,5 +202,17 @@ export class ProfileComponent {
       console.error('Error decoding token:', e);
       return null;
     }
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+
+      },
+      error: (err) => {
+        console.error('logout failed', err);
+        alert('failed to logout. please try again');
+      }
+    })
   }
 }

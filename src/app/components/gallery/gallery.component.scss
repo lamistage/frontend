@@ -1,18 +1,78 @@
-.spacer {
-    flex: 1 1 auto;
+h1 {
+  font-family: 'neoda', sans-serif;
+  color: #ffa7b5;
+  text-align: center;
+  font-size: 3vw;
+  margin-bottom: 60px;
 }
 
-.tag-list {
-  width: 40vw;
-  padding-right: 10px;
+.mat-toolbar {
+  background: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
 }
 
-.user-list {
-  width: 40vw;
-  padding-right: 10px;
+.pm-label {
+  margin-left: 10vw;
+  font-family: 'neoda', sans-serif;
+  color: #ffa7b5;
+  font-size: 3vw;
+}
+
+.burger-button {
+  margin-right: 10vw
+}
+
+.container {
+  width: 100%;
+}
+
+.search-items {
+  display: flex;
+  align-items: center;
+  margin: 0 10vw;
+  gap: 10px;
 }
 
 .search-item {
-  display: inline-block;
-  padding-right: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.search-item.search-button {
+  flex: 0 0 auto;
+}
+
+.search-item mat-form-field {
+  width: 100%;
+}
+
+.search-item.search-button button{
+  background-color: #ffa7b5;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;;
+}
+
+.search-item.search-button button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.gallery {
+  margin: 20px 10vw;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
