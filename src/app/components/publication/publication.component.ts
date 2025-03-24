@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ViewChild, ElementRef } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Image } from '../../models/image';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
 import { ImageService } from '../../services/image.service';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { SimpleChanges } from '@angular/core';
@@ -30,12 +29,13 @@ export class PublicationComponent {
   @Input() publication!: Image;
   @Input() isProfilePage: boolean = false;
   @Output() deleted = new EventEmitter<number>();
+  @ViewChild('tagInput') tagInput!: ElementRef;
+
   imageBlob!: Blob;
   imageLoaded = false;
   originalFilePath!: string;
   isEditing = signal(false);
   editableTags = signal<Tag[]>([]);
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   constructor(private clipboard: Clipboard, private imageService: ImageService) {}
 
@@ -98,6 +98,7 @@ export class PublicationComponent {
 
   startEditing() {
     this.isEditing.set(true);
+    this.editableTags.set([...this.publication.tags]);
   }
 
   saveTags() {
@@ -132,31 +133,17 @@ export class PublicationComponent {
     });
   }
 
-  addTag(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    if (value) {
-      this.editableTags.update(tags => [...tags, { name: value}]);
-    }
-    event.chipInput!.clear();
-  }
-
   removeTag(tag: Tag): void {
     this.editableTags.update(tags => tags.filter(t => t !== tag));
   }
 
-  editTag(tag: Tag, event: MatChipEditedEvent): void {
-    const value = event.value.trim();
-    if (!value) {
-      this.removeTag(tag);
-      return;
+  addTagFromInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const tagName = input.value.trim();
+    if (tagName) {
+      const newTag = {name: tagName};
+      this.editableTags.update(tags => [...tags, newTag]);
+      input.value = '';
     }
-    this.editableTags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index >= 0) {
-        tags[index] = { name: value };
-        return [...tags];
-      }
-      return tags;
-    });
   }
 }

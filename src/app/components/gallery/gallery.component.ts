@@ -1,27 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { ImageService } from '../../services/image.service';
 import { Image } from '../../models/image';
-import { NgIf, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
-import { MatMenuModule} from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
-
 
 export interface Tag {
   name: string;
@@ -40,65 +27,63 @@ interface SortType {
   selector: 'app-gallery',
   imports: [
     CommonModule,
-    MatToolbarModule, 
-    MatButtonModule, 
-    MatIconModule, 
-    MatFormFieldModule, 
-    MatChipsModule, 
-    MatSelectModule, 
-    MatInputModule, 
-    FormsModule,
-    NgIf,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
     PublicationComponent,
-    MatMenuModule,
-    RouterModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule
+    RouterModule
   ],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss'
 })
 export class GalleryComponent {
-  readonly addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  @ViewChild('tagInput') tagInput!: ElementRef;
+  @ViewChild('userInput') userInput!: ElementRef;
+
   readonly tags = signal<Tag[]>([]);
   readonly users = signal<User[]>([]);
-  readonly announcer = inject(LiveAnnouncer);
   private readonly imageService = inject(ImageService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   sortTypes: SortType[] = [
-    {value: 'date,desc', viewValue: 'newest first'},
-    {value: 'date,asc', viewValue: 'oldest first'}
+    { value: 'date,desc', viewValue: 'newest first' },
+    { value: 'date,asc', viewValue: 'oldest first' }
   ];
   selectedSort = signal<string>('date,desc');
+  isSortOpen = false;
+  isMenuOpen = false;
+  isMenuVisible = false;
 
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
+  currentPage = signal<number>(0);
+  totalPages = signal<number>(1);
+  pageSize = 20;
 
-  tagCtrl = new FormControl('');
   allTags: Tag[] = [];
-  filteredTags: Observable<Tag[]>;
+  filteredTags: Tag[] = [];
 
-  userCtrl = new FormControl('');
   allUsers: User[] = [];
-  filteredUsers: Observable<User[]>;
+  filteredUsers: User[] = [];
 
   constructor() {
     this.loadAllTags();
     this.loadAllUsers();
     this.loadImages();
+  }
 
-    this.filteredTags = this.tagCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterTags(value || ''))
-    );
+  toggleMenu(): void {
+    if (!this.isMenuOpen) {
+      this.isMenuVisible = true;
+    }
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 
-    this.filteredUsers = this.userCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterUsers(value || ''))
-    );
+  onAnimationEnd(event: AnimationEvent): void {
+    if (event.animationName === 'slideUp') {
+      this.isMenuVisible = false;
+    }
   }
 
   loadAllTags() {
@@ -118,19 +103,9 @@ export class GalleryComponent {
         this.allUsers = users;
       },
       error: (err) => {
-        console.error('error loading users:', err)
+        console.error('error loading users:', err);
       }
     });
-  }
-
-  private _filterTags(value: string): Tag[] {
-    const filterValue = value.toLowerCase();
-    return this.allTags.filter(tag => tag.name.toLowerCase().includes(filterValue));
-  }
-
-  private _filterUsers(value: string): User[] {
-    const filterValue = value.toLowerCase();
-    return this.allUsers.filter(user => user.login.toLowerCase().includes(filterValue));
   }
 
   public loadImages() {
@@ -139,127 +114,168 @@ export class GalleryComponent {
     const tagNames = this.tags().map(t => t.name);
     const userLogins = this.users().map(u => u.login);
     const sort = this.selectedSort();
+    const page = this.currentPage();
 
-    this.imageService.getImages(tagNames, userLogins, sort).subscribe({
-      next: (data) => {
-        this.images.set(data);
+    this.imageService.getImages(tagNames, userLogins, sort, page, this.pageSize).subscribe({
+      next: (pageData) => {
+        this.images.set(pageData.content || []);
+        const totalPages = pageData.page?.totalPages || 1; 
+        this.totalPages.set(totalPages);
         this.isLoading.set(false);
+
+        if (this.currentPage() >= totalPages && totalPages > 0) {
+          this.currentPage.set(totalPages - 1);
+          this.loadImages();
+        }
       },
       error: (err) => {
         console.error('Error loading images:', err);
+        this.images.set([]);
+        this.totalPages.set(1);
         this.isLoading.set(false);
       }
     });
   }
 
-  add_tag(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.tags.update(tags => [...tags, {name: value}]);
+  goToPreviousPage() {
+    if (this.currentPage() > 0) {
+      this.currentPage.update(page => page - 1);
+      this.loadImages();
     }
+  }
 
-    event.chipInput!.clear();
+  goToNextPage() {
+    if (this.currentPage() < this.totalPages() - 1) {
+      this.currentPage.update(page => page + 1);
+      this.loadImages();
+    }
+  }
+
+  addTagFromInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const tagName = input.value.trim();
+    if (tagName) {
+      const newTag = { name: tagName };
+      const tagExists = this.tags().some(
+        t => t.name.toLowerCase() === tagName.toLowerCase()
+      );
+      if (!tagExists) {
+        this.tags.update(tags => [...tags, newTag]);
+      }
+      input.value = '';
+      this.filteredTags = [];
+      this.currentPage.set(0);
+      this.loadImages();
+    }
   }
 
   remove_tag(tag: Tag): void {
-    this.tags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index < 0) {
-        return tags;
-      }
-
-      tags.splice(index, 1);
-      this.announcer.announce(`Removed ${tag.name}`);
-      return [...tags];
-    });
+    this.tags.update(tags => tags.filter(t => t !== tag));
+    this.currentPage.set(0);
+    this.loadImages();
   }
 
-  edit_tag(tag: Tag, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.remove_tag(tag);
-      return;
-    }
-
-    this.tags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index >= 0) {
-        tags[index].name = value;
-        return [...tags];
-      }
-      return tags;
-    });
-  }
-
-  selectedTag(event: MatAutocompleteSelectedEvent): void {
-    const value = event.option.value;
-    this.tags.update(tags => [...tags, { name: value }]);
-    this.tagCtrl.setValue('');
-  }
-
-  add_user(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
+  filterTags(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim().toLowerCase();
     if (value) {
-      this.users.update(users => [...users, {login: value}]);
+      this.filteredTags = this.allTags.filter(tag =>
+        tag.name.toLowerCase().includes(value) &&
+        !this.tags().some(t => t.name.toLowerCase() === tag.name.toLowerCase())
+      );
+    } else {
+      this.filteredTags = [];
     }
+  }
 
-    event.chipInput!.clear();
+  selectTag(tag: Tag): void {
+    const tagExists = this.tags().some(
+      t => t.name.toLowerCase() === tag.name.toLowerCase()
+    );
+    if (!tagExists) {
+      this.tags.update(tags => [...tags, tag]);
+    }
+    this.tagInput.nativeElement.value = '';
+    this.filteredTags = [];
+    this.currentPage.set(0);
+    this.loadImages();
+  }
+
+  addUserFromInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const userLogin = input.value.trim();
+    if (userLogin) {
+      const newUser = { login: userLogin };
+      const userExists = this.users().some(
+        u => u.login.toLowerCase() === userLogin.toLowerCase()
+      );
+      if (!userExists) {
+        this.users.update(users => [...users, newUser]);
+      }
+      input.value = '';
+      this.filteredUsers = [];
+      this.currentPage.set(0);
+      this.loadImages();
+    }
   }
 
   remove_user(user: User): void {
-    this.users.update(users => {
-      const index = users.indexOf(user);
-      if (index < 0) {
-        return users;
-      }
-
-      users.splice(index, 1);
-      this.announcer.announce(`Removed ${user.login}`);
-      return [...users];
-    });
-  }
-
-  edit_user(user: User, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.remove_user(user);
-      return;
-    }
-
-    this.users.update(users => {
-      const index = users.indexOf(user);
-      if (index >= 0) {
-        users[index].login = value;
-        return [...users];
-      }
-      return users;
-    });
-  }
-
-  selectedUser(event: MatAutocompleteSelectedEvent): void {
-    const value = event.option.value;
-    this.users.update(users => [...users, { login: value }]);
-    this.userCtrl.setValue('');
-  }
-
-  changeSort(newSort: string) {
-    this.selectedSort.set(newSort);
+    this.users.update(users => users.filter(u => u !== user));
+    this.currentPage.set(0);
     this.loadImages();
+  }
+
+  filterUsers(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim().toLowerCase();
+    if (value) {
+      this.filteredUsers = this.allUsers.filter(user =>
+        user.login.toLowerCase().includes(value) &&
+        !this.users().some(u => u.login.toLowerCase() === user.login.toLowerCase())
+      );
+    } else {
+      this.filteredUsers = [];
+    }
+  }
+
+  selectUser(user: User): void {
+    const userExists = this.users().some(
+      u => u.login.toLowerCase() === user.login.toLowerCase()
+    );
+    if (!userExists) {
+      this.users.update(users => [...users, user]);
+    }
+    this.userInput.nativeElement.value = '';
+    this.filteredUsers = [];
+    this.currentPage.set(0);
+    this.loadImages();
+  }
+
+  toggleSortDropdown(): void {
+    this.isSortOpen = !this.isSortOpen;
+  }
+
+  selectSort(value: string): void {
+    this.selectedSort.set(value);
+    this.isSortOpen = false;
+    this.currentPage.set(0);
+    this.loadImages();
+  }
+
+  getSelectedSortLabel(): string {
+    const selected = this.sortTypes.find(sortType => sortType.value === this.selectedSort());
+    return selected ? selected.viewValue : 'Select sort order';
   }
 
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-
+        this.router.navigate(['/auth']);
       },
       error: (err) => {
         console.error('logout failed', err);
         alert('failed to logout. please try again');
       }
-    })
+    });
   }
 }

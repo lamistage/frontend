@@ -1,31 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, signal } from '@angular/core';
+import { ImageService } from '../../services/image.service';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { Image } from '../../models/image';
+import { Tag } from '../../models/image';
+import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { ImageService } from '../../services/image.service';
-import { Image } from '../../models/image';
-import { NgIf, CommonModule } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
-import { MatMenuModule} from '@angular/material/menu';
-import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
-
-
-export interface Tag {
-  name: string;
-}
+import { FormsModule } from '@angular/forms';
 
 export interface User {
   login: string;
@@ -40,54 +24,58 @@ interface SortType {
   selector: 'app-profile',
   imports: [
     CommonModule,
-    MatToolbarModule, 
-    MatButtonModule, 
-    MatIconModule, 
-    MatFormFieldModule, 
-    MatChipsModule, 
-    MatSelectModule, 
-    MatInputModule, 
-    FormsModule,
-    NgIf,
-    PublicationComponent,
-    MatMenuModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
     RouterModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule
+    PublicationComponent,
+    FormsModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
-  readonly addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  @ViewChild('tagInput') tagInput!: ElementRef;
+
   readonly tags = signal<Tag[]>([]);
-  readonly announcer = inject(LiveAnnouncer);
-  private readonly imageService = inject(ImageService);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-
-  sortTypes: SortType[] = [
-    {value: 'date,desc', viewValue: 'newest first'},
-    {value: 'date,asc', viewValue: 'oldest first'}
-  ];
-  selectedSort = signal<string>('date,desc');
-
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
-
-  tagCtrl = new FormControl('');
+  selectedSort = signal<string>('date,desc');
+  sortTypes: SortType[] = [
+    { value: 'date,desc', viewValue: 'newest first' },
+    { value: 'date,asc', viewValue: 'oldest first' }
+  ];
+  editingTag: Tag | null = null;
   allTags: Tag[] = [];
-  filteredTags: Observable<Tag[]>;
+  filteredTags: Tag[] = [];
+  isSortOpen = false;
+  isMenuOpen = false;
+  isMenuVisible = false;
 
-  constructor() {
+  currentPage = signal<number>(0);
+  totalPages = signal<number>(1);
+  pageSize = 20;
+
+  constructor(
+    private imageService: ImageService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loadAllTags();
     this.loadImages();
+  }
 
-    this.filteredTags = this.tagCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterTags(value || ''))
-    );
+  toggleMenu(): void {
+    if (!this.isMenuOpen) {
+      this.isMenuVisible = true;
+    }
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  onAnimationEnd(event: AnimationEvent): void {
+    if (event.animationName === 'slideUp') {
+      this.isMenuVisible = false;
+    }
   }
 
   loadAllTags() {
@@ -98,12 +86,7 @@ export class ProfileComponent {
       error: (err) => {
         console.error('error loading tags', err);
       }
-    })
-  }
-
-  private _filterTags(value: string): Tag[] {
-    const filterValue = value.toLowerCase();
-    return this.allTags.filter(tag => tag.name.toLowerCase().includes(filterValue));
+    });
   }
 
   public loadImages() {
@@ -125,79 +108,121 @@ export class ProfileComponent {
     const tagNames = this.tags().map(t => t.name);
     const userLogins = [userLogin];
     const sort = this.selectedSort();
+    const page = this.currentPage();
 
-    this.imageService.getImages(tagNames, userLogins, sort).subscribe({
-      next: (data) => {
-        this.images.set(data);
+    this.imageService.getImages(tagNames, userLogins, sort, page, this.pageSize).subscribe({
+      next: (pageData) => {
+        this.images.set(pageData.content || []);
+        const totalPages = pageData.page?.totalPages || 1;
+        this.totalPages.set(totalPages);
         this.isLoading.set(false);
+
+        if (this.currentPage() >= totalPages && totalPages > 0) {
+          this.currentPage.set(totalPages - 1);
+          this.loadImages();
+        }
       },
       error: (err) => {
         console.error('Error loading images:', err);
+        this.images.set([]);
+        this.totalPages.set(1);
         this.isLoading.set(false);
       }
     });
   }
 
-  add_tag(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.tags.update(tags => [...tags, {name: value}]);
+  addTagFromInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const tagName = input.value.trim();
+    if (tagName) {
+      const newTag = { name: tagName };
+      const tagExists = this.tags().some(
+        t => t.name.toLowerCase() === tagName.toLowerCase()
+      );
+      if (!tagExists) {
+        this.tags.update(tags => [...tags, newTag]);
+      }
+      input.value = '';
+      this.filteredTags = [];
+      this.currentPage.set(0);
+      this.loadImages();
     }
-
-    event.chipInput!.clear();
   }
 
   remove_tag(tag: Tag): void {
-    this.tags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index < 0) {
-        return tags;
-      }
-
-      tags.splice(index, 1);
-      this.announcer.announce(`Removed ${tag.name}`);
-      return [...tags];
-    });
-  }
-
-  edit_tag(tag: Tag, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.remove_tag(tag);
-      return;
-    }
-
-    this.tags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index >= 0) {
-        tags[index].name = value;
-        return [...tags];
-      }
-      return tags;
-    });
-  }
-
-  selectedTag(event: MatAutocompleteSelectedEvent): void {
-    const value = event.option.value;
-    this.tags.update(tags => [...tags, { name: value }]);
-    this.tagCtrl.setValue('');
-  }
-
-  changeSort(newSort: string) {
-    this.selectedSort.set(newSort);
+    this.tags.update(tags => tags.filter(t => t !== tag));
+    this.currentPage.set(0);
     this.loadImages();
   }
-  
+
+  filterTags(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim().toLowerCase();
+    if (value) {
+      this.filteredTags = this.allTags.filter(tag =>
+        tag.name.toLowerCase().includes(value) &&
+        !this.tags().some(t => t.name.toLowerCase() === tag.name.toLowerCase())
+      );
+    } else {
+      this.filteredTags = [];
+    }
+  }
+
+  selectTag(tag: Tag): void {
+    const tagExists = this.tags().some(
+      t => t.name.toLowerCase() === tag.name.toLowerCase()
+    );
+    if (!tagExists) {
+      this.tags.update(tags => [...tags, tag]);
+    }
+    this.tagInput.nativeElement.value = '';
+    this.filteredTags = [];
+    this.currentPage.set(0);
+    this.loadImages();
+  }
+
+  toggleSortDropdown(): void {
+    this.isSortOpen = !this.isSortOpen;
+  }
+
+  selectSort(value: string): void {
+    this.selectedSort.set(value);
+    this.isSortOpen = false;
+    this.currentPage.set(0);
+    this.loadImages();
+  }
+
+  getSelectedSortLabel(): string {
+    const selected = this.sortTypes.find(sortType => sortType.value === this.selectedSort());
+    return selected ? selected.viewValue : 'Select sort order';
+  }
+
   onPublicationDeleted(imageId: number) {
     this.images.update(images => images.filter(img => img.id !== imageId));
+    if (this.images().length === 0 && this.currentPage() > 0) {
+      this.currentPage.update(page => page - 1);
+    }
+    this.loadImages();
+  }
+
+  goToPreviousPage() {
+    if (this.currentPage() > 0) {
+      this.currentPage.update(page => page - 1);
+      this.loadImages();
+    }
+  }
+
+  goToNextPage() {
+    if (this.currentPage() < this.totalPages() - 1) {
+      this.currentPage.update(page => page + 1);
+      this.loadImages();
+    }
   }
 
   private getUserLoginFromToken(token: string): string | null {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1])); 
-      return payload.sub || null; 
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub || null;
     } catch (e) {
       console.error('Error decoding token:', e);
       return null;
@@ -207,12 +232,12 @@ export class ProfileComponent {
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-
+        this.router.navigate(['/auth']);
       },
       error: (err) => {
         console.error('logout failed', err);
         alert('failed to logout. please try again');
       }
-    })
+    });
   }
 }

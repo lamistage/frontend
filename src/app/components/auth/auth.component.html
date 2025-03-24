@@ -1,4 +1,3 @@
-<!-- Auth component Sign In -->
 <div *ngIf="!isRegisterMode" class="auth-container-sign-in">
   <div class="left-side">
     <div class="sign-in-form">
@@ -10,6 +9,9 @@
         <div class="input-container">
           <input type="password" placeholder="Password" formControlName="password" (input)="onInputPassword($event)">
         </div>
+        @if (errorMessage) {
+          <p class="error-message">{{ errorMessage }}</p>
+        }
         <button type="submit" [disabled]="form.invalid" (click)="onSubmit()">Sign In</button>
       </form>
     </div>
@@ -23,7 +25,6 @@
   </div>
 </div>
 
-<!-- Auth component Sign Up -->
 <div *ngIf="isRegisterMode" class="auth-container-sign-up">
   <div class="left-side">
     <div class="sign-in-screen">
@@ -44,6 +45,9 @@
           <p class="input-hint">from 6 to 30 symbols & only latin letters and numbers</p>
           <input type="password" placeholder="Password" formControlName="password" (input)="onInputPassword($event)">
         </div>
+        @if (errorMessage) {
+          <p class="error-message">{{ errorMessage }}</p>
+        }
         <button type="submit" [disabled]="form.invalid" (click)="onSubmit()">Sign Up</button>
       </form>
     </div>

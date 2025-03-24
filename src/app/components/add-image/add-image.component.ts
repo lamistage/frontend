@@ -1,22 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddImageService } from '../../services/add-image.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule} from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 export interface Tag {
   name: string;
@@ -24,24 +20,25 @@ export interface Tag {
 
 @Component({
   selector: 'app-add-image',
-  standalone: true,  
+  standalone: true,
   imports: [
-    CommonModule, 
-    MatFormFieldModule, 
-    MatChipsModule, 
-    MatIconModule, 
+    CommonModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    MatMenuModule,
     RouterModule,
     MatAutocompleteModule,
     ReactiveFormsModule
-  ], 
+  ],
   templateUrl: './add-image.component.html',
   styleUrls: ['./add-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddImageComponent {
+  @ViewChild('tagInput') tagInput!: ElementRef;
+
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
   uploadSuccess: boolean = false;
@@ -57,15 +54,26 @@ export class AddImageComponent {
 
   tagCtrl = new FormControl('');
   allTags: Tag[] = [];
-  filteredTags: Observable<Tag[]>;
+  filteredTags: Tag[] = [];
+
+  isMenuOpen = false;
+  isMenuVisible = false;
 
   constructor() {
     this.loadAllTags();
+  }
 
-    this.filteredTags = this.tagCtrl.valueChanges.pipe(
-      startWith(null),
-      map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice()))
-    );
+  toggleMenu(): void {
+    if (!this.isMenuOpen) {
+      this.isMenuVisible = true;
+    }
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  onAnimationEnd(event: AnimationEvent): void {
+    if (event.animationName === 'slideUp') {
+      this.isMenuVisible = false;
+    }
   }
 
   loadAllTags() {
@@ -74,14 +82,9 @@ export class AddImageComponent {
         this.allTags = tags;
       },
       error: (err) => {
-        console.error('Error loading tags:', err)
+        console.error('Error loading tags:', err);
       }
     });
-  }
-
-  private _filter(value: string): Tag[] {
-    const filterValue = value.toLowerCase();
-    return this.allTags.filter(tag => tag.name.toLowerCase().includes(filterValue));
   }
 
   onDragOver(event: DragEvent) {
@@ -99,7 +102,7 @@ export class AddImageComponent {
     event.stopPropagation();
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
-      const file = files[0]; 
+      const file = files[0];
       if (this.isValidFileType(file)) {
         const fakeEvent = { target: { files: [file] } } as any;
         this.onFileSelected(fakeEvent);
@@ -115,7 +118,6 @@ export class AddImageComponent {
       const file = input.files[0];
       if (this.isValidFileType(file)) {
         this.selectedFile.set(file);
-        // Создаем URL для предпросмотра
         this.previewUrl.set(URL.createObjectURL(file));
         console.log('File selected:', this.selectedFile());
       } else {
@@ -134,7 +136,7 @@ export class AddImageComponent {
 
   clearFile() {
     if (this.previewUrl()) {
-      URL.revokeObjectURL(this.previewUrl()!); 
+      URL.revokeObjectURL(this.previewUrl()!);
     }
     this.selectedFile.set(null);
     this.previewUrl.set(null);
@@ -144,10 +146,10 @@ export class AddImageComponent {
 
   get isUploadDisabled(): boolean {
     return !this.selectedFile() || this.tags().length === 0;
-  }  
+  }
 
   uploadPhoto() {
-    if(!this.selectedFile) {
+    if (!this.selectedFile) {
       alert('Please select a file');
       return;
     }
@@ -188,7 +190,7 @@ export class AddImageComponent {
             login: userLogin,
           },
           tags: this.tags(),
-        }
+        };
 
         console.log(imageData);
 
@@ -213,58 +215,56 @@ export class AddImageComponent {
     });
   }
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    
-    if (value) {
-      this.tags.update(tags => [...tags, {name: value}]);
+  addTagFromInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const tagName = input.value.trim();
+    if (tagName) {
+      const newTag = { name: tagName };
+      const tagExists = this.tags().some(
+        t => t.name.toLowerCase() === tagName.toLowerCase()
+      );
+      if (!tagExists) {
+        this.tags.update(tags => [...tags, newTag]);
+      }
+      input.value = '';
+      this.filteredTags = [];
     }
-
-    event.chipInput!.clear();
   }
 
   remove(tag: Tag): void {
-    this.tags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index < 0) {
-        return tags;
-      }
-
-      tags.splice(index, 1);
-      this.announcer.announce(`Removed ${tag.name}`);
-      return [...tags];
-    });
+    this.tags.update(tags => tags.filter(t => t !== tag));
   }
 
-  edit(tag: Tag, event: MatChipEditedEvent): void {
-    const value = event.value.trim();
-
-    if (!value) {
-      this.remove(tag);
-      return;
+  filterTags(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim().toLowerCase();
+    if (value) {
+      this.filteredTags = this.allTags.filter(tag =>
+        tag.name.toLowerCase().includes(value) &&
+        !this.tags().some(t => t.name.toLowerCase() === tag.name.toLowerCase())
+      );
+    } else {
+      this.filteredTags = [];
     }
-
-    this.tags.update(tags => {
-      const index = tags.indexOf(tag);
-      if (index >= 0) {
-        tags[index].name = value;
-        return [...tags];
-      }
-      return tags;
-    });
   }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    const value = event.option.value;
-    this.tagCtrl.setValue(null);
-    this.tags.update(tags => [...tags, {name: value}]);
-    event.option.deselect();
+  selectTag(tag: Tag): void {
+    const tagExists = this.tags().some(
+      t => t.name.toLowerCase() === tag.name.toLowerCase()
+    );
+    if (!tagExists) {
+      this.tags.update(tags => [...tags, tag]);
+    } else {
+      alert(`Tag "${tag.name}" already exists.`);
+    }
+    this.tagInput.nativeElement.value = '';
+    this.filteredTags = [];
   }
 
   private getUserIdFromToken(token: string): string | null {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1])); 
-      return payload.id || null; 
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.id || null;
     } catch (e) {
       console.error('Error decoding token:', e);
       return null;
@@ -273,8 +273,8 @@ export class AddImageComponent {
 
   private getUserLoginFromToken(token: string): string | null {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1])); 
-      return payload.sub || null; 
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub || null;
     } catch (e) {
       console.error('Error decoding token:', e);
       return null;
@@ -284,12 +284,12 @@ export class AddImageComponent {
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-
+        this.router.navigate(['/auth']);
       },
       error: (err) => {
         console.error('logout failed', err);
         alert('failed to logout. please try again');
       }
-    })
+    });
   }
 }

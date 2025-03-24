@@ -27,16 +27,10 @@
   color: #ffa7b5;
 }
 
-.mat-icon-button {
-  background-color: #f0f0f0;
-  border-radius: 50%;
-  padding: 6px;
-  box-shadow: none;
-  transition: background-color 0.2s;
-}
-
-.mat-icon-button:hover {
-  background-color: #e0e0e0;
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 0px;
 }
 
 .image-container {
@@ -63,11 +57,111 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  width: 100%;
 }
 
-.mat-chip {
-  font-size: 12px;
-  background-color: #ffcad2;
+.custom-chip-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.custom-chip {
+  display: flex;
+  align-items: center;
+  background-color: #ffc1cb;
   color: #fff;
   border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 14px;
+  font-family: 'Geologica-Regular', sans-serif;
+}
+
+.custom-chip .remove-chip-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.custom-chip .remove-chip-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #fff;
+}
+
+.tag-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tag-input-container input {
+  width: 100%;
+  border: 1px solid #ffdbe1;
+  border-radius: 20px;
+  font-family: 'Geologica-Regular', sans-serif;
+  font-size: 14px;
+  background-color: #fff;
+  color: #ffa7b5;
+  padding: 4px 10px;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color:#ffa7b5;
+    font-family: 'Geologica-Regular', sans-serif;
+    font-size: 14px;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #ffa7b5;
+    box-shadow: 0 0 5px rgba(255, 167, 181, 0.5); 
+  }
+}
+
+.tag-input-container .error-message {
+  color: #ffa7b5;
+  font-family: 'Geologica-Regular', sans-serif;
+  font-size: 12px;
+  padding-left: 6px;
+  opacity: 0.9;
+}
+
+.save-btn {
+  padding: 4px 10px;
+  background-color: #ffc1cb;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-family: 'Geologica-Regular', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  align-self: flex-start;
+}
+
+.save-btn:hover {
+  background-color: #ffa7b5; 
+}
+
+.save-btn:disabled {
+  background-color: #ffd3da; 
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.material-icons.color_pink { 
+  color: #ffa7b5;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
 }

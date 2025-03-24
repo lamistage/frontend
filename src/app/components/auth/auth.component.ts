@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -15,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 export class AuthComponent {
   form: FormGroup;
   isRegisterMode = false;
+  errorMessage: string | null = null; 
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.form = this.fb.group({
@@ -36,6 +36,7 @@ export class AuthComponent {
 
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
+    this.errorMessage = null; 
   }
 
   onInputLogin(event: any) {
@@ -63,22 +64,22 @@ export class AuthComponent {
       if (this.isRegisterMode) {
         this.authService.signUp(formData).subscribe({
           next: () => {
-            alert('Registration Successful');
+            this.errorMessage = null; 
             this.toggleMode();
           },
           error: () => {
-            alert('User with such login is already exists');
+            this.errorMessage = 'User with such login already exists';
           }
         });
       } else {
         this.authService.signIn(formData).subscribe({
           next: (res) => {
             localStorage.setItem('token', res.token);
-            alert('Sign In Successful');
+            this.errorMessage = null; 
             this.router.navigate(['/add-image']);
           },
           error: () => {
-            alert('Invalid Login or Password');
+            this.errorMessage = 'Invalid Login or Password';
           }
         });
       }

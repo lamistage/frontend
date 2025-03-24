@@ -1,125 +1,146 @@
 <mat-toolbar>
-    <span class="pm-label">pm</span>
-    <button class="burger-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icon-button with a menu">
-        <mat-icon>menu</mat-icon>
+  <span class="pm-label">pm</span>
+  <div class="menu-container">
+    <button class="burger-button" (click)="toggleMenu()">
+      <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item [routerLink]="['/profile']">
-            <mat-icon>person</mat-icon>
-            <span>profile</span>
-        </button>
-        <button mat-menu-item [routerLink]="['/gallery']">
-            <mat-icon>photo_library</mat-icon>
-            <span>gallery</span>
-        </button>
-        <button mat-menu-item [routerLink]="['/add-image']">
-            <mat-icon>add_to_photos</mat-icon>
-            <span>add-image</span>
-        </button>
-        <button mat-menu-item (click)="logout()">
-            <mat-icon>exit_to_app</mat-icon>
-            <span>logout</span>
-        </button>
-    </mat-menu>
+    <div class="custom-menu" *ngIf="isMenuVisible" [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" (animationend)="onAnimationEnd($event)">
+      <button class="menu-item" [routerLink]="['/profile']">
+        <mat-icon class="color_pink icon-sm">person</mat-icon>
+        <span>profile</span>
+      </button>
+      <button class="menu-item" [routerLink]="['/gallery']">
+        <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
+        <span>gallery</span>
+      </button>
+      <button class="menu-item" [routerLink]="['/add-image']">
+        <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
+        <span>add-image</span>
+      </button>
+      <button class="menu-item" (click)="logout()">
+        <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
+        <span>logout</span>
+      </button>
+    </div>
+  </div>
 </mat-toolbar>
 
 <h1>Gallery</h1>
+<p>Welcome to the image gallery! Here, you can explore a wide collection of images uploaded by all users. Use the filtering and sorting options below to find exactly what you're looking for.</p>
 
 <div class="container">
-    <div class="search-items">
-        <div class="search-item">
-            <mat-form-field class="tag-list">
-                <mat-label>tags</mat-label>
-                <mat-chip-grid #tagChipGrid aria-label="Enter tags">
-                    @for (tag of tags(); track tag) {
-                        <mat-chip-row
-                            (removed)="remove_tag(tag)"
-                            [editable]="true"
-                            (edited)="edit_tag(tag, $event)"
-                            [aria-description]="'press enter to edit ' + tag.name"
-                        >
-                        {{tag.name}}
-                        <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
-                        <mat-icon>cancel</mat-icon>
-                        </button>
-                    </mat-chip-row>
-                    }
-                    <input
-                    placeholder="new tag..."
-                    [formControl]="tagCtrl"
-                    [matChipInputFor]="tagChipGrid"
-                    [matAutocomplete]="tagAuto"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="add_tag($event)"
-                    />  
-                </mat-chip-grid>
-                <mat-autocomplete #tagAuto="matAutocomplete" (optionSelected)="selectedTag($event)">
-                    @for (tag of filteredTags | async; track tag) {
-                        <mat-option [value]="tag.name">{{tag.name}}</mat-option>
-                    }
-                </mat-autocomplete>
-            </mat-form-field>
+  <div class="search-items">
+    <div class="search-item">
+      <div class="tag-input-container">
+        <div class="custom-chip-set">
+          @for (tag of tags(); track tag) {
+            <div class="custom-chip">
+              <span>{{tag.name}}</span>
+              <button class="remove-chip-btn" (click)="remove_tag(tag)">
+                <mat-icon class="color_pink icon-sm">clear</mat-icon>
+              </button>
+            </div>
+          }
         </div>
-
-        <div class="search-item">
-            <mat-form-field class="user-list">
-                <mat-label>users</mat-label>
-                <mat-chip-grid #userChipGrid aria-label="Enter users">
-                    @for (user of users(); track user) {
-                        <mat-chip-row
-                            (removed)="remove_user(user)"
-                            [editable]="true"
-                            (edited)="edit_user(user, $event)"
-                            [aria-description]="'press enter to edit ' + user.login"
-                        >
-                        {{user.login}}
-                        <button matChipRemove [attr.aria-label]="'remove ' + user.login">
-                            <mat-icon>cancel</mat-icon>
-                        </button>
-                    </mat-chip-row>
-                    }
-                    <input
-                    placeholder="new user..."
-                    [formControl]="userCtrl"
-                    [matChipInputFor]="userChipGrid"
-                    [matAutocomplete]="userAuto"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="add_user($event)"
-                    />  
-                </mat-chip-grid>
-                <mat-autocomplete #userAuto="matAutocomplete" (optionSelected)="selectedUser($event)">
-                    @for (user of filteredUsers | async; track user) {
-                        <mat-option [value]="user.login">{{user.login}}</mat-option>
-                    }
-                </mat-autocomplete>
-            </mat-form-field>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="new tag..."
+            (keyup.enter)="addTagFromInput($event)"
+            (input)="filterTags($event)"
+            #tagInput
+          >
+          @if (filteredTags.length > 0) {
+            <div class="autocomplete-dropdown">
+              @for (tag of filteredTags; track tag) {
+                <div class="autocomplete-item" (click)="selectTag(tag)">
+                  {{tag.name}}
+                </div>
+              }
+            </div>
+          }
         </div>
-
-        <div class="search-item">
-            <mat-form-field>
-                <mat-label>sorting order</mat-label>
-                <mat-select [(value)]="selectedSort">
-                    @for (sortType of sortTypes; track sortType) {
-                        <mat-option [value]="sortType.value">{{sortType.viewValue}}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div class="search-item search-button">
-            <button (click)="loadImages()">
-                <mat-icon>search</mat-icon>
-            </button>
-        </div>
+      </div>
     </div>
 
-    <div class="gallery">
-        <p *ngIf="isLoading()">loading..</p>
-
-        @for (publication of images(); track publication) {
-            <app-publication [publication]="publication"></app-publication>
-        }
+    <div class="search-item">
+      <div class="user-input-container">
+        <div class="custom-chip-set">
+          @for (user of users(); track user) {
+            <div class="custom-chip">
+              <span>{{user.login}}</span>
+              <button class="remove-chip-btn" (click)="remove_user(user)">
+                <mat-icon class="color_pink icon-sm">clear</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="new user..."
+            (keyup.enter)="addUserFromInput($event)"
+            (input)="filterUsers($event)"
+            #userInput
+          >
+          @if (filteredUsers.length > 0) {
+            <div class="autocomplete-dropdown">
+              @for (user of filteredUsers; track user) {
+                <div class="autocomplete-item" (click)="selectUser(user)">
+                  {{user.login}}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
+
+    <div class="search-item">
+      <div class="sort-container">
+        <label class="sort-label">sorting order</label>
+        <div class="sort-wrapper">
+          <button class="sort-button" (click)="toggleSortDropdown()">
+            <span>{{ getSelectedSortLabel() }}</span>
+            <mat-icon class="sort-icon color_pink icon-sm">{{ isSortOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+          @if (isSortOpen) {
+            <div class="sort-dropdown">
+              @for (sortType of sortTypes; track sortType) {
+                <div
+                  class="sort-option"
+                  (click)="selectSort(sortType.value)"
+                >
+                  {{ sortType.viewValue }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="search-item search-button">
+      <button (click)="loadImages()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="gallery">
+    <p *ngIf="isLoading()">loading..</p>
+    @for (publication of images(); track publication) {
+      <app-publication [publication]="publication"></app-publication>
+    }
+  </div>
+
+  <div class="pagination">
+    <button (click)="goToPreviousPage()" [disabled]="currentPage() === 0">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <span>page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+    <button (click)="goToNextPage()" [disabled]="currentPage() === totalPages() - 1">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
 </div>

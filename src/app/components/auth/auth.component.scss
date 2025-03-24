@@ -42,6 +42,7 @@
     border-radius: 20px;
     font-size: 16px;
     font-family: 'Geologica-Regular', sans-serif;
+    color:#ffa7b5;
   }
   
   .sign-in-form input::placeholder {
@@ -66,12 +67,19 @@
     cursor: pointer;
     font-family: 'neoda', sans-serif;
     margin-top: 20px;
+
+    &:hover {
+      background-color: #ffa7b5;
+    }
+
+    &:disabled {
+      background-color: #ffdbe1; 
+      color: #fff; 
+      cursor: not-allowed; 
+      opacity: 0.7; 
+    }
   }
   
-  .sign-in-form button:hover {
-    background-color: #ffa7b6;
-  }
-
   .sign-in-form form {
     display: flex;
     flex-direction: column;
@@ -113,10 +121,10 @@
     font-size: 18px;
     cursor: pointer;
     font-family: 'neoda', sans-serif;
-  }
-  
-  .sign-up-screen button:hover {
-    background-color: #ffa7b6;
+
+    &:hover {
+      background-color: #ffa7b5;
+    }
   }
   
   .error {
@@ -206,6 +214,7 @@
     border-radius: 20px;
     font-size: 16px;
     font-family: 'Geologica-Regular', sans-serif;
+    color:#ffa7b5;
   }
   
   .sign-up-form input::placeholder {
@@ -230,6 +239,17 @@
     cursor: pointer;
     font-family: 'neoda', sans-serif;
     margin-top: 20px;
+
+    &:hover {
+      background-color: #ffa7b5;
+    }
+
+    &:disabled {
+      background-color: #ffdbdf; 
+      opacity: 60%;
+      color: #fff;
+      cursor: not-allowed;
+    }
   }
 
   .sign-up-form form {
@@ -273,10 +293,10 @@
     font-size: 18px;
     cursor: pointer;
     font-family: 'neoda', sans-serif;
-  }
-  
-  .sign-in-screen button:hover {
-    background-color: #ffa7b6;
+
+    &:hover {
+      background-color: #ffa7b5;
+    }
   }
   
   .error {
@@ -336,4 +356,12 @@
 
 .auth-container.active .sign-up-form {
   display: block;
+}
+
+.error-message {
+  font-family: 'Geologica-Regular', sans-serif;
+  color: #ff6b81;
+  font-size: 14px;
+  margin: 5px;
+  text-align: center;
 }

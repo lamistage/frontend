@@ -1,34 +1,32 @@
 <div class="add-image-page">
-    <mat-toolbar>
-        <span class="pm-label">pm</span>
-        <button class="burger-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icon-button with a menu">
-            <mat-icon>menu</mat-icon>
+  <mat-toolbar>
+    <span class="pm-label">pm</span>
+    <div class="menu-container">
+      <button class="burger-button" (click)="toggleMenu()">
+        <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+      </button>
+      <div class="custom-menu" *ngIf="isMenuVisible" [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" (animationend)="onAnimationEnd($event)">
+        <button class="menu-item" [routerLink]="['/profile']">
+          <mat-icon class="color_pink icon-sm">person</mat-icon>
+          <span>profile</span>
         </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item [routerLink]="['/profile']">
-                <mat-icon>person</mat-icon>
-                <span>profile</span>
-            </button>
-            <button mat-menu-item [routerLink]="['/gallery']">
-                <mat-icon>photo_library</mat-icon>
-                <span>gallery</span>
-            </button>
-            <button mat-menu-item [routerLink]="['/add-image']">
-                <mat-icon>add_to_photos</mat-icon>
-                <span>add-image</span>
-            </button>
-            <button mat-menu-item (click)="logout()">
-                <mat-icon>exit_to_app</mat-icon>
-                <span>logout</span>
-            </button>
-        </mat-menu>
-    </mat-toolbar>
+        <button class="menu-item" [routerLink]="['/gallery']">
+          <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
+          <span>gallery</span>
+        </button>
+        <button class="menu-item" [routerLink]="['/add-image']">
+          <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
+          <span>add-image</span>
+        </button>
+        <button class="menu-item" (click)="logout()">
+          <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
+          <span>logout</span>
+        </button>
+      </div>
+    </div>
+  </mat-toolbar>
 
     <h1>Upload Your Photo</h1>
-    
-    <!-- <div class="file-selector">
-        <input type="file" (change)="onFileSelected($event)">
-    </div> -->
 
     <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
         <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
@@ -45,38 +43,36 @@
         </button>
     </div>
 
-    <mat-form-field class="tag-input">
-        <mat-label>tags</mat-label>
-        <mat-chip-grid #chipGrid aria-label="Enter tags">
-            @for (tag of tags(); track tag) {
-            <mat-chip-row
-                (removed)="remove(tag)"
-                [editable]="true"
-                (edited)="edit(tag, $event)"
-                [aria-description]="'press enter to edit ' + tag.name"
-            >
-                {{tag.name}}
-                <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
-                    <mat-icon>cancel</mat-icon>
-                </button>
-            </mat-chip-row>
-            }
-            <input
+    <div class="tag-input-container">
+        <div class="custom-chip-set">
+          @for (tag of tags(); track tag) {
+            <div class="custom-chip">
+              <span>{{tag.name}}</span>
+              <button class="remove-chip-btn" (click)="remove(tag)">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+        <div class="input-wrapper">
+          <input
+            type="text"
             placeholder="new tag..."
-            [formControl]="tagCtrl"
-            [matChipInputFor]="chipGrid"
-            [matAutocomplete]="auto"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            [matChipInputAddOnBlur]="addOnBlur"
-            (matChipInputTokenEnd)="add($event)"
-            />
-        </mat-chip-grid>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            @for (tag of filteredTags | async; track tag) {
-                <mat-option [value]="tag.name">{{tag.name}}</mat-option>
-            }
-        </mat-autocomplete>
-    </mat-form-field>
+            (keyup.enter)="addTagFromInput($event)"
+            (input)="filterTags($event)"
+            #tagInput
+          >
+          @if (filteredTags.length > 0) {
+            <div class="autocomplete-dropdown">
+              @for (tag of filteredTags; track tag) {
+                <div class="autocomplete-item" (click)="selectTag(tag)">
+                  {{tag.name}}
+                </div>
+              }
+            </div>
+          }
+        </div>
+    </div>
 
     <button class="add-image-button" mat-flat-button (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
 
