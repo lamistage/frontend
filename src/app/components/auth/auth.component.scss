@@ -5,71 +5,76 @@
   width: 100vw;
   font-family: 'Geologica-Regular', sans-serif;
 
-  .left-side, .right-side {
+  .left-side,
+  .right-side {
     width: 50%;
     height: 100vh;
   }
-}
 
-.auth-container-sign-in {
-  
-  .left-side {
-    background-color: white; 
-  }
-  
-  .right-side {
-    background-color: #ffc0cb; 
-  }
-  
-  .sign-in-form {
+  .sign-in-form,
+  .sign-up-form,
+  .sign-in-screen,
+  .sign-up-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
     width: 100%;
-    color: #ffc0cb; 
+    color: #ffc0cb;
+    font-family: 'Geologica-Regular', sans-serif;
   }
-  
-  .sign-in-form h2 {
+
+  .sign-in-form h2,
+  .sign-up-form h2,
+  .sign-in-screen h2,
+  .sign-up-screen h2 {
     font-size: 40px;
     font-family: 'neoda', sans-serif;
     margin-bottom: 40px;
   }
-  
-  .sign-in-form input {
+
+  .sign-in-form input,
+  .sign-up-form input {
     width: 50%;
     max-width: 300px;
     height: 40px;
-    padding: 0px 20px;
+    padding: 0 20px;
     border: 1px solid #ffd9df;
     border-radius: 20px;
     font-size: 16px;
     font-family: 'Geologica-Regular', sans-serif;
-    color:#ffa7b5;
+    color: #ffa7b5;
+
+    &::placeholder {
+      color: #ffc0cb;
+    }
+
+    &:focus {
+      outline: none;
+      border: 2px solid #ffc0cb;
+      box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+      transition: all 0.3s ease;
+    }
   }
-  
-  .sign-in-form input::placeholder {
-    color: #ffc0cb;
-  }
-  
-  .sign-in-form input:focus {
-    outline: none;
-    border: 2px solid #ffc0cb;
-    box-shadow: 0px 0px 10px rgba(255, 192, 203, 0.5);
-    transition: all 0.3s ease;
-  }
-  
-  .sign-in-form button {
+
+  .sign-in-form button,
+  .sign-up-form button,
+  .sign-in-screen button,
+  .sign-up-screen button {
     width: 180px;
     height: 40px;
-    background-color: #ffc0cb;
-    color: white;
     border: none;
     border-radius: 20px;
     font-size: 18px;
     cursor: pointer;
     font-family: 'neoda', sans-serif;
+  }
+
+  .sign-in-form button,
+  .sign-up-form button {
+    background-color: #ffc0cb;
+    color: white;
     margin-top: 20px;
 
     &:hover {
@@ -77,36 +82,32 @@
     }
 
     &:disabled {
-      background-color: #ffdbe1; 
-      color: #fff; 
-      cursor: not-allowed; 
-      opacity: 0.7; 
+      background-color: #ffdbdf;
+      color: #fff;
+      cursor: not-allowed;
+      opacity: 0.6;
     }
   }
-  
-  .sign-in-form form {
+
+  .sign-in-screen button,
+  .sign-up-screen button {
+    background-color: white;
+    color: #ffc0cb;
+
+    &:hover {
+      background-color: #fff2f4;
+    }
+  }
+
+  .sign-in-form form,
+  .sign-up-form form {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
   }
-  
-  .sign-up-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    height: 100%;
-    font-family: 'Geologica-Regular', sans-serif;
-  }
-  
-  .sign-up-screen h2 {
-    font-size: 40px;
-    font-family: 'neoda', sans-serif;
-    margin-bottom: 20px;
-  }
-  
+
+  .sign-in-screen p,
   .sign-up-screen p {
     font-size: 16px;
     text-align: center;
@@ -114,43 +115,15 @@
     max-width: 500px;
     margin-bottom: 30px;
   }
-  
-  .sign-up-screen button {
-    width: 180px;
-    height: 40px;
-    background-color: white;
-    color: #ffc0cb;
-    border: none;
-    border-radius: 20px;
-    font-size: 18px;
-    cursor: pointer;
-    font-family: 'neoda', sans-serif;
 
-    &:hover {
-      background-color: #ffa7b5;
-    }
-  }
-  
   .error {
     color: #ff8da1;
     font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0;
     animation: fadeIn 0.5s ease-in-out;
     font-family: 'Geologica-Regular', sans-serif;
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+
   .input-container {
     display: flex;
     flex-direction: column;
@@ -158,12 +131,12 @@
     width: 100%;
     margin-bottom: 10px;
     position: relative;
+
+    input {
+      margin-bottom: 5px;
+    }
   }
-  
-  .input-container input {
-    margin-bottom: 5px;
-  }
-  
+
   .input-hint {
     font-size: 12px;
     color: #ffc0cb;
@@ -171,186 +144,51 @@
     width: 80%;
     margin-bottom: 20px;
     font-family: 'Geologica-Regular', sans-serif;
+  }
+}
+
+.auth-container-sign-in {
+  .left-side {
+    background-color: white;
+  }
+
+  .right-side {
+    background-color: #ffc0cb;
+  }
+
+  .sign-up-screen {
+    color: white;
   }
 }
 
 .auth-container-sign-up {
-  
   .left-side {
-    background-color: #ffc0cb; 
-  }
-  
-  .right-side {
-    background-color: white; 
-  }
-  
-  .sign-up-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    color: #ffc0cb;
-  }
-  
-  .sign-up-form h2 {
-    font-size: 40px;
-    font-family: 'neoda', sans-serif;
-    margin-bottom: 30px;
-  }
-  
-  .sign-up-form input {
-    width: 50%;
-    max-width: 300px;
-    height: 40px;
-    padding: 0px 20px;
-    border: 1px solid #ffd9df;
-    border-radius: 20px;
-    font-size: 16px;
-    font-family: 'Geologica-Regular', sans-serif;
-    color:#ffa7b5;
-  }
-  
-  .sign-up-form input::placeholder {
-    color: #ffc0cb;
-  }
-  
-  .sign-up-form input:focus {
-    outline: none;
-    border: 2px solid #ffc0cb;
-    box-shadow: 0px 0px 10px rgba(255, 192, 203, 0.5);
-    transition: all 0.3s ease;
-  }
-  
-  .sign-up-form button {
-    width: 180px;
-    height: 40px;
     background-color: #ffc0cb;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-size: 18px;
-    cursor: pointer;
-    font-family: 'neoda', sans-serif;
-    margin-top: 20px;
-
-    &:hover {
-      background-color: #ffa7b5;
-    }
-
-    &:disabled {
-      background-color: #ffdbdf; 
-      opacity: 60%;
-      color: #fff;
-      cursor: not-allowed;
-    }
   }
 
-  .sign-up-form form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  .right-side {
+    background-color: white;
   }
-  
+
   .sign-in-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white; 
-    height: 100%;
-    font-family: 'Geologica-Regular', sans-serif;
+    color: white;
   }
-  
-  .sign-in-screen h2 {
-    font-size: 40px;
-    font-family: 'neoda', sans-serif;
-    margin-bottom: 20px;
-  }
-  
-  .sign-in-screen p {
-    font-size: 16px;
-    text-align: center;
-    width: 80%;
-    max-width: 500px;
+
+  .sign-up-form h2 {
     margin-bottom: 30px;
   }
-  
-  .sign-in-screen button {
-    width: 180px;
-    height: 40px;
-    background-color: white; 
-    color: #ffc0cb;
-    border: none;
-    border-radius: 20px;
-    font-size: 18px;
-    cursor: pointer;
-    font-family: 'neoda', sans-serif;
-
-    &:hover {
-      background-color: #ffa7b5;
-    }
-  }
-  
-  .error {
-    color: #ff8da1;
-    font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    animation: fadeIn 0.5s ease-in-out;
-    font-family: 'Geologica-Regular', sans-serif;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-    position: relative;
-  }
-  
-  .input-container input {
-    margin-bottom: 5px;
-  }
-  
-  .input-hint {
-    font-size: 12px;
-    color: #ffc0cb;
-    text-align: center;
-    width: 80%;
-    margin-bottom: 20px;
-    font-family: 'Geologica-Regular', sans-serif;
-  }
 }
 
-.auth-container.active .sign-in-form {
-  display: none;
-}
+.auth-container.active {
+  .sign-in-form,
+  .sign-in-screen {
+    display: none;
+  }
 
-.auth-container.active .sign-up-screen {
-  display: block;
-}
-
-.auth-container.active .sign-in-screen {
-  display: none;
-}
-
-.auth-container.active .sign-up-form {
-  display: block;
+  .sign-up-screen,
+  .sign-up-form {
+    display: block;
+  }
 }
 
 .error-message {
@@ -361,40 +199,56 @@
   text-align: center;
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+/* Анимация */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  .auth-container-sign-in {
-    
-    .sign-in-form h2 {
+@media (min-width: 768px) and (max-width: 991px) {
+  .auth-container-sign-in,
+  .auth-container-sign-up {
+    .sign-in-form h2,
+    .sign-up-form h2 {
       font-size: 40px;
       margin-bottom: 40px;
     }
-    
-    .sign-in-form input {
-      width: 50%;
+
+    .sign-in-form input,
+    .sign-up-form input {
       max-width: 240px;
       height: 34px;
       font-size: 16px;
     }
 
-    .sign-in-form button {
+    .sign-in-form button,
+    .sign-up-form button {
       width: 180px;
       height: 34px;
       font-size: 16px;
       margin-top: 18px;
     }
-    
+
+    .sign-in-screen h2,
     .sign-up-screen h2 {
       font-size: 40px;
       margin-bottom: 20px;
     }
-    
+
+    .sign-in-screen p,
     .sign-up-screen p {
       font-size: 16px;
       width: 70%;
       max-width: 300px;
     }
-    
+
+    .sign-in-screen button,
     .sign-up-screen button {
       width: 180px;
       height: 34px;
@@ -403,6 +257,12 @@
 
     .error {
       font-size: 10px;
+    }
+
+    .input-hint {
+      font-size: 12px;
+      width: 80%;
+      margin-bottom: 10px;
     }
   }
 
@@ -411,51 +271,8 @@
   }
 
   .auth-container-sign-up {
-    
-    .sign-up-form h2 {
-      font-size: 40px;
-      margin-bottom: 30px;
-    }
-    
-    .sign-up-form input {
-      width: 50%;
-      max-width: 240px;
-      height: 34px;
-      font-size: 16px;
-    }
-    
-    .sign-up-form button {
-      width: 180px;
-      height: 34px;
-      font-size: 16px;
-      margin-top: 18px;
-    }
-    
     .sign-in-screen h2 {
       font-size: 36px;
-      margin-bottom: 20px;
-    }
-    
-    .sign-in-screen p {
-      font-size: 16px;
-      width: 70%;
-      max-width: 300px;
-    }
-    
-    .sign-in-screen button {
-      width: 180px;
-      height: 34px;
-      font-size: 16px;
-    }
-
-    .error {
-      font-size: 10px;
-    }
-
-    .input-hint {
-      font-size: 12px;
-      width: 80%;
-      margin-bottom: 10px;
     }
   }
 }
@@ -463,99 +280,48 @@
 @media (max-width: 767px) {
   .auth-container-sign-in,
   .auth-container-sign-up {
-    flex-direction: column; 
+    flex-direction: column;
     height: 100vh;
     width: 100vw;
-  }
 
-  .auth-container-sign-in .left-side,
-  .auth-container-sign-in .right-side,
-  .auth-container-sign-up .left-side,
-  .auth-container-sign-up .right-side {
-    width: 100%; 
-    height: 50vh; 
-  }
-
-  .auth-container-sign-in {
-    
-    .sign-in-form h2 {
-      font-size: 6.4vw;
-      margin-bottom: 30px;
-    }
-    
-    .sign-in-form input {
-      width: 50%;
-      max-width: 240px;
-      height: 30px;
-      font-size: 16px;
+    .left-side,
+    .right-side {
+      width: 100%;
+      height: 50vh;
     }
 
-    .sign-in-form button {
-      width: 140px;
-      height: 30px;
-      font-size: 16px;
-      margin-top: 14px;
-    }
-    
+    .sign-in-form h2,
+    .sign-up-form h2,
+    .sign-in-screen h2,
     .sign-up-screen h2 {
       font-size: 6.4vw;
-      margin-bottom: 20px;
-    }
-    
-    .sign-up-screen p {
-      font-size: 2.6vw;
-      width: 70%;
-      max-width: 300px;
-    }
-    
-    .sign-up-screen button {
-      width: 140px;
-      height: 30px;
-      font-size: 16px;
-    }
-
-    .error {
-      font-size: 10px;
-    }
-  }
-
-  .error-message {
-    font-size: 2.4vw;
-  }
-
-  .auth-container-sign-up {
-    
-    .sign-up-form h2 {
-      font-size: 6.4vw;
       margin-bottom: 30px;
     }
-    
+
+    .sign-in-form input,
     .sign-up-form input {
-      width: 50%;
       max-width: 240px;
       height: 30px;
       font-size: 16px;
     }
-    
+
+    .sign-in-form button,
     .sign-up-form button {
       width: 140px;
       height: 30px;
       font-size: 16px;
       margin-top: 16px;
     }
-    
-    .sign-in-screen h2 {
-      font-size: 6.4vw;
-      margin-bottom: 20px;
-    }
-    
-    .sign-in-screen p {
+
+    .sign-in-screen p,
+    .sign-up-screen p {
       font-size: 14px;
       width: 70%;
       max-width: 300px;
     }
-    
-    .sign-in-screen button {
+
+    .sign-in-screen button,
+    .sign-up-screen button {
       width: 140px;
       height: 30px;
       font-size: 16px;
@@ -571,104 +337,69 @@
       margin-bottom: 10px;
     }
   }
+
+  .error-message {
+    font-size: 2.4vw;
+  }
+
+  .auth-container-sign-in {
+    .sign-up-screen p {
+      font-size: 2.6vw;
+    }
+  }
+
+  .auth-container-sign-up {
+    .sign-in-screen p {
+      font-size: 14px;
+    }
+  }
 }
 
 @media (max-width: 480px) {
   .auth-container-sign-in,
   .auth-container-sign-up {
-    flex-direction: column; 
+    flex-direction: column;
     height: 100vh;
     width: 100vw;
-  }
 
-  .auth-container-sign-in .left-side,
-  .auth-container-sign-in .right-side,
-  .auth-container-sign-up .left-side,
-  .auth-container-sign-up .right-side {
-    width: 100%; 
-    height: 50vh; 
-  }
-
-  .auth-container-sign-in {
-    
-    .sign-in-form h2 {
-      font-size: 8vw;
-      margin-bottom: 30px;
-    }
-    
-    .sign-in-form input {
-      width: 50%;
-      max-width: 180px;
-      height: 30px;
-      font-size: 14px;
+    .left-side,
+    .right-side {
+      width: 100%;
+      height: 50vh;
     }
 
-    .sign-in-form button {
-      width: 120px;
-      height: 30px;
-      font-size: 14px;
-      margin-top: 16px;
-    }
-    
+    .sign-in-form h2,
+    .sign-up-form h2,
+    .sign-in-screen h2,
     .sign-up-screen h2 {
       font-size: 8vw;
-      margin-bottom: 20px;
-    }
-    
-    .sign-up-screen p {
-      font-size: 3.2vw;
-      width: 70%;
-      max-width: 300px;
-    }
-    
-    .sign-up-screen button {
-      width: 120px;
-      height: 30px;
-      font-size: 14px;
-    }
-
-    .error {
-      font-size: 10px;
-    }
-  }
-
-  .error-message {
-    font-size: 3.2vw;
-  }
-
-  .auth-container-sign-up {
-    
-    .sign-up-form h2 {
-      font-size: 8vw;
       margin-bottom: 30px;
     }
-    
+
+    .sign-in-form input,
     .sign-up-form input {
-      width: 50%;
       max-width: 180px;
       height: 30px;
       font-size: 14px;
     }
-    
+
+    .sign-in-form button,
     .sign-up-form button {
       width: 120px;
       height: 30px;
       font-size: 14px;
       margin-top: 16px;
     }
-    
-    .sign-in-screen h2 {
-      font-size: 8vw;
-      margin-bottom: 20px;
-    }
-    
-    .sign-in-screen p {
+
+    .sign-in-screen p,
+    .sign-up-screen p {
       font-size: 3.2vw;
       width: 70%;
       max-width: 300px;
     }
-    
-    .sign-in-screen button {
+
+    .sign-in-screen button,
+    .sign-up-screen button {
       width: 120px;
       height: 30px;
       font-size: 14px;
@@ -683,5 +414,9 @@
       width: 80%;
       margin-bottom: 10px;
     }
+  }
+
+  .error-message {
+    font-size: 3.2vw;
   }
 }
