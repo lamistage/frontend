@@ -1,21 +1,21 @@
 <div class="publication-container">
-    <div class="header">
-      <span class="user-login">{{ publication.user.login }}</span>
-      <div class="button-group">
-        <button mat-icon-button class="copy-btn" (click)="copyImage()">
-          <mat-icon class="material-icons color_pink">content_copy</mat-icon>
+  <div class="header">
+    <span class="user-login">{{ publication.user.login }}</span>
+    <div class="button-group">
+      <button mat-icon-button class="copy-btn" (click)="copyImage()">
+        <mat-icon class="material-icons color_pink">content_copy</mat-icon>
+      </button>
+      <ng-container *ngIf="isProfilePage">
+        <button mat-icon-button class="edit-btn" (click)="startEditing()" *ngIf="!isEditing()">
+          <mat-icon class="material-icons color_pink">edit</mat-icon>
         </button>
-        <ng-container *ngIf="isProfilePage">
-          <button mat-icon-button class="edit-btn" (click)="startEditing()" *ngIf="!isEditing()">
-            <mat-icon class="material-icons color_pink">edit</mat-icon>
-          </button>
-          <button mat-icon-button class="delete-btn" (click)="deletePublication()">
-            <mat-icon class="material-icons color_pink">delete</mat-icon>
-          </button>
-        </ng-container>
-      </div>
+        <button mat-icon-button class="delete-btn" (click)="deletePublication()">
+          <mat-icon class="material-icons color_pink">delete</mat-icon>
+        </button>
+      </ng-container>
     </div>
-  
+  </div>
+
   <div class="image-container" *ngIf="imageLoaded && publication.filePath">
     <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
   </div>
@@ -23,7 +23,7 @@
   <div class="image-container" *ngIf="!imageLoaded">
     <p>Loading image...</p>
   </div>
-  
+
   <div class="tags-container">
     @if (!isEditing()) {
       <div class="custom-chip-set">
@@ -47,16 +47,27 @@
         }
       </div>
       <div class="tag-input-container">
-        <input
-          type="text"
-          placeholder="new tag.."
-          (keyup.enter)="addTagFromInput($event)"
-          #tagInput
-        >
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="new tag.."
+            (keyup.enter)="addTagFromInput($event)"
+            (input)="filterTags($event)"
+            #tagInput
+          >
+          @if (filteredTags.length > 0) {
+            <div class="autocomplete-dropdown">
+              @for (tag of filteredTags; track tag) {
+                <div class="autocomplete-item" (click)="selectTag(tag)">
+                  {{tag.name}}
+                </div>
+              }
+            </div>
+          }
+        </div>
         <div class="error-message" *ngIf="editableTags().length === 0">add at least one tag</div>
       </div>
       <button class="save-btn" (click)="saveTags()" [disabled]="editableTags().length === 0">ok</button>
     }
   </div>
 </div>
-  
