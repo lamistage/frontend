@@ -1,3 +1,12 @@
+$primary-pink: #ffa7b5;
+$hover-pink: #ff8fa3;
+$light-pink: #ffc1cb;
+$border-pink: #ffdbe1;
+$background-hover: #fff6f7;
+$disabled-pink: #ffdbdf;
+$font-primary: 'Geologica-Regular', sans-serif;
+$font-secondary: 'neoda', sans-serif;
+
 mat-toolbar {
   background: transparent;
   display: flex;
@@ -9,8 +18,8 @@ mat-toolbar {
 
 .pm-label {
   margin-left: 10vw;
-  font-family: 'neoda', sans-serif;
-  color: #ffa7b5;
+  font-family: $font-secondary;
+  color: $primary-pink;
   font-size: 2.4vw;
 }
 
@@ -29,10 +38,10 @@ mat-toolbar {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
 
-.burger-button:hover {
-  border-color: #ffa7b5;
+  &:hover {
+    border-color: $primary-pink;
+  }
 }
 
 .icon-md {
@@ -47,7 +56,7 @@ mat-toolbar {
   top: 100%;
   right: 0;
   background-color: #fff;
-  border: 1px solid #ffdbe1;
+  border: 1px solid $border-pink;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 4px;
@@ -91,8 +100,8 @@ mat-toolbar {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ffa7b5;
-  font-family: 'Geologica-Regular', sans-serif;
+  color: $primary-pink;
+  font-family: $font-primary;
   font-size: 16px;
   padding: 8px 16px;
   background: none;
@@ -100,58 +109,35 @@ mat-toolbar {
   width: 100%;
   text-align: left;
   cursor: pointer;
-}
 
-.menu-item:hover {
-  background-color: #fff6f7;
-  color: #ff8fa3;
+  &:hover {
+    background-color: $background-hover;
+    color: $hover-pink;
+  }
 }
 
 h1 {
-  font-family: 'neoda', sans-serif;
-  color: #ffa7b5;
+  font-family: $font-secondary;
+  color: $primary-pink;
   text-align: center;
   font-size: 3vw;
   margin-bottom: 40px;
 }
 
 p {
-  font-family: 'Geologica-Regular', sans-serif;
-  color: #ffc1cb;
+  font-family: $font-primary;
+  color: $light-pink;
   text-align: center;
   font-size: 16px;
-  margin: 40px 30vw 60px 30vw;
-}
-
-.add-image-page {
-  width: 100vw;
-  height: 100vh;
-  // background: radial-gradient(#ffffff, #FFDFE5);
-}
-
-.file-selector {
-  padding-bottom: 20px;
-}
-
-.tag-input {
-width: 60%;
-margin: auto;
-display: block;
-}
-
-img {
-margin-top: 10px;
-max-width: 100%;
-height: auto;
-border-radius: 5px;
+  margin: 40px 30vw 60px;
 }
 
 .color_pink {
-  color: #ffa7b5;
-}
+  color: $primary-pink;
 
-.color_pink:hover {
-  color: #ff8fa3;
+  &:hover {
+    color: $hover-pink;
+  }
 }
 
 .icon-sm {
@@ -168,43 +154,64 @@ border-radius: 5px;
   line-height: 30px;
 }
 
+.add-image-page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.file-selector {
+  padding-bottom: 20px;
+}
+
+.tag-input {
+  width: 60%;
+  margin: auto;
+  display: block;
+}
+
+img {
+  margin-top: 10px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
 .dropzone {
-  border: 1px dashed #ffc1cb; 
+  border: 1px dashed $light-pink;
   border-radius: 26px;
-  text-align: center;
   margin: 16px 25vw;
-  aspect-ratio: 7 / 3; 
+  aspect-ratio: 7 / 3;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   text-align: center;
-}
 
-.dropzone mat-icon {
-  font-size: 70px;
-  color: #ffc1cb; 
-  margin-bottom: 10px;
-  width: 70px;
-  height: 70px;
-}
+  mat-icon {
+    font-size: 70px;
+    color: $light-pink;
+    margin-bottom: 10px;
+    width: 70px;
+    height: 70px;
+  }
 
-.dropzone h3 {
-  font-family: 'Geologica-Regular', sans-serif;
-  font-weight: lighter;
-  color: #ffa7b5; 
-  font-size: 20px;
-  margin: 10px 0;
-}
+  h3 {
+    font-family: $font-primary;
+    font-weight: lighter;
+    color: $primary-pink;
+    font-size: 20px;
+    margin: 10px 0;
+  }
 
-.dropzone button {
-  margin-top: 10px;
-  background-color: #ffc1cb; 
-  font-size: 20px;
-  color: #ffffff;
-  font-family: 'Geologica-Regular', sans-serif;
-  padding: 0px 30px;
-  height: 30px;
+  button {
+    margin-top: 10px;
+    background-color: $light-pink;
+    font-size: 20px;
+    color: #ffffff;
+    font-family: $font-primary;
+    padding: 0 30px;
+    height: 30px;
+  }
 }
 
 .image-preview {
@@ -219,25 +226,25 @@ border-radius: 5px;
 
 .preview-image {
   max-width: 90%;
-  max-height: 60vh; 
+  max-height: 60vh;
   border-radius: 16px;
   object-fit: contain;
   display: inline-block;
 }
 
 .back-button {
-  position: absolute; 
-  left: -10px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-  color: #ffa7b5;
-}
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $primary-pink;
 
-.back-button mat-icon {
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 30px;
+  mat-icon {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 30px;
+  }
 }
 
 .tag-input-container {
@@ -247,6 +254,34 @@ border-radius: 5px;
   width: 50%;
   margin: 0 auto;
   box-sizing: border-box;
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid $border-pink;
+    border-radius: 20px;
+    font-family: $font-primary;
+    font-size: 18px;
+    background-color: #fff;
+    color: $primary-pink;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: $primary-pink;
+      font-family: $font-primary;
+      font-size: 18px;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-pink;
+      box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+    }
+  }
 }
 
 .custom-chip-set {
@@ -259,56 +294,28 @@ border-radius: 5px;
 .custom-chip {
   display: flex;
   align-items: center;
-  background-color: #ffc1cb;
+  background-color: $light-pink;
   color: #fff;
   border-radius: 20px;
   padding: 4px 10px;
   font-size: 18px;
-  font-family: 'Geologica-Regular', sans-serif;
-}
+  font-family: $font-primary;
 
-.custom-chip .remove-chip-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin-left: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
+  .remove-chip-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 
-.custom-chip .remove-chip-btn mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  color: #fff;
-}
-
-.tag-input-container .input-wrapper {
-  position: relative;
-}
-
-.tag-input-container input {
-  width: 100%;
-  padding: 6px 10px;
-  border: 1px solid #ffdbe1;
-  border-radius: 20px;
-  font-family: 'Geologica-Regular', sans-serif;
-  font-size: 18px;
-  background-color: #fff;
-  color: #ffa7b5;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: #ffa7b5;
-    font-family: 'Geologica-Regular', sans-serif;
-    font-size: 18px;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #ffa7b5;
-    box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #fff;
+    }
   }
 }
 
@@ -318,7 +325,7 @@ border-radius: 5px;
   left: 0;
   right: 0;
   background-color: #fff;
-  border: 1px solid #ffdbe1;
+  border: 1px solid $border-pink;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-height: 150px;
@@ -328,33 +335,32 @@ border-radius: 5px;
 
 .autocomplete-item {
   padding: 8px 10px;
-  font-family: 'Geologica-Regular', sans-serif;
+  font-family: $font-primary;
   font-size: 18px;
-  color: #ffa7b5;
+  color: $primary-pink;
   cursor: pointer;
-}
 
-.autocomplete-item:hover {
-  background-color: #fff6f7;
+  &:hover {
+    background-color: $background-hover;
+  }
 }
 
 .add-image-button {
   display: block;
-  margin: 40px auto;
-  background-color: #ffa7b5 !important;
-  color: #ffffff !important;
-  font-family: 'neoda', sans-serif;
+  margin: 40px auto 60px;
+  background-color: $primary-pink;
+  color: #ffffff;
+  font-family: $font-secondary;
   font-size: 18px;
-  padding: 0px 26px;
+  padding: 0 26px;
   height: 34px;
   border-radius: 20px;
-  margin-bottom: 60px;
-}
 
-.add-image-button[disabled] {
-  background-color: #ffdbdf !important;
-  opacity: 60%;
-  color: #fff !important;
+  &[disabled] {
+    background-color: $disabled-pink;
+    opacity: 0.6;
+    color: #fff;
+  }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -365,8 +371,6 @@ border-radius: 5px;
   .burger-button {
     width: 40px;
     height: 40px;
-    line-height: 40px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -378,44 +382,41 @@ border-radius: 5px;
 
   h1 {
     font-size: 4vw;
-    margin-top: 18px;
-    margin-bottom: 60px;
+    margin: 18px 0 60px;
   }
 
   .dropzone {
     margin: 20px 16vw;
-    border-radius: 26px;
-    margin-bottom: 30px;
-    aspect-ratio: 2 / 1; 
-  }
-  
-  .dropzone mat-icon {
-    margin-bottom: 0px;
-    width: 48px;
-    height: 48px;
-    font-size: 48px;
-  }
-  
-  .dropzone h3 {
-    font-size: clamp(18px, 1.6vw, 20px);
-    margin: 4px 0;
-  }
-  
-  .dropzone button {
-    font-size: clamp(18px, 1.6vw, 20px);
-    height: 20px;
-    padding: 0 20px;
-    height: 26px;
+    aspect-ratio: 2 / 1;
+
+    mat-icon {
+      margin-bottom: 0;
+      width: 48px;
+      height: 48px;
+      font-size: 48px;
+    }
+
+    h3 {
+      font-size: clamp(18px, 1.6vw, 20px);
+      margin: 4px 0;
+    }
+
+    button {
+      font-size: clamp(18px, 1.6vw, 20px);
+      padding: 0 20px;
+      height: 26px;
+    }
   }
 
-  .custom-chip {
+  .custom-chip,
+  .tag-input-container input,
+  .autocomplete-item {
     font-size: 18px;
   }
 
   .tag-input-container input {
-    font-size: 18px;
     padding: 4px 10px;
-  
+
     &::placeholder {
       font-size: 18px;
     }
@@ -423,12 +424,11 @@ border-radius: 5px;
 
   .autocomplete-item {
     padding: 6px 10px;
-    font-size: 18px;
   }
-  
+
   .add-image-button {
     font-size: clamp(16px, 1.5vw, 18px);
-    padding: 0px 28px;
+    padding: 0 28px;
     height: 32px;
   }
 }
@@ -441,8 +441,6 @@ border-radius: 5px;
   .burger-button {
     width: 40px;
     height: 40px;
-    line-height: 40px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -454,33 +452,31 @@ border-radius: 5px;
 
   h1 {
     font-size: 5vw;
-    margin-top: 14px;
-    margin-bottom: 60px;
+    margin: 14px 0 60px;
   }
 
   .dropzone {
     margin: 20px 16vw;
     border-radius: 20px;
-    aspect-ratio: 3 / 2; 
-  }
-  
-  .dropzone mat-icon {
-    margin-bottom: 0px;
-    width: 44px;
-    height: 44px;
-    font-size: 44px;
-  }
-  
-  .dropzone h3 {
-    font-size: clamp(16px, 1.8vw, 17px);
-    margin: 4px 0;
-  }
-  
-  .dropzone button {
-    font-size: clamp(16px, 1.8vw, 17px);
-    height: 20px;
-    padding: 0 20px;
-    height: 26px;
+    aspect-ratio: 3 / 2;
+
+    mat-icon {
+      margin-bottom: 0;
+      width: 44px;
+      height: 44px;
+      font-size: 44px;
+    }
+
+    h3 {
+      font-size: clamp(16px, 1.8vw, 17px);
+      margin: 4px 0;
+    }
+
+    button {
+      font-size: clamp(16px, 1.8vw, 17px);
+      padding: 0 20px;
+      height: 26px;
+    }
   }
 
   .back-button mat-icon {
@@ -490,14 +486,15 @@ border-radius: 5px;
     font-size: 26px;
   }
 
-  .custom-chip {
+  .custom-chip,
+  .tag-input-container input,
+  .autocomplete-item {
     font-size: 16px;
   }
 
   .tag-input-container input {
-    font-size: 16px;
     padding: 4px 10px;
-  
+
     &::placeholder {
       font-size: 16px;
     }
@@ -505,12 +502,11 @@ border-radius: 5px;
 
   .autocomplete-item {
     padding: 6px 10px;
-    font-size: 16px;
   }
-  
+
   .add-image-button {
     font-size: clamp(13px, 4vw, 15px);
-    padding: 0px 24px;
+    padding: 0 24px;
     height: 28px;
   }
 }
@@ -523,8 +519,6 @@ border-radius: 5px;
   .burger-button {
     width: 30px;
     height: 30px;
-    line-height: 30px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -536,35 +530,33 @@ border-radius: 5px;
 
   h1 {
     font-size: 5.6vw;
-    margin-top: 14px;
-    margin-bottom: 40px;
+    margin: 14px 0 40px;
   }
 
   .dropzone {
     margin: 20px 16vw;
     border-radius: 18px;
-    aspect-ratio: 4 / 3; 
+    aspect-ratio: 4 / 3;
+
+    mat-icon {
+      margin-bottom: 0;
+      width: 34px;
+      height: 34px;
+      font-size: 34px;
+    }
+
+    h3 {
+      font-size: clamp(14px, 2.2vw, 1rem);
+      margin: 2px 0;
+    }
+
+    button {
+      font-size: clamp(14px, 2.2vw, 1rem);
+      padding: 0 20px;
+      height: 22px;
+    }
   }
-  
-  .dropzone mat-icon {
-    margin-bottom: 0px;
-    width: 34px;
-    height: 34px;
-    font-size: 34px; 
-  }
-  
-  .dropzone h3 {
-    font-size: clamp(14px, 2.2vw, 1rem);
-    margin: 2px 0;
-  }
-  
-  .dropzone button {
-    font-size: clamp(14px, 2.2vw, 1rem);
-    height: 20px;
-    padding: 0 20px;
-    height: 22px;
-  }
-  
+
   .back-button mat-icon {
     width: 24px;
     height: 24px;
@@ -572,14 +564,15 @@ border-radius: 5px;
     font-size: 24px;
   }
 
-  .custom-chip {
+  .custom-chip,
+  .tag-input-container input,
+  .autocomplete-item {
     font-size: 14px;
   }
 
   .tag-input-container input {
-    font-size: 14px;
     padding: 4px 10px;
-  
+
     &::placeholder {
       font-size: 14px;
     }
@@ -587,12 +580,11 @@ border-radius: 5px;
 
   .autocomplete-item {
     padding: 6px 10px;
-    font-size: 14px;
   }
-  
+
   .add-image-button {
     font-size: clamp(13px, 4vw, 15px);
-    padding: 0px 20px;
+    padding: 0 20px;
     height: 26px;
   }
 }
@@ -605,8 +597,6 @@ border-radius: 5px;
   .burger-button {
     width: 30px;
     height: 30px;
-    line-height: 30px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -618,33 +608,22 @@ border-radius: 5px;
 
   h1 {
     font-size: 7vw;
-    margin-top: 14px;
-    margin-bottom: 30px;
+    margin: 14px 0 30px;
   }
 
   .dropzone {
     margin: 20px 10vw;
     border-radius: 16px;
-    aspect-ratio: 4 / 3; 
-  }
-  
-  .dropzone mat-icon {
-    margin-bottom: 0px;
-    width: 30px;
-    height: 30px;
-    font-size: 30px;
-  }
-  
-  .dropzone h3 {
-    font-size: clamp(12px, 2.8vw, 1rem);
-    margin: 2px 0;
-  }
-  
-  .dropzone button {
-    font-size: clamp(12px, 2.8vw, 2rem);
-    height: 20px;
-    padding: 0 20px;
-    height: 22px;
+
+    mat-icon {
+      width: 30px;
+      height: 30px;
+      font-size: 30px;
+    }
+
+    h3 {
+      font-size: clamp(12px, 2.8vw, 1rem);
+    }
   }
 
   .back-button mat-icon {
@@ -652,29 +631,5 @@ border-radius: 5px;
     height: 20px;
     line-height: 20px;
     font-size: 20px;
-  }
-
-  .custom-chip {
-    font-size: 14px;
-  }
-
-  .tag-input-container input {
-    font-size: 14px;
-    padding: 4px 10px;
-  
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-
-  .autocomplete-item {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-  
-  .add-image-button {
-    font-size: clamp(13px, 4vw, 15px);
-    padding: 0px 20px;
-    height: 26px;
   }
 }
