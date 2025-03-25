@@ -1,3 +1,11 @@
+$primary-pink: #ffa7b5;
+$hover-pink: #ff8fa3;
+$light-pink: #ffc1cb;
+$border-pink: #ffdbe1;
+$background-hover: #fff6f7;
+$font-primary: 'Geologica-Regular', sans-serif;
+$font-secondary: 'neoda', sans-serif;
+
 mat-toolbar {
   background: transparent;
   display: flex;
@@ -9,8 +17,8 @@ mat-toolbar {
 
 .pm-label {
   margin-left: 10vw;
-  font-family: 'neoda', sans-serif;
-  color: #ffa7b5;
+  font-family: $font-secondary;
+  color: $primary-pink;
   font-size: 2.4vw;
 }
 
@@ -29,10 +37,10 @@ mat-toolbar {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
 
-.burger-button:hover {
-  border-color: #ffa7b5;
+  &:hover {
+    border-color: $primary-pink;
+  }
 }
 
 .icon-md {
@@ -47,7 +55,7 @@ mat-toolbar {
   top: 100%;
   right: 0;
   background-color: #fff;
-  border: 1px solid #ffdbe1;
+  border: 1px solid $border-pink;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-top: 4px;
@@ -91,8 +99,8 @@ mat-toolbar {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ffa7b5;
-  font-family: 'Geologica-Regular', sans-serif;
+  color: $primary-pink;
+  font-family: $font-primary;
   font-size: 16px;
   padding: 8px 16px;
   background: none;
@@ -100,35 +108,35 @@ mat-toolbar {
   width: 100%;
   text-align: left;
   cursor: pointer;
-}
 
-.menu-item:hover {
-  background-color: #fff6f7;
-  color: #ff8fa3;
+  &:hover {
+    background-color: $background-hover;
+    color: $hover-pink;
+  }
 }
 
 h1 {
-  font-family: 'neoda', sans-serif;
-  color: #ffa7b5;
+  font-family: $font-secondary;
+  color: $primary-pink;
   text-align: center;
   font-size: 3.2vw;
   margin-bottom: 40px;
 }
 
 p {
-  font-family: 'Geologica-Regular', sans-serif;
-  color: #ffc1cb;
+  font-family: $font-primary;
+  color: $light-pink;
   text-align: center;
   font-size: 16px;
-  margin: 40px 30vw 60px 30vw;
+  margin: 40px 30vw 60px;
 }
 
 .color_pink {
-  color: #ffa7b5;
-}
+  color: $primary-pink;
 
-.color_pink:hover {
-  color: #ff8fa3;
+  &:hover {
+    color: $hover-pink;
+  }
 }
 
 .container {
@@ -146,6 +154,35 @@ p {
 .search-item {
   flex: 1;
   min-width: 0;
+
+  &.search-button {
+    flex: 0 0 auto;
+
+    button {
+      background-color: $primary-pink;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $hover-pink;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+  }
 }
 
 .tag-input-container,
@@ -155,6 +192,34 @@ p {
   gap: 8px;
   width: 100%;
   box-sizing: border-box;
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid $border-pink;
+    border-radius: 20px;
+    font-family: $font-primary;
+    font-size: 16px;
+    background-color: #fff;
+    color: $primary-pink;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: $primary-pink;
+      font-family: $font-primary;
+      font-size: 16px;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-pink;
+      box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+    }
+  }
 }
 
 .custom-chip-set {
@@ -166,58 +231,28 @@ p {
 .custom-chip {
   display: flex;
   align-items: center;
-  background-color: #ffc1cb;
+  background-color: $light-pink;
   color: #fff;
   border-radius: 20px;
   padding: 2px 10px;
   font-size: 16px;
-  font-family: 'Geologica-Regular', sans-serif;
-}
+  font-family: $font-primary;
 
-.custom-chip .remove-chip-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin-left: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
+  .remove-chip-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 
-.custom-chip .remove-chip-btn mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  color: #fff;
-}
-
-.tag-input-container .input-wrapper,
-.user-input-container .input-wrapper {
-  position: relative;
-}
-
-.tag-input-container input,
-.user-input-container input {
-  width: 100%;
-  padding: 6px 10px;
-  border: 1px solid #ffdbe1;
-  border-radius: 20px;
-  font-family: 'Geologica-Regular', sans-serif;
-  font-size: 16px;
-  background-color: #fff;
-  color: #ffa7b5;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: #ffa7b5;
-    font-family: 'Geologica-Regular', sans-serif;
-    font-size: 16px;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #ffa7b5;
-    box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #fff;
+    }
   }
 }
 
@@ -227,7 +262,7 @@ p {
   left: 0;
   right: 0;
   background-color: #fff;
-  border: 1px solid #ffdbe1;
+  border: 1px solid $border-pink;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-height: 150px;
@@ -237,14 +272,14 @@ p {
 
 .autocomplete-item {
   padding: 8px 10px;
-  font-family: 'Geologica-Regular', sans-serif;
+  font-family: $font-primary;
   font-size: 16px;
-  color: #ffa7b5;
+  color: $primary-pink;
   cursor: pointer;
-}
 
-.autocomplete-item:hover {
-  background-color: #fff6f7;
+  &:hover {
+    background-color: $background-hover;
+  }
 }
 
 .sort-container {
@@ -254,9 +289,9 @@ p {
 }
 
 .sort-label {
-  font-family: 'Geologica-Regular', sans-serif;
+  font-family: $font-primary;
   font-size: 12px;
-  color: #ffc1cb;
+  color: $light-pink;
   padding-left: 10px;
 }
 
@@ -267,34 +302,34 @@ p {
 .sort-button {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid #ffdbe1;
+  border: 1px solid $border-pink;
   border-radius: 20px;
   background-color: #fff;
-  color: #ffa7b5;
-  font-family: 'Geologica-Regular', sans-serif;
+  color: $primary-pink;
+  font-family: $font-primary;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
   box-sizing: border-box;
-}
 
-.sort-button:hover {
-  background-color: #fff6f7;
-}
+  &:hover {
+    background-color: $background-hover;
+  }
 
-.sort-button:focus {
-  outline: none;
-  border-color: #ffa7b5;
-  box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+  &:focus {
+    outline: none;
+    border-color: $primary-pink;
+    box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+  }
 }
 
 .sort-icon {
   font-size: 16px;
   width: 16px;
   height: 16px;
-  color: #ffa7b5;
+  color: $primary-pink;
 }
 
 .sort-dropdown {
@@ -303,7 +338,7 @@ p {
   left: 0;
   right: 0;
   background-color: #fff;
-  border: 1px solid #ffdbe1;
+  border: 1px solid $border-pink;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -312,43 +347,14 @@ p {
 
 .sort-option {
   padding: 8px 10px;
-  font-family: 'Geologica-Regular', sans-serif;
+  font-family: $font-primary;
   font-size: 16px;
-  color: #ffa7b5;
+  color: $primary-pink;
   cursor: pointer;
-}
 
-.sort-option:hover {
-  background-color: #fff6f7;
-}
-
-.search-item.search-button {
-  flex: 0 0 auto;
-}
-
-.search-item.search-button button {
-  background-color: #ffa7b5;
-  color: #fff;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  cursor: pointer;
-}
-
-.search-item.search-button button:hover {
-  background-color: #ff8fa3;
-}
-
-.search-item.search-button button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  &:hover {
+    background-color: $background-hover;
+  }
 }
 
 .gallery {
@@ -364,31 +370,31 @@ p {
   align-items: center;
   gap: 15px;
   margin: 30px 10vw;
-  font-family: 'Geologica-Regular', sans-serif;
-  color: #ff8fa3;
+  font-family: $font-primary;
+  color: $hover-pink;
   font-size: 14px;
-}
 
-.pagination button {
-  display: flex;
-  align-items: center;
-  background-color: #ffc1cb;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 2px 2px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+  button {
+    display: flex;
+    align-items: center;
+    background-color: $light-pink;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 
-.pagination button:hover {
-  background-color: #ffa7b5;
-}
+    &:hover {
+      background-color: $primary-pink;
+    }
 
-.pagination button:disabled {
-  background-color: #ffdbe1;
-  cursor: not-allowed;
-  opacity: 0.7;
+    &:disabled {
+      background-color: $border-pink;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
 }
 
 .icon-sm {
@@ -413,8 +419,6 @@ p {
   .burger-button {
     width: 40px;
     height: 40px;
-    line-height: 40px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -426,13 +430,12 @@ p {
 
   h1 {
     font-size: 4vw;
-    margin-top: 18px;
-    margin-bottom: 30px;
+    margin: 18px 0 30px;
   }
 
   p {
     font-size: clamp(15px, 1.4vw, 16px);
-    margin: 20px 26vw 40px 26vw;
+    margin: 20px 26vw 40px;
   }
 
   .search-items {
@@ -440,74 +443,57 @@ p {
     margin-bottom: 28px;
   }
 
-  .custom-chip {
+  .custom-chip,
+  .tag-input-container input,
+  .user-input-container input,
+  .autocomplete-item,
+  .sort-button,
+  .sort-option {
     font-size: 18px;
   }
 
-  .tag-input-container input {
-    font-size: 18px;
+  .tag-input-container input,
+  .user-input-container input,
+  .sort-button {
     padding: 4px 10px;
-  
+
     &::placeholder {
       font-size: 18px;
     }
   }
 
-  .user-input-container input {
-    font-size: 18px;
-    padding: 4px 10px;
-  
-    &::placeholder {
-      font-size: 18px;
-    }
-  }
-
-  .autocomplete-item {
+  .autocomplete-item,
+  .sort-option {
     padding: 6px 10px;
-    font-size: 18px;
   }
 
   .sort-label {
     font-size: 14px;
   }
-  
-  .sort-button {
-    padding: 4px 10px;
-    font-size: 18px;
-  }
 
-  .sort-option {
-    padding: 6px 10px;
-    font-size: 18px;
-  }
+  .search-item.search-button {
+    button {
+      width: 32px;
+      height: 32px;
 
-  .search-item.search-button button {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .search-item.search-button button mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+      }
+    }
   }
 
   .gallery {
-    margin: 20px 10vw;
-    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
-  
+
   .pagination {
     gap: 12px;
-    margin: 30px 10vw 50px 10vw;
+    margin: 30px 10vw 50px;
     font-size: 16px;
-  }
-  
-  .pagination button {
-    padding: 0px 0px;
   }
 }
 
@@ -519,8 +505,6 @@ p {
   .burger-button {
     width: 40px;
     height: 40px;
-    line-height: 40px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -532,13 +516,12 @@ p {
 
   h1 {
     font-size: 5vw;
-    margin-top: 14px;
-    margin-bottom: 24px;
+    margin: 14px 0 24px;
   }
 
   p {
     font-size: clamp(14px, 1.5vw, 15px);
-    margin: 20px 20vw 26px 20vw;
+    margin: 20px 20vw 26px;
   }
 
   .search-items {
@@ -546,74 +529,64 @@ p {
     margin-bottom: 28px;
   }
 
-  .custom-chip {
+  .custom-chip,
+  .tag-input-container input,
+  .autocomplete-item,
+  .sort-button,
+  .sort-option {
     font-size: 16px;
-  }
-
-  .tag-input-container input {
-    font-size: 16px;
-    padding: 4px 10px;
-  
-    &::placeholder {
-      font-size: 16px;
-    }
   }
 
   .user-input-container input {
     font-size: 14px;
-    padding: 4px 10px;
-  
+
     &::placeholder {
       font-size: 14px;
     }
   }
 
-  .autocomplete-item {
+  .tag-input-container input,
+  .user-input-container input,
+  .sort-button {
+    padding: 4px 10px;
+
+    &::placeholder {
+      font-size: 16px;
+    }
+  }
+
+  .autocomplete-item,
+  .sort-option {
     padding: 6px 10px;
-    font-size: 16px;
   }
 
   .sort-label {
     font-size: 12px;
   }
-  
-  .sort-button {
-    padding: 4px 10px;
-    font-size: 16px;
-  }
 
-  .sort-option {
-    padding: 6px 10px;
-    font-size: 16px;
-  }
+  .search-item.search-button {
+    button {
+      width: 30px;
+      height: 30px;
 
-  .search-item.search-button button {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .search-item.search-button button mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+      }
+    }
   }
 
   .gallery {
-    margin: 20px 10vw;
-    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
   }
-  
+
   .pagination {
     gap: 12px;
-    margin: 24px 10vw 30px 10vw;
+    margin: 24px 10vw 30px;
     font-size: 14px;
-  }
-  
-  .pagination button {
-    padding: 0px 0px;
   }
 }
 
@@ -625,8 +598,6 @@ p {
   .burger-button {
     width: 30px;
     height: 30px;
-    line-height: 30px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -638,109 +609,86 @@ p {
 
   h1 {
     font-size: 6vw;
-    margin-top: 14px;
-    margin-bottom: 24px;
+    margin: 14px 0 24px;
   }
 
   p {
     font-size: clamp(13px, 2vw, 15px);
-    margin: 20px 18vw 26px 18vw;
+    margin: 20px 18vw 26px;
   }
 
   .search-items {
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 24px;
+
+    .search-item {
+      &:nth-child(1),
+      &:nth-child(2) {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+      }
+
+      &:nth-child(3) {
+        flex: 1 1 70%;
+        min-width: 0;
+      }
+
+      &.search-button {
+        flex: 0 0 30px;
+
+        button {
+          width: 28px;
+          height: 28px;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+          }
+        }
+      }
+    }
   }
 
-  .search-item:nth-child(1),
-  .search-item:nth-child(2) {
-    flex: 1 1 calc(50% - 6px); 
-    min-width: 0;
-  }
-
-  .search-item:nth-child(3) {
-    flex: 1 1 70%; 
-    min-width: 0;
-  }
-
-  .search-item.search-button {
-    flex: 0 0 30px; 
-  }
-
-  .search-items {
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .custom-chip {
+  .custom-chip,
+  .tag-input-container input,
+  .user-input-container input,
+  .autocomplete-item,
+  .sort-button,
+  .sort-option {
     font-size: 14px;
   }
 
-  .tag-input-container input {
-    font-size: 14px;
+  .tag-input-container input,
+  .user-input-container input,
+  .sort-button {
     padding: 4px 10px;
-  
+
     &::placeholder {
       font-size: 14px;
     }
   }
 
-  .user-input-container input {
-    font-size: 14px;
-    padding: 4px 10px;
-  
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-
-  .autocomplete-item {
+  .autocomplete-item,
+  .sort-option {
     padding: 6px 10px;
-    font-size: 14px;
   }
 
   .sort-label {
     font-size: 10px;
   }
-  
-  .sort-button {
-    padding: 4px 10px;
-    font-size: 14px;
-  }
-
-  .sort-option {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  .search-item.search-button button {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .search-item.search-button button mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-  }
 
   .gallery {
-    margin: 20px 10vw;
-    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-  
+
   .pagination {
     gap: 10px;
-    margin: 20px 10vw 30px 10vw;
+    margin: 20px 10vw 30px;
     font-size: 14px;
-  }
-  
-  .pagination button {
-    padding: 0px 0px;
   }
 }
 
@@ -752,8 +700,6 @@ p {
   .burger-button {
     width: 30px;
     height: 30px;
-    line-height: 30px;
-    padding: 0px;
   }
 
   .icon-md {
@@ -765,103 +711,29 @@ p {
 
   h1 {
     font-size: 7vw;
-    margin-top: 14px;
-    margin-bottom: 24px;
+    margin: 14px 0 24px;
   }
 
   p {
     font-size: clamp(10px, 2.6vw, 2rem);
-    margin: 10px 16vw 26px 16vw;
+    margin: 10px 16vw 26px;
   }
 
   .search-items {
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 24px;
-  }
 
-  .search-item:nth-child(1),
-  .search-item:nth-child(2) {
-    flex: 1 1 calc(50% - 5px); 
-    min-width: 0;
-  }
-
-  .search-item:nth-child(3) {
-    flex: 1 1 70%; 
-    min-width: 0;
-  }
-
-  .search-item.search-button {
-    flex: 0 0 30px; 
-  }
-
-  .custom-chip {
-    font-size: 14px;
-  }
-
-  .tag-input-container input {
-    font-size: 14px;
-    padding: 4px 10px;
-  
-    &::placeholder {
-      font-size: 14px;
+    .search-item {
+      &:nth-child(1),
+      &:nth-child(2) {
+        flex: 1 1 calc(50% - 5px);
+        min-width: 0;
+      }
     }
-  }
-
-  .user-input-container input {
-    font-size: 14px;
-    padding: 4px 10px;
-  
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-
-  .autocomplete-item {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  .sort-label {
-    font-size: 10px;
-  }
-  
-  .sort-button {
-    padding: 4px 10px;
-    font-size: 14px;
-  }
-
-  .sort-option {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  .search-item.search-button button {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .search-item.search-button button mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
   }
 
   .gallery {
-    margin: 20px 10vw;
-    display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: 10px;
-  }
-
-  .pagination {
-    gap: 10px;
-    margin: 20px 10vw 30px 10vw;
-    font-size: 14px;
-  }
-  
-  .pagination button {
-    padding: 0px 0px;
   }
 }
