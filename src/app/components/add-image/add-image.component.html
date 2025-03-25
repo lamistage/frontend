@@ -26,58 +26,60 @@
     </div>
   </mat-toolbar>
 
-    <h1>Upload Your Photo</h1>
+  <h1>Upload Your<br>Photo</h1>
 
-    <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
-        <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
-        <mat-icon>file_upload</mat-icon>
-        <h3>drag & drop file here</h3>
-        <h3>or</h3>
-        <button mat-flat-button (click)="fileInput.click()">browse for file</button>
+  <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
+      <mat-icon>file_upload</mat-icon>
+      <h3>drag & drop file here</h3>
+      <h3>or</h3>
+      <button mat-flat-button (click)="fileInput.click()">browse for file</button>
+  </div>
+
+  <div class="image-preview" *ngIf="selectedFile()">
+    <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="image-wrapper">
+      <img [src]="previewUrl()" alt="Selected image" class="preview-image" />
     </div>
+  </div>
 
-    <div class="image-preview" *ngIf="selectedFile()">
-        <img [src]="previewUrl()" alt="Selected image" class="preview-image" />
-        <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
-    </div>
+  <div class="tag-input-container">
+      <div class="custom-chip-set">
+        @for (tag of tags(); track tag) {
+          <div class="custom-chip">
+            <span>{{tag.name}}</span>
+            <button class="remove-chip-btn" (click)="remove(tag)">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+      <div class="input-wrapper">
+        <input
+          type="text"
+          placeholder="new tag..."
+          (keyup.enter)="addTagFromInput($event)"
+          (input)="filterTags($event)"
+          #tagInput
+        >
+        @if (filteredTags.length > 0) {
+          <div class="autocomplete-dropdown">
+            @for (tag of filteredTags; track tag) {
+              <div class="autocomplete-item" (click)="selectTag(tag)">
+                {{tag.name}}
+              </div>
+            }
+          </div>
+        }
+      </div>
+  </div>
 
-    <div class="tag-input-container">
-        <div class="custom-chip-set">
-          @for (tag of tags(); track tag) {
-            <div class="custom-chip">
-              <span>{{tag.name}}</span>
-              <button class="remove-chip-btn" (click)="remove(tag)">
-                <mat-icon>clear</mat-icon>
-              </button>
-            </div>
-          }
-        </div>
-        <div class="input-wrapper">
-          <input
-            type="text"
-            placeholder="new tag..."
-            (keyup.enter)="addTagFromInput($event)"
-            (input)="filterTags($event)"
-            #tagInput
-          >
-          @if (filteredTags.length > 0) {
-            <div class="autocomplete-dropdown">
-              @for (tag of filteredTags; track tag) {
-                <div class="autocomplete-item" (click)="selectTag(tag)">
-                  {{tag.name}}
-                </div>
-              }
-            </div>
-          }
-        </div>
-    </div>
+  <button class="add-image-button" mat-flat-button (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
 
-    <button class="add-image-button" mat-flat-button (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
-
-    <div *ngIf="uploadSuccess">
-        <p>Image uploaded successfully!</p>
-        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded image">
-    </div>
+  <div *ngIf="uploadSuccess">
+      <p>Image uploaded successfully!</p>
+      <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded image">
+  </div>
 </div>
