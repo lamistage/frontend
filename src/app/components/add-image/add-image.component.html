@@ -76,7 +76,7 @@
       </div>
   </div>
 
-  <button class="add-image-button" mat-flat-button (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
+  <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
 
   <div *ngIf="uploadSuccess">
       <p>Image uploaded successfully!</p>

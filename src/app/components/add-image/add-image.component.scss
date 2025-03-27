@@ -353,13 +353,16 @@ img {
   font-family: $font-secondary;
   font-size: 18px;
   padding: 0 26px;
-  height: 34px;
+  height: 38px;
   border-radius: 20px;
+  border: none;
+  cursor: pointer;
 
   &[disabled] {
     background-color: $disabled-pink;
     opacity: 0.6;
     color: #fff;
+    cursor: not-allowed;
   }
 }
 
