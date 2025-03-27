@@ -9,6 +9,6 @@ export const routes: Route[] = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
   { path: 'auth', component: AuthComponent },
   { path: 'add-image', component: AddImageComponent, canActivate: [AuthGuard] },
-  { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
+  { path: 'gallery', component: GalleryComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
 ];

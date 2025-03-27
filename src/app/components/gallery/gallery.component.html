@@ -1,27 +1,35 @@
 <mat-toolbar>
   <span class="pm-label">pm</span>
   <div class="menu-container">
-    <button class="burger-button" (click)="toggleMenu()">
-      <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
-    </button>
-    <div class="custom-menu" *ngIf="isMenuVisible" [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" (animationend)="onAnimationEnd($event)">
-      <button class="menu-item" [routerLink]="['/profile']">
-        <mat-icon class="color_pink icon-sm">person</mat-icon>
-        <span>profile</span>
+    @if (isAuthenticated()) {
+      <button class="burger-button" (click)="toggleMenu()">
+        <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </button>
-      <button class="menu-item" [routerLink]="['/gallery']">
-        <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
-        <span>gallery</span>
-      </button>
-      <button class="menu-item" [routerLink]="['/add-image']">
-        <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
-        <span>add-image</span>
-      </button>
-      <button class="menu-item" (click)="logout()">
-        <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
-        <span>logout</span>
-      </button>
-    </div>
+      <div class="custom-menu" *ngIf="isMenuVisible" [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" (animationend)="onAnimationEnd($event)">
+        <button class="menu-item" [routerLink]="['/profile']">
+          <mat-icon class="color_pink icon-sm">person</mat-icon>
+          <span>profile</span>
+        </button>
+        <button class="menu-item" [routerLink]="['/gallery']">
+          <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
+          <span>gallery</span>
+        </button>
+        <button class="menu-item" [routerLink]="['/add-image']">
+          <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
+          <span>add-image</span>
+        </button>
+        <button class="menu-item" (click)="logout()">
+          <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
+          <span>logout</span>
+        </button>
+      </div>
+    }
+    @else {
+      <div class="auth-buttons">
+        <button class="auth-button login-button" (click)="goToLogin()">Log in</button>
+        <button class="auth-button signup-button" (click)="goToSignUp()">Sign up</button>
+      </div>
+    }
   </div>
 </mat-toolbar>
 

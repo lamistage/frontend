@@ -54,6 +54,7 @@ export class GalleryComponent {
   isSortOpen = false;
   isMenuOpen = false;
   isMenuVisible = false;
+  isAuthenticated = signal<boolean>(false); 
 
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
@@ -68,9 +69,15 @@ export class GalleryComponent {
   filteredUsers: User[] = [];
 
   constructor() {
+    this.checkAuthentication();
     this.loadAllTags();
     this.loadAllUsers();
     this.loadImages();
+  }
+
+  private checkAuthentication(): void {
+    const token = localStorage.getItem('token');
+    this.isAuthenticated.set(!!token); 
   }
 
   toggleMenu(): void {
@@ -119,7 +126,7 @@ export class GalleryComponent {
     this.imageService.getImages(tagNames, userLogins, sort, page, this.pageSize).subscribe({
       next: (pageData) => {
         this.images.set(pageData.content || []);
-        const totalPages = pageData.page?.totalPages || 1; 
+        const totalPages = pageData.page?.totalPages || 1;
         this.totalPages.set(totalPages);
         this.isLoading.set(false);
 
@@ -277,5 +284,13 @@ export class GalleryComponent {
         alert('failed to logout. please try again');
       }
     });
+  }
+
+  goToLogin() {
+    this.router.navigate(['/auth']);
+  }
+
+  goToSignUp() {
+    this.router.navigate(['/auth'], { queryParams: { mode: 'signup' } });
   }
 }

@@ -37,6 +37,8 @@ mat-toolbar {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  overflow: visible;
+  box-sizing: border-box;
 
   &:hover {
     border-color: $primary-pink;
@@ -44,10 +46,21 @@ mat-toolbar {
 }
 
 .icon-md {
-  font-size: 60px;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-icon.icon-md {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
 }
 
 .custom-menu {
@@ -411,6 +424,42 @@ p {
   line-height: 30px;
 }
 
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: $font-primary;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-button {
+  background-color: transparent;
+  border: 1px solid $primary-pink;
+  color: $primary-pink;
+
+  &:hover {
+    background-color: $background-hover;
+    color: $hover-pink;
+    border-color: $hover-pink;
+  }
+}
+
+.signup-button {
+  background-color: $primary-pink;
+  border: none;
+  color: #fff;
+
+  &:hover {
+    background-color: $hover-pink;
+  }
+}
+
 @media (min-width: 992px) and (max-width: 1199px) {
   .pm-label {
     font-size: 3.2vw;
@@ -422,10 +471,10 @@ p {
   }
 
   .icon-md {
-    font-size: 4.5vw;
-    width: 4.5vw;
-    height: 4.5vw;
-    line-height: 4.5vw;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
   }
 
   h1 {
@@ -495,6 +544,11 @@ p {
     margin: 30px 10vw 50px;
     font-size: 16px;
   }
+
+  .auth-button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -508,10 +562,10 @@ p {
   }
 
   .icon-md {
-    font-size: 5vw;
-    width: 5vw;
-    height: 5vw;
-    line-height: 5vw;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
   }
 
   h1 {
@@ -588,6 +642,11 @@ p {
     margin: 24px 10vw 30px;
     font-size: 14px;
   }
+
+  .auth-button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -601,10 +660,10 @@ p {
   }
 
   .icon-md {
-    font-size: 6vw;
-    width: 6vw;
-    height: 6vw;
-    line-height: 6vw;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
   }
 
   h1 {
@@ -690,6 +749,11 @@ p {
     margin: 20px 10vw 30px;
     font-size: 14px;
   }
+
+  .auth-button {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -703,10 +767,10 @@ p {
   }
 
   .icon-md {
-    font-size: 7vw;
-    width: 7vw;
-    height: 7vw;
-    line-height: 7vw;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
   }
 
   h1 {
@@ -735,5 +799,10 @@ p {
 
   .gallery {
     grid-template-columns: repeat(1, 1fr);
+  }
+
+  .auth-button {
+    font-size: 12px;
+    padding: 4px 8px;
   }
 }
