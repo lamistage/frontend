@@ -2,8 +2,7 @@ import { Component, ViewChild, ElementRef, signal } from '@angular/core';
 import { ImageService } from '../../services/image.service';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { Image } from '../../models/image';
-import { Tag } from '../../models/image';
+import { Image, Tag } from '../../models/image';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -61,7 +60,6 @@ export class ProfileComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    this.loadAllTags();
     this.loadImages();
   }
 
@@ -78,23 +76,12 @@ export class ProfileComponent {
     }
   }
 
-  loadAllTags() {
-    this.imageService.getAllTags().subscribe({
-      next: (tags) => {
-        this.allTags = tags;
-      },
-      error: (err) => {
-        console.error('error loading tags', err);
-      }
-    });
-  }
-
   public loadImages() {
     this.isLoading.set(true);
 
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('no token found. please log in.');
+      alert('No token found. Please log in.');
       this.router.navigate(['/auth']);
       return;
     }
@@ -117,6 +104,8 @@ export class ProfileComponent {
         this.totalPages.set(totalPages);
         this.isLoading.set(false);
 
+        this.extractTagsFromImages();
+
         if (this.currentPage() >= totalPages && totalPages > 0) {
           this.currentPage.set(totalPages - 1);
           this.loadImages();
@@ -129,6 +118,21 @@ export class ProfileComponent {
         this.isLoading.set(false);
       }
     });
+  }
+
+  private extractTagsFromImages(): void {
+    const tagSet = new Set<string>();
+    const images = this.images();
+
+    images.forEach(image => {
+      if (image.tags) {
+        image.tags.forEach(tag => {
+          tagSet.add(tag.name);
+        });
+      }
+    });
+
+    this.allTags = Array.from(tagSet).map(tagName => ({ name: tagName }));
   }
 
   addTagFromInput(event: Event): void {
@@ -235,8 +239,8 @@ export class ProfileComponent {
         this.router.navigate(['/auth']);
       },
       error: (err) => {
-        console.error('logout failed', err);
-        alert('failed to logout. please try again');
+        console.error('Logout failed', err);
+        alert('Failed to logout. Please try again');
       }
     });
   }

@@ -43,7 +43,6 @@ export class PublicationComponent {
     this.originalFilePath = this.publication.filePath;
     this.loadImage();
     this.editableTags.set([...this.publication.tags]);
-    this.loadAllTags(); // Загружаем все теги при инициализации
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -111,6 +110,7 @@ export class PublicationComponent {
   startEditing() {
     this.isEditing.set(true);
     this.editableTags.set([...this.publication.tags]);
+    this.loadAllTags();
   }
 
   saveTags() {
