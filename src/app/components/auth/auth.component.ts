@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-auth',
@@ -67,8 +68,12 @@ export class AuthComponent {
             this.errorMessage = null; 
             this.toggleMode();
           },
-          error: () => {
-            this.errorMessage = 'User with such login already exists';
+          error: (err: HttpErrorResponse) => {
+            if (err.status === 409) {
+              this.errorMessage = err.error; 
+            } else {
+              this.errorMessage = 'An error occurred during registration. Please try again.';
+            }
           }
         });
       } else {
@@ -78,8 +83,14 @@ export class AuthComponent {
             this.errorMessage = null; 
             this.router.navigate(['/add-image']);
           },
-          error: () => {
-            this.errorMessage = 'Invalid Login or Password';
+          error: (err: HttpErrorResponse) => {
+            if (err.status === 404) {
+              this.errorMessage = err.error; 
+            } else if (err.status === 401) {
+              this.errorMessage = err.error; 
+            } else {
+              this.errorMessage = 'An error occurred during login. Please try again.';
+            }
           }
         });
       }
