@@ -38,6 +38,8 @@ mat-toolbar {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  overflow: visible;
+  box-sizing: border-box;
 
   &:hover {
     border-color: $primary-pink;
@@ -45,10 +47,21 @@ mat-toolbar {
 }
 
 .icon-md {
-  font-size: 60px;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-icon.icon-md {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
 }
 
 .custom-menu {
@@ -377,10 +390,10 @@ img {
   }
 
   .icon-md {
-    font-size: 4.5vw;
-    width: 4.5vw;
-    height: 4.5vw;
-    line-height: 4.5vw;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
   }
 
   h1 {
@@ -447,10 +460,10 @@ img {
   }
 
   .icon-md {
-    font-size: 5vw;
-    width: 5vw;
-    height: 5vw;
-    line-height: 5vw;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
   }
 
   h1 {
@@ -525,10 +538,10 @@ img {
   }
 
   .icon-md {
-    font-size: 6vw;
-    width: 6vw;
-    height: 6vw;
-    line-height: 6vw;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
   }
 
   h1 {
@@ -603,10 +616,10 @@ img {
   }
 
   .icon-md {
-    font-size: 7vw;
-    width: 7vw;
-    height: 7vw;
-    line-height: 7vw;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
   }
 
   h1 {
