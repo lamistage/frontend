@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, signal, inject } from '@angular/core';
 import { ImageService } from '../../services/image.service';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
@@ -55,12 +55,19 @@ export class ProfileComponent {
   totalPages = signal<number>(1);
   pageSize = 20;
 
-  constructor(
-    private imageService: ImageService,
-    private authService: AuthService,
-    private router: Router
-  ) {
+  private readonly imageService = inject(ImageService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  constructor() {
+    this.checkAuthentication();
     this.loadImages();
+  }
+
+  private checkAuthentication(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth']);
+    }
   }
 
   toggleMenu(): void {
@@ -79,16 +86,29 @@ export class ProfileComponent {
   public loadImages() {
     this.isLoading.set(true);
 
-    const token = localStorage.getItem('token');
+    if (!this.authService.isAuthenticated()) {
+      alert('Session expired. Please log in again.');
+      this.authService.logout().subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
+      return;
+    }
+
+    const token = this.authService.getToken();
     if (!token) {
       alert('No token found. Please log in.');
-      this.router.navigate(['/auth']);
+      this.authService.logout().subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
       return;
     }
 
     const userLogin = this.getUserLoginFromToken(token);
     if (!userLogin) {
       alert('Invalid token. Please log in again.');
+      this.authService.logout().subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
       return;
     }
 

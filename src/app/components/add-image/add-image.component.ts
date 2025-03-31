@@ -60,7 +60,14 @@ export class AddImageComponent {
   isMenuVisible = false;
 
   constructor() {
+    this.checkAuthentication();
     this.loadAllTags();
+  }
+
+  private checkAuthentication(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/auth']);
+    }
   }
 
   toggleMenu(): void {
@@ -149,31 +156,42 @@ export class AddImageComponent {
   }
 
   uploadPhoto() {
-    if (!this.selectedFile) {
+    if (!this.selectedFile()) {
       alert('Please select a file');
       return;
     }
 
-    const file = this.selectedFile()!;
+    // Проверяем, аутентифицирован ли пользователь
+    if (!this.authService.isAuthenticated()) {
+      alert('Session expired. Please log in again.');
+      this.authService.logout().subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
+      return;
+    }
 
-    const token = localStorage.getItem('token');
+    // Получаем токен (интерсептор уже обновил его, если он истек)
+    const token = this.authService.getToken();
     if (!token) {
-      alert('no token found. please log in.');
-      this.router.navigate(['/auth']);
+      alert('No token found. Please log in.');
+      this.authService.logout().subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
       return;
     }
 
     const userId = this.getUserIdFromToken(token);
-    if (!userId) {
+    const userLogin = this.getUserLoginFromToken(token);
+
+    if (!userId || !userLogin) {
       alert('Invalid token. Please log in again.');
+      this.authService.logout().subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
       return;
     }
 
-    const userLogin = this.getUserLoginFromToken(token);
-    if (!userLogin) {
-      alert('Invalid token. Please log in again.');
-      return;
-    }
+    const file = this.selectedFile()!;
 
     const formData = new FormData();
     formData.append('image', file);

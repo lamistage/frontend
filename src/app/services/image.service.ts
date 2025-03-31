@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators'; 
+import { tap, switchMap } from 'rxjs/operators';
 import { Image, User } from '../models/image';
-import { switchMap } from 'rxjs/operators';
 import { Tag } from '../models/image';
 
 interface PageMetadata {
@@ -26,11 +25,6 @@ export class ImageService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders | undefined {
-    const token = localStorage.getItem('token');
-    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
-  }
-
   getImages(tags: string[], users: string[], sort: string, page: number = 0, size: number = 20): Observable<Page<Image>> {
     let params = new URLSearchParams();
     tags.forEach(tag => params.append('tag', tag));
@@ -39,49 +33,34 @@ export class ImageService {
     params.append('page', page.toString());
     params.append('size', size.toString());
 
-    const headers = this.getHeaders();
-    const options = headers ? { headers } : {};
-
-    return this.http.get<Page<Image>>(`${this.apiUrl}/image?${params.toString()}`, options).pipe(
+    return this.http.get<Page<Image>>(`${this.apiUrl}/image?${params.toString()}`).pipe(
       tap(pageData => console.log('Received page data:', pageData))
     );
   }
 
   getImage(imagePath: string): Observable<Blob> {
-    const headers = this.getHeaders();
-    const options = headers ? { headers, responseType: 'blob' as 'json' } : { responseType: 'blob' as 'json' };
-    return this.http.get<Blob>(`${this.apiUrl}/${imagePath}`, options);
+    return this.http.get<Blob>(`${this.apiUrl}/${imagePath}`, { responseType: 'blob' as 'json' });
   }
 
   deleteImage(filePath: string): Observable<void> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.delete<void>(`${this.apiUrl}/${filePath}`, { headers, responseType: 'blob' as 'json' });
+    return this.http.delete<void>(`${this.apiUrl}/${filePath}`, { responseType: 'blob' as 'json' });
   }
 
   deletePublication(image: Image): Observable<void> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.delete<void>(`${this.apiUrl}/image/${image.id}`, { headers }).pipe(
-      switchMap(() => this.http.delete<void>(`${this.apiUrl}/${image.filePath}`, { headers }))
+    return this.http.delete<void>(`${this.apiUrl}/image/${image.id}`).pipe(
+      switchMap(() => this.http.delete<void>(`${this.apiUrl}/${image.filePath}`))
     );
   }
 
   saveImage(image: Partial<Image>): Observable<Image> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    return this.http.post<Image>(`${this.apiUrl}/image`, image, { headers });
+    return this.http.post<Image>(`${this.apiUrl}/image`, image);
   }
 
   getAllTags(): Observable<Tag[]> {
-    const headers = this.getHeaders();
-    const options = headers ? { headers } : {};
-    return this.http.get<Tag[]>(`${this.apiUrl}/tag`, options);
+    return this.http.get<Tag[]>(`${this.apiUrl}/tag`);
   }
 
   getAllUsers(): Observable<User[]> {
-    const headers = this.getHeaders();
-    const options = headers ? { headers } : {};
-    return this.http.get<User[]>(`${this.apiUrl}/user`, options);
+    return this.http.get<User[]>(`${this.apiUrl}/user`);
   }
 }

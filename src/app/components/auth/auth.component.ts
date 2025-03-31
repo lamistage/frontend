@@ -15,7 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AuthComponent {
   form: FormGroup;
   isRegisterMode = false;
-  errorMessage: string | null = null; 
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.form = this.fb.group({
@@ -37,7 +37,7 @@ export class AuthComponent {
 
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
-    this.errorMessage = null; 
+    this.errorMessage = null;
   }
 
   onInputLogin(event: any) {
@@ -65,12 +65,12 @@ export class AuthComponent {
       if (this.isRegisterMode) {
         this.authService.signUp(formData).subscribe({
           next: () => {
-            this.errorMessage = null; 
+            this.errorMessage = null;
             this.toggleMode();
           },
           error: (err: HttpErrorResponse) => {
             if (err.status === 409) {
-              this.errorMessage = err.error; 
+              this.errorMessage = err.error;
             } else {
               this.errorMessage = 'An error occurred during registration. Please try again.';
             }
@@ -78,16 +78,15 @@ export class AuthComponent {
         });
       } else {
         this.authService.signIn(formData).subscribe({
-          next: (res) => {
-            localStorage.setItem('token', res.token);
-            this.errorMessage = null; 
+          next: (res: { token: string, refreshToken: string, expiresIn: number }) => {
+            this.errorMessage = null;
             this.router.navigate(['/add-image']);
           },
           error: (err: HttpErrorResponse) => {
             if (err.status === 404) {
-              this.errorMessage = err.error; 
+              this.errorMessage = err.error;
             } else if (err.status === 401) {
-              this.errorMessage = err.error; 
+              this.errorMessage = err.error;
             } else {
               this.errorMessage = 'An error occurred during login. Please try again.';
             }

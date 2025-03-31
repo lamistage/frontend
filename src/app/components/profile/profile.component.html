@@ -37,7 +37,7 @@
             <div class="custom-chip">
               <span>{{tag.name}}</span>
               <button class="remove-chip-btn" (click)="remove_tag(tag)">
-                <mat-icon>clear</mat-icon>
+                <mat-icon class="color_pink icon-sm">clear</mat-icon>
               </button>
             </div>
           }
@@ -45,7 +45,7 @@
         <div class="input-wrapper">
           <input
             type="text"
-            placeholder="new tag..."
+            placeholder="filter by tag..."
             (keyup.enter)="addTagFromInput($event)"
             (input)="filterTags($event)"
             #tagInput
@@ -69,7 +69,7 @@
         <div class="sort-wrapper">
           <button class="sort-button" (click)="toggleSortDropdown()">
             <span>{{ getSelectedSortLabel() }}</span>
-            <mat-icon class="sort-icon">{{ isSortOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+            <mat-icon class="sort-icon color_pink icon-sm">{{ isSortOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
           </button>
           @if (isSortOpen) {
             <div class="sort-dropdown">
@@ -86,17 +86,12 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="gallery">
     <p *ngIf="isLoading()">loading..</p>
-    @for (publication of images(); track publication.id) {
-      <app-publication
-        [publication]="publication"
-        [isProfilePage]="true"
-        (deleted)="onPublicationDeleted($event)"
-      ></app-publication>
+    @for (publication of images(); track publication) {
+      <app-publication [publication]="publication" (deleted)="onPublicationDeleted($event)"></app-publication>
     }
   </div>
 

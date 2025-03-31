@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal, effect } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -54,7 +54,7 @@ export class GalleryComponent {
   isSortOpen = false;
   isMenuOpen = false;
   isMenuVisible = false;
-  isAuthenticated = signal<boolean>(false); 
+  isAuthenticated = signal<boolean>(false);
 
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
@@ -69,15 +69,13 @@ export class GalleryComponent {
   filteredUsers: User[] = [];
 
   constructor() {
-    this.checkAuthentication();
+    effect(() => {
+      this.isAuthenticated.set(this.authService.isAuthenticated());
+    });
+
     this.loadAllTags();
     this.loadAllUsers();
     this.loadImages();
-  }
-
-  private checkAuthentication(): void {
-    const token = localStorage.getItem('token');
-    this.isAuthenticated.set(!!token); 
   }
 
   toggleMenu(): void {
@@ -274,23 +272,24 @@ export class GalleryComponent {
     return selected ? selected.viewValue : 'Select sort order';
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout().subscribe({
       next: () => {
+        this.isAuthenticated.set(false);
         this.router.navigate(['/auth']);
       },
       error: (err) => {
-        console.error('logout failed', err);
-        alert('failed to logout. please try again');
+        console.error('Logout failed:', err);
+        alert('Failed to logout. Please try again.');
       }
     });
   }
 
-  goToLogin() {
+  goToLogin(): void {
     this.router.navigate(['/auth']);
   }
 
-  goToSignUp() {
+  goToSignUp(): void {
     this.router.navigate(['/auth'], { queryParams: { mode: 'signup' } });
   }
 }
