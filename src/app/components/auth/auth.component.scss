@@ -1,9 +1,21 @@
+// Определяем общие переменные
+$primary-pink: #ffa7b5;
+$hover-pink: #ff8fa3;
+$light-pink: #ffc0cb;
+$border-pink: #ffd9df;
+$background-hover: #fff2f4;
+$disabled-pink: #ffdbdf;
+$error-pink: #ff8da1;
+$error-message-pink: #ff6b81;
+$font-primary: 'Geologica-Regular', sans-serif;
+$font-secondary: 'surgena', sans-serif;
+
 .auth-container-sign-in,
 .auth-container-sign-up {
   display: flex;
   height: 100vh;
   width: 100vw;
-  font-family: 'Geologica-Regular', sans-serif;
+  font-family: $font-primary;
 
   .left-side,
   .right-side {
@@ -21,68 +33,61 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-    color: #ffc0cb;
-    font-family: 'Geologica-Regular', sans-serif;
+    color: $light-pink;
+    font-family: $font-primary;
   }
 
-  .sign-in-form h2,
-  .sign-up-form h2,
-  .sign-in-screen h2,
-  .sign-up-screen h2 {
+  h2 {
     font-size: 40px;
-    font-family: 'neoda', sans-serif;
+    font-family: $font-secondary;
     margin-bottom: 40px;
   }
 
-  .sign-in-form input,
-  .sign-up-form input {
+  input {
     width: 50%;
     max-width: 300px;
     height: 40px;
     padding: 0 20px;
-    border: 1px solid #ffd9df;
+    border: 1px solid $border-pink;
     border-radius: 20px;
     font-size: 16px;
-    font-family: 'Geologica-Regular', sans-serif;
-    color: #ffa7b5;
+    font-family: $font-primary;
+    color: $primary-pink;
 
     &::placeholder {
-      color: #ffc0cb;
+      color: $light-pink;
     }
 
     &:focus {
       outline: none;
-      border: 2px solid #ffc0cb;
+      border: 2px solid $light-pink;
       box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
       transition: all 0.3s ease;
     }
   }
 
-  .sign-in-form button,
-  .sign-up-form button,
-  .sign-in-screen button,
-  .sign-up-screen button {
+  button {
     width: 180px;
     height: 40px;
     border: none;
     border-radius: 20px;
     font-size: 18px;
     cursor: pointer;
-    font-family: 'neoda', sans-serif;
+    font-family: $font-secondary;
   }
 
   .sign-in-form button,
   .sign-up-form button {
-    background-color: #ffc0cb;
+    background-color: $light-pink;
     color: white;
     margin-top: 20px;
 
     &:hover {
-      background-color: #ffa7b5;
+      background-color: $primary-pink;
     }
 
     &:disabled {
-      background-color: #ffdbdf;
+      background-color: $disabled-pink;
       color: #fff;
       cursor: not-allowed;
       opacity: 0.6;
@@ -92,23 +97,21 @@
   .sign-in-screen button,
   .sign-up-screen button {
     background-color: white;
-    color: #ffc0cb;
+    color: $light-pink;
 
     &:hover {
-      background-color: #fff2f4;
+      background-color: $background-hover;
     }
   }
 
-  .sign-in-form form,
-  .sign-up-form form {
+  form {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
   }
 
-  .sign-in-screen p,
-  .sign-up-screen p {
+  p {
     font-size: 16px;
     text-align: center;
     width: 80%;
@@ -117,11 +120,11 @@
   }
 
   .error {
-    color: #ff8da1;
+    color: $error-pink;
     font-size: 14px;
     margin: 10px 0;
     animation: fadeIn 0.5s ease-in-out;
-    font-family: 'Geologica-Regular', sans-serif;
+    font-family: $font-primary;
   }
 
   .input-container {
@@ -139,11 +142,11 @@
 
   .input-hint {
     font-size: 12px;
-    color: #ffc0cb;
+    color: $light-pink;
     text-align: center;
     width: 80%;
     margin-bottom: 20px;
-    font-family: 'Geologica-Regular', sans-serif;
+    font-family: $font-primary;
   }
 }
 
@@ -153,7 +156,7 @@
   }
 
   .right-side {
-    background-color: #ffc0cb;
+    background-color: $light-pink;
   }
 
   .sign-up-screen {
@@ -163,7 +166,7 @@
 
 .auth-container-sign-up {
   .left-side {
-    background-color: #ffc0cb;
+    background-color: $light-pink;
   }
 
   .right-side {
@@ -192,8 +195,8 @@
 }
 
 .error-message {
-  font-family: 'Geologica-Regular', sans-serif;
-  color: #ff6b81;
+  font-family: $font-primary;
+  color: $error-message-pink;
   font-size: 14px;
   margin: 5px;
   text-align: center;
@@ -214,14 +217,12 @@
 @media (min-width: 768px) and (max-width: 991px) {
   .auth-container-sign-in,
   .auth-container-sign-up {
-    .sign-in-form h2,
-    .sign-up-form h2 {
+    h2 {
       font-size: 40px;
       margin-bottom: 40px;
     }
 
-    .sign-in-form input,
-    .sign-up-form input {
+    input {
       max-width: 240px;
       height: 34px;
       font-size: 16px;
@@ -241,8 +242,7 @@
       margin-bottom: 20px;
     }
 
-    .sign-in-screen p,
-    .sign-up-screen p {
+    p {
       font-size: 16px;
       width: 70%;
       max-width: 300px;
@@ -290,16 +290,12 @@
       height: 50vh;
     }
 
-    .sign-in-form h2,
-    .sign-up-form h2,
-    .sign-in-screen h2,
-    .sign-up-screen h2 {
+    h2 {
       font-size: 6.4vw;
       margin-bottom: 30px;
     }
 
-    .sign-in-form input,
-    .sign-up-form input {
+    input {
       max-width: 240px;
       height: 30px;
       font-size: 16px;
@@ -313,8 +309,7 @@
       margin-top: 16px;
     }
 
-    .sign-in-screen p,
-    .sign-up-screen p {
+    p {
       font-size: 14px;
       width: 70%;
       max-width: 300px;
@@ -368,16 +363,12 @@
       height: 50vh;
     }
 
-    .sign-in-form h2,
-    .sign-up-form h2,
-    .sign-in-screen h2,
-    .sign-up-screen h2 {
+    h2 {
       font-size: 8vw;
       margin-bottom: 30px;
     }
 
-    .sign-in-form input,
-    .sign-up-form input {
+    input {
       max-width: 180px;
       height: 30px;
       font-size: 14px;
@@ -391,8 +382,7 @@
       margin-top: 16px;
     }
 
-    .sign-in-screen p,
-    .sign-up-screen p {
+    p {
       font-size: 3.2vw;
       width: 70%;
       max-width: 300px;
