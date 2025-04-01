@@ -28,8 +28,8 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
     authReq = addTokenHeader(req, token);
   }
 
-  if (token && !authService.isAuthenticated()) {
-    console.log('Token expired, attempting to refresh');
+  if (token && (authService.shouldRefreshToken() || !authService.isAuthenticated())) {
+    console.log('Token is about to expire or has expired, attempting to refresh');
     return handleTokenExpiration(authReq, next, authService, router, snackBar);
   }
 
