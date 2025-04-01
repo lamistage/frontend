@@ -34,8 +34,8 @@ export class PublicationComponent {
   originalFilePath!: string;
   isEditing = signal(false);
   editableTags = signal<Tag[]>([]);
-  allTags: Tag[] = []; // Храним все доступные теги
-  filteredTags: Tag[] = []; // Храним отфильтрованные теги для автодополнения
+  allTags: Tag[] = []; 
+  filteredTags: Tag[] = []; 
 
   constructor(private clipboard: Clipboard, private imageService: ImageService) {}
 
@@ -71,7 +71,7 @@ export class PublicationComponent {
   private loadAllTags() {
     this.imageService.getAllTags().subscribe({
       next: (tags) => {
-        this.allTags = tags; // Сохраняем все теги
+        this.allTags = tags; 
       },
       error: (err) => {
         console.error('Error loading tags:', err);
@@ -136,11 +136,9 @@ export class PublicationComponent {
           this.publication.tags = this.editableTags();
         }
         this.isEditing.set(false);
-        alert('Tags updated successfully!');
       },
       error: (err) => {
         console.error('Failed to update tags:', err);
-        alert('Failed to update tags. Please try again.');
       }
     });
   }
@@ -161,7 +159,7 @@ export class PublicationComponent {
         this.editableTags.update(tags => [...tags, newTag]);
       }
       input.value = '';
-      this.filteredTags = []; // Очищаем автодополнение
+      this.filteredTags = []; 
     }
   }
 

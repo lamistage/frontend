@@ -161,7 +161,6 @@ export class AddImageComponent {
       return;
     }
 
-    // Проверяем, аутентифицирован ли пользователь
     if (!this.authService.isAuthenticated()) {
       alert('Session expired. Please log in again.');
       this.authService.logout().subscribe(() => {
@@ -170,10 +169,8 @@ export class AddImageComponent {
       return;
     }
 
-    // Получаем токен (интерсептор уже обновил его, если он истек)
     const token = this.authService.getToken();
     if (!token) {
-      alert('No token found. Please log in.');
       this.authService.logout().subscribe(() => {
         this.router.navigate(['/auth']);
       });
@@ -184,7 +181,6 @@ export class AddImageComponent {
     const userLogin = this.getUserLoginFromToken(token);
 
     if (!userId || !userLogin) {
-      alert('Invalid token. Please log in again.');
       this.authService.logout().subscribe(() => {
         this.router.navigate(['/auth']);
       });
@@ -272,8 +268,6 @@ export class AddImageComponent {
     );
     if (!tagExists) {
       this.tags.update(tags => [...tags, tag]);
-    } else {
-      alert(`Tag "${tag.name}" already exists.`);
     }
     this.tagInput.nativeElement.value = '';
     this.filteredTags = [];
@@ -306,7 +300,6 @@ export class AddImageComponent {
       },
       error: (err) => {
         console.error('logout failed', err);
-        alert('failed to logout. please try again');
       }
     });
   }

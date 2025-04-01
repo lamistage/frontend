@@ -87,7 +87,6 @@ export class ProfileComponent {
     this.isLoading.set(true);
 
     if (!this.authService.isAuthenticated()) {
-      alert('Session expired. Please log in again.');
       this.authService.logout().subscribe(() => {
         this.router.navigate(['/auth']);
       });
@@ -96,7 +95,6 @@ export class ProfileComponent {
 
     const token = this.authService.getToken();
     if (!token) {
-      alert('No token found. Please log in.');
       this.authService.logout().subscribe(() => {
         this.router.navigate(['/auth']);
       });
@@ -105,7 +103,6 @@ export class ProfileComponent {
 
     const userLogin = this.getUserLoginFromToken(token);
     if (!userLogin) {
-      alert('Invalid token. Please log in again.');
       this.authService.logout().subscribe(() => {
         this.router.navigate(['/auth']);
       });
@@ -260,7 +257,6 @@ export class ProfileComponent {
       },
       error: (err) => {
         console.error('Logout failed', err);
-        alert('Failed to logout. Please try again');
       }
     });
   }
