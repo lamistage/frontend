@@ -43,6 +43,7 @@
           }
         </div>
         <div class="input-wrapper">
+          <mat-icon class="prefix-icon color_pink">search</mat-icon>
           <input
             type="text"
             placeholder="filter by tag..."
@@ -91,7 +92,11 @@
   <div class="gallery">
     <p *ngIf="isLoading()">loading..</p>
     @for (publication of images(); track publication) {
-      <app-publication [publication]="publication" (deleted)="onPublicationDeleted($event)"></app-publication>
+      <app-publication 
+        [publication]="publication" 
+        [isProfilePage]="true" 
+        (deleted)="onPublicationDeleted($event)">
+      </app-publication>
     }
   </div>
 
