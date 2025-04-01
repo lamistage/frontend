@@ -131,7 +131,7 @@ h1 {
   color: $primary-pink;
   text-align: center;
   font-size: 3.2vw;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 p {
@@ -139,7 +139,7 @@ p {
   color: $light-pink;
   text-align: center;
   font-size: 16px;
-  margin: 40px 30vw 60px;
+  margin: 30px 30vw 50px;
 }
 
 .color_pink {
@@ -206,11 +206,23 @@ p {
 
   .input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .prefix-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: $primary-pink;
   }
 
   input {
     width: 100%;
-    padding: 6px 16px;
+    padding: 6px 16px 6px 36px;
     border: 1px solid $border-pink;
     border-radius: 20px;
     font-family: $font-primary;
@@ -424,6 +436,74 @@ p {
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
+  .tag-input-container {
+    .prefix-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      left: 8px;
+    }
+
+    input {
+      padding: 4px 10px 4px 32px;
+      font-size: 18px;
+
+      &::placeholder {
+        font-size: 18px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 18px;
+    }
+
+    .tag-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 32px;
+    }
+
+    .autocomplete-item,
+    .sort-option {
+      padding: 6px 10px;
+    }
+
+    .sort-label {
+      font-size: 14px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 14px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 18px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 18px;
+  }
+
   .pm-label {
     font-size: 3.2vw;
   }
@@ -441,8 +521,8 @@ p {
   }
 
   h1 {
-    font-size: 4vw;
-    margin: 18px 0 30px;
+    font-size: 4.2vw;
+    margin: 18px 0 20px;
   }
 
   p {
@@ -453,32 +533,6 @@ p {
   .search-items {
     gap: 12px;
     margin-bottom: 28px;
-  }
-
-  .custom-chip,
-  .tag-input-container input,
-  .autocomplete-item,
-  .sort-button,
-  .sort-option {
-    font-size: 18px;
-  }
-
-  .tag-input-container input,
-  .sort-button {
-    padding: 4px 10px;
-
-    &::placeholder {
-      font-size: 18px;
-    }
-  }
-
-  .autocomplete-item,
-  .sort-option {
-    padding: 6px 10px;
-  }
-
-  .sort-label {
-    font-size: 14px;
   }
 
   .search-item.search-button {
@@ -508,6 +562,74 @@ p {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
+  .tag-input-container {
+    .prefix-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      left: 8px;
+    }
+
+    input {
+      padding: 4px 10px 4px 30px;
+      font-size: 16px;
+
+      &::placeholder {
+        font-size: 16px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 16px;
+    }
+
+    .tag-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 30px;
+    }
+
+    .autocomplete-item,
+    .sort-option {
+      padding: 6px 10px;
+    }
+
+    .sort-label {
+      font-size: 12px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 12px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 16px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+
   .pm-label {
     font-size: 3.6vw;
   }
@@ -526,43 +648,17 @@ p {
 
   h1 {
     font-size: 5vw;
-    margin: 14px 0 24px;
+    margin: 14px 0 18px;
   }
 
   p {
     font-size: clamp(14px, 1.5vw, 15px);
-    margin: 20px 20vw 26px;
+    margin: 18px 20vw 30px;
   }
 
   .search-items {
     gap: 12px;
     margin-bottom: 28px;
-  }
-
-  .custom-chip,
-  .tag-input-container input,
-  .autocomplete-item,
-  .sort-button,
-  .sort-option {
-    font-size: 16px;
-  }
-
-  .tag-input-container input,
-  .sort-button {
-    padding: 4px 10px;
-
-    &::placeholder {
-      font-size: 16px;
-    }
-  }
-
-  .autocomplete-item,
-  .sort-option {
-    padding: 6px 10px;
-  }
-
-  .sort-label {
-    font-size: 12px;
   }
 
   .search-item.search-button {
@@ -592,6 +688,74 @@ p {
 }
 
 @media (max-width: 767px) {
+  .tag-input-container {
+    .prefix-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      left: 8px;
+    }
+
+    input {
+      padding: 4px 10px 4px 28px;
+      font-size: 14px;
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 14px;
+    }
+
+    .tag-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 28px;
+    }
+
+    .autocomplete-item,
+    .sort-option {
+      padding: 6px 10px;
+    }
+
+    .sort-label {
+      font-size: 10px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 10px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
   .pm-label {
     font-size: 4vw;
   }
@@ -610,43 +774,17 @@ p {
 
   h1 {
     font-size: 6vw;
-    margin: 14px 0 24px;
+    margin: 14px 0 14px;
   }
 
   p {
     font-size: clamp(13px, 2vw, 15px);
-    margin: 20px 18vw 26px;
+    margin: 16px 18vw 28px;
   }
 
   .search-items {
     gap: 12px;
     margin-bottom: 28px;
-  }
-
-  .custom-chip,
-  .tag-input-container input,
-  .autocomplete-item,
-  .sort-button,
-  .sort-option {
-    font-size: 14px;
-  }
-
-  .tag-input-container input,
-  .sort-button {
-    padding: 4px 10px;
-
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-
-  .autocomplete-item,
-  .sort-option {
-    padding: 6px 10px;
-  }
-
-  .sort-label {
-    font-size: 10px;
   }
 
   .search-item.search-button {
@@ -670,12 +808,71 @@ p {
 
   .pagination {
     gap: 10px;
-    margin: 20px 10vw 30px;
-    font-size: 14px;
+    margin: 30px 10vw 30px;
+    font-size: clamp(13px, 2vw, 15px);
   }
 }
 
 @media (max-width: 480px) {
+  .tag-input-container {
+    .prefix-icon {
+      font-size: 12px;
+      width: 12px;
+      height: 12px;
+      left: 6px;
+    }
+
+    input {
+      padding: 4px 10px 4px 24px;
+      font-size: 14px;
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 14px;
+    }
+
+    .tag-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 24px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 10px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
   .pm-label {
     font-size: 5vw;
   }
@@ -694,12 +891,12 @@ p {
 
   h1 {
     font-size: 7vw;
-    margin: 14px 0 24px;
+    margin: 14px 0 14px;
   }
 
   p {
     font-size: clamp(10px, 2.6vw, 2rem);
-    margin: 10px 16vw 26px;
+    margin: 10px 16vw 22px;
   }
 
   .search-items {
@@ -743,6 +940,6 @@ p {
 
   .pagination {
     gap: 10px;
-    margin: 20px 10vw 30px;
+    margin: 30px 10vw 30px;
   }
 }

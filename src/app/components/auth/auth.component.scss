@@ -1,4 +1,3 @@
-// Определяем общие переменные
 $primary-pink: #ffa7b5;
 $hover-pink: #ff8fa3;
 $light-pink: #ffc0cb;
@@ -40,7 +39,7 @@ $font-secondary: 'surgena', sans-serif;
   h2 {
     font-size: 40px;
     font-family: $font-secondary;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   input {
@@ -67,8 +66,6 @@ $font-secondary: 'surgena', sans-serif;
   }
 
   button {
-    width: 180px;
-    height: 40px;
     border: none;
     border-radius: 20px;
     font-size: 18px;
@@ -81,6 +78,7 @@ $font-secondary: 'surgena', sans-serif;
     background-color: $light-pink;
     color: white;
     margin-top: 20px;
+    padding: 6px 30px 6px 30px;
 
     &:hover {
       background-color: $primary-pink;
@@ -98,6 +96,7 @@ $font-secondary: 'surgena', sans-serif;
   .sign-up-screen button {
     background-color: white;
     color: $light-pink;
+    padding: 6px 30px 6px 30px;
 
     &:hover {
       background-color: $background-hover;
@@ -116,6 +115,7 @@ $font-secondary: 'surgena', sans-serif;
     text-align: center;
     width: 80%;
     max-width: 500px;
+    margin-top: 0px;
     margin-bottom: 30px;
   }
 
@@ -230,8 +230,7 @@ $font-secondary: 'surgena', sans-serif;
 
     .sign-in-form button,
     .sign-up-form button {
-      width: 180px;
-      height: 34px;
+      padding: 6px 30px;
       font-size: 16px;
       margin-top: 18px;
     }
@@ -243,15 +242,14 @@ $font-secondary: 'surgena', sans-serif;
     }
 
     p {
-      font-size: 16px;
+      font-size: 14px;
       width: 70%;
       max-width: 300px;
     }
 
     .sign-in-screen button,
     .sign-up-screen button {
-      width: 180px;
-      height: 34px;
+      padding: 6px 30px;
       font-size: 16px;
     }
 
@@ -303,8 +301,7 @@ $font-secondary: 'surgena', sans-serif;
 
     .sign-in-form button,
     .sign-up-form button {
-      width: 140px;
-      height: 30px;
+      padding: 4px 30px;
       font-size: 16px;
       margin-top: 16px;
     }
@@ -317,8 +314,7 @@ $font-secondary: 'surgena', sans-serif;
 
     .sign-in-screen button,
     .sign-up-screen button {
-      width: 140px;
-      height: 30px;
+      padding: 4px 30px;
       font-size: 16px;
     }
 
@@ -335,18 +331,6 @@ $font-secondary: 'surgena', sans-serif;
 
   .error-message {
     font-size: 2.4vw;
-  }
-
-  .auth-container-sign-in {
-    .sign-up-screen p {
-      font-size: 2.6vw;
-    }
-  }
-
-  .auth-container-sign-up {
-    .sign-in-screen p {
-      font-size: 14px;
-    }
   }
 }
 
@@ -365,7 +349,7 @@ $font-secondary: 'surgena', sans-serif;
 
     h2 {
       font-size: 8vw;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
     }
 
     input {
@@ -376,8 +360,7 @@ $font-secondary: 'surgena', sans-serif;
 
     .sign-in-form button,
     .sign-up-form button {
-      width: 120px;
-      height: 30px;
+      padding: 4px 26px;
       font-size: 14px;
       margin-top: 16px;
     }
@@ -386,12 +369,12 @@ $font-secondary: 'surgena', sans-serif;
       font-size: 3.2vw;
       width: 70%;
       max-width: 300px;
+      margin-bottom: 24px;
     }
 
     .sign-in-screen button,
     .sign-up-screen button {
-      width: 120px;
-      height: 30px;
+      padding: 4px 26px;
       font-size: 14px;
     }
 

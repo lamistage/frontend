@@ -26,7 +26,7 @@
     </div>
   </mat-toolbar>
 
-  <h1>Upload Your<br>Photo</h1>
+  <h1>Upload Your Photo</h1>
 
   <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
       <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />

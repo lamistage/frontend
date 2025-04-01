@@ -208,11 +208,23 @@ p {
 
   .input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .prefix-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: $primary-pink;
   }
 
   input {
     width: 100%;
-    padding: 6px 10px;
+    padding: 6px 16px 6px 36px;
     border: 1px solid $border-pink;
     border-radius: 20px;
     font-family: $font-primary;
@@ -461,63 +473,75 @@ p {
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-  .pm-label {
-    font-size: 3.2vw;
-  }
-
-  .burger-button {
-    width: 40px;
-    height: 40px;
-  }
-
-  .icon-md {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
-    line-height: 28px;
-  }
-
-  h1 {
-    font-size: 4vw;
-    margin: 18px 0 30px;
-  }
-
-  p {
-    font-size: clamp(15px, 1.4vw, 16px);
-    margin: 20px 26vw 40px;
-  }
-
-  .search-items {
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .custom-chip,
-  .tag-input-container input,
-  .user-input-container input,
-  .autocomplete-item,
-  .sort-button,
-  .sort-option {
-    font-size: 18px;
-  }
-
-  .tag-input-container input,
-  .user-input-container input,
-  .sort-button {
-    padding: 4px 10px;
-
-    &::placeholder {
+  .tag-input-container,
+  .user-input-container {
+    .prefix-icon {
       font-size: 18px;
+      width: 18px;
+      height: 18px;
+      left: 8px;
+    }
+
+    input {
+      padding: 4px 10px 4px 32px;
+      font-size: 18px;
+
+      &::placeholder {
+        font-size: 18px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .user-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 18px;
+    }
+
+    .tag-input-container input,
+    .user-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 32px;
+    }
+
+    .autocomplete-item,
+    .sort-option {
+      padding: 6px 10px;
+    }
+
+    .sort-label {
+      font-size: 14px;
     }
   }
 
-  .autocomplete-item,
-  .sort-option {
-    padding: 6px 10px;
+  .sort-container {
+    gap: 4px;
   }
 
   .sort-label {
     font-size: 14px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 18px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 18px;
   }
 
   .search-item.search-button {
@@ -552,6 +576,77 @@ p {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
+  .tag-input-container,
+  .user-input-container {
+    .prefix-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      left: 8px;
+    }
+
+    input {
+      padding: 4px 10px 4px 30px;
+      font-size: 16px;
+
+      &::placeholder {
+        font-size: 16px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .user-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 16px;
+    }
+
+    .tag-input-container input,
+    .user-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 30px;
+    }
+
+    .autocomplete-item,
+    .sort-option {
+      padding: 6px 10px;
+    }
+
+    .sort-label {
+      font-size: 12px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 12px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 16px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+
   .pm-label {
     font-size: 3.6vw;
   }
@@ -583,41 +678,6 @@ p {
     margin-bottom: 28px;
   }
 
-  .custom-chip,
-  .tag-input-container input,
-  .autocomplete-item,
-  .sort-button,
-  .sort-option {
-    font-size: 16px;
-  }
-
-  .user-input-container input {
-    font-size: 14px;
-
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-
-  .tag-input-container input,
-  .user-input-container input,
-  .sort-button {
-    padding: 4px 10px;
-
-    &::placeholder {
-      font-size: 16px;
-    }
-  }
-
-  .autocomplete-item,
-  .sort-option {
-    padding: 6px 10px;
-  }
-
-  .sort-label {
-    font-size: 12px;
-  }
-
   .search-item.search-button {
     button {
       width: 30px;
@@ -639,7 +699,7 @@ p {
 
   .pagination {
     gap: 12px;
-    margin: 24px 10vw 30px;
+    margin: 30px 10vw 30px;
     font-size: 14px;
   }
 
@@ -650,6 +710,77 @@ p {
 }
 
 @media (max-width: 767px) {
+  .tag-input-container,
+  .user-input-container {
+    .prefix-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      left: 8px;
+    }
+
+    input {
+      padding: 4px 10px 4px 28px;
+      font-size: 14px;
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .user-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 14px;
+    }
+
+    .tag-input-container input,
+    .user-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 28px;
+    }
+
+    .autocomplete-item,
+    .sort-option {
+      padding: 6px 10px;
+    }
+
+    .sort-label {
+      font-size: 10px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 10px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
   .pm-label {
     font-size: 4vw;
   }
@@ -711,34 +842,6 @@ p {
     }
   }
 
-  .custom-chip,
-  .tag-input-container input,
-  .user-input-container input,
-  .autocomplete-item,
-  .sort-button,
-  .sort-option {
-    font-size: 14px;
-  }
-
-  .tag-input-container input,
-  .user-input-container input,
-  .sort-button {
-    padding: 4px 10px;
-
-    &::placeholder {
-      font-size: 14px;
-    }
-  }
-
-  .autocomplete-item,
-  .sort-option {
-    padding: 6px 10px;
-  }
-
-  .sort-label {
-    font-size: 10px;
-  }
-
   .gallery {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
@@ -746,7 +849,7 @@ p {
 
   .pagination {
     gap: 10px;
-    margin: 20px 10vw 30px;
+    margin: 30px 10vw 30px;
     font-size: 14px;
   }
 
@@ -757,6 +860,68 @@ p {
 }
 
 @media (max-width: 480px) {
+  .tag-input-container,
+  .user-input-container {
+    .prefix-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      left: 6px;
+    }
+
+    input {
+      padding: 4px 10px 4px 24px;
+      font-size: 14px;
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .custom-chip,
+    .tag-input-container input,
+    .user-input-container input,
+    .autocomplete-item,
+    .sort-button,
+    .sort-option {
+      font-size: 14px;
+    }
+
+    .tag-input-container input,
+    .user-input-container input,
+    .sort-button {
+      padding: 4px 10px 4px 24px;
+    }
+  }
+
+  .sort-container {
+    gap: 4px;
+  }
+
+  .sort-label {
+    font-size: 10px;
+  }
+
+  .sort-button {
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+
+  .sort-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .sort-dropdown {
+    margin-top: 4px;
+  }
+
+  .sort-option {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
   .pm-label {
     font-size: 5vw;
   }
