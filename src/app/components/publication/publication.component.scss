@@ -42,6 +42,19 @@ $font-primary: 'Geologica-Regular', sans-serif;
   white-space: nowrap;
 }
 
+.copy-message {
+  color: $primary-pink; 
+  font-family: $font-primary;
+  font-size: 12px;
+  background-color: $background-hover; 
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.copy-message.ng-leave {
+  opacity: 0;
+}
+
 .button-group {
   display: flex;
   align-items: center;
@@ -268,6 +281,10 @@ $font-primary: 'Geologica-Regular', sans-serif;
     font-size: 16px;
   }
 
+  .copy-message {
+    font-size: 10px;
+  }
+
   .image-container {
     margin-bottom: 16px;
     border-radius: 12px;
@@ -312,7 +329,7 @@ $font-primary: 'Geologica-Regular', sans-serif;
   .user-login {
     font-size: 16px;
   }
-
+  
   .image-container {
     margin-bottom: 12px;
   }

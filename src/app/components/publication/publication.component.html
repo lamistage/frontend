@@ -1,6 +1,9 @@
 <div class="publication-container">
   <div class="header">
     <span class="user-login">{{ publication.user.login }}</span>
+    <div class="copy-message" *ngIf="showCopyMessage()">
+      copied to clipboard!
+    </div>
     <div class="button-group">
       <button mat-icon-button class="copy-btn" (click)="copyImage()">
         <mat-icon class="material-icons color_pink">content_copy</mat-icon>

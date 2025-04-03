@@ -28,12 +28,19 @@
 
   <h1>Upload Your Photo</h1>
 
+  <div class="message" *ngIf="showSuccessMessage()">
+    image uploaded successfully!
+  </div>
+
   <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
       <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
       <mat-icon>file_upload</mat-icon>
       <h3>drag & drop file here</h3>
       <h3>or</h3>
       <button mat-flat-button (click)="fileInput.click()">browse for file</button>
+  </div>
+  <div class="message" *ngIf="showBadFileTypeMessage()">
+    please select a .jpg or .png file !
   </div>
 
   <div class="image-preview" *ngIf="selectedFile()">
@@ -77,9 +84,4 @@
   </div>
 
   <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
-
-  <div *ngIf="uploadSuccess">
-      <p>Image uploaded successfully!</p>
-      <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded image">
-  </div>
 </div>

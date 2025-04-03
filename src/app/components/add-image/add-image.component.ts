@@ -56,6 +56,8 @@ export class AddImageComponent {
   tagCtrl = new FormControl('');
   allTags: Tag[] = [];
   filteredTags: Tag[] = [];
+  showBadFileTypeMessage = signal(false);
+  showSuccessMessage = signal(false);
 
   isMenuOpen = false;
   isMenuVisible = false;
@@ -132,7 +134,10 @@ export class AddImageComponent {
         const fakeEvent = { target: { files: [file] } } as any;
         this.onFileSelected(fakeEvent);
       } else {
-        alert('please select a .jpg or .png file.');
+        this.showBadFileTypeMessage.set(true);
+        setTimeout(() => {
+          this.showBadFileTypeMessage.set(false);
+        }, 5000);
       }
     }
   }
@@ -146,10 +151,10 @@ export class AddImageComponent {
         this.previewUrl.set(URL.createObjectURL(file));
         console.log('File selected:', this.selectedFile());
       } else {
-        alert('Please select a .jpg or .png file.');
-        this.selectedFile.set(null);
-        this.previewUrl.set(null);
-        input.value = '';
+        this.showBadFileTypeMessage.set(true);
+        setTimeout(() => {
+          this.showBadFileTypeMessage.set(false);
+        }, 5000);
       }
     }
   }
@@ -228,7 +233,10 @@ export class AddImageComponent {
 
         this.addImageService.saveImage(imageData).subscribe({
           next: () => {
-            alert('Image added successfully');
+            this.showSuccessMessage.set(true);
+            setTimeout(() => {
+              this.showSuccessMessage.set(false);
+            }, 2000);
             console.log('Image added successfully', imageData);
             this.tags.set([]);
             this.selectedFile.set(null);

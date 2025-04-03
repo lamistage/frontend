@@ -260,6 +260,21 @@ img {
   }
 }
 
+.message {
+  color: #ff6b81; 
+  font-family: $font-primary;
+  font-size: 12px;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+  text-align: center;
+  width: 100%;
+}
+
+.message.ng-leave {
+  opacity: 0;
+}
+
+
 .tag-input-container {
   display: flex;
   flex-direction: column;

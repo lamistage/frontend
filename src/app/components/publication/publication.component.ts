@@ -36,6 +36,7 @@ export class PublicationComponent {
   editableTags = signal<Tag[]>([]);
   allTags: Tag[] = []; 
   filteredTags: Tag[] = []; 
+  showCopyMessage = signal(false); 
 
   constructor(private clipboard: Clipboard, private imageService: ImageService) {}
 
@@ -84,7 +85,10 @@ export class PublicationComponent {
       await navigator.clipboard.write([
         new ClipboardItem({ [this.imageBlob.type]: this.imageBlob }),
       ]);
-      alert('The image has been copied to the clipboard!');
+      this.showCopyMessage.set(true);
+      setTimeout(() => {
+        this.showCopyMessage.set(false);
+      }, 1000);
     } catch (err) {
       console.error('Copy error:', err);
       alert('Failed to copy the image.');
@@ -96,7 +100,6 @@ export class PublicationComponent {
       const imageToDelete = { ...this.publication, filePath: this.originalFilePath };
       this.imageService.deletePublication(imageToDelete).subscribe({
         next: () => {
-          alert('Publication deleted successfully!');
           this.deleted.emit(this.publication.id);
         },
         error: (err) => {
