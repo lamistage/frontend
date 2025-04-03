@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, signal, effect } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal, effect, HostListener } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -39,6 +39,10 @@ interface SortType {
 export class GalleryComponent {
   @ViewChild('tagInput') tagInput!: ElementRef;
   @ViewChild('userInput') userInput!: ElementRef;
+  @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef;
+  @ViewChild('tagInputContainer', { static: false }) tagInputContainer!: ElementRef; 
+  @ViewChild('userInputContainer', { static: false }) userInputContainer!: ElementRef; 
+  @ViewChild('sortContainer', { static: false }) sortContainer!: ElementRef; 
 
   readonly tags = signal<Tag[]>([]);
   readonly users = signal<User[]>([]);
@@ -88,6 +92,51 @@ export class GalleryComponent {
   onAnimationEnd(event: AnimationEvent): void {
     if (event.animationName === 'slideUp') {
       this.isMenuVisible = false;
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (this.isMenuOpen) {
+      const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
+      const burgerButton = menuContainerElement?.querySelector('.burger-button');
+      const clickedInsideMenu = menuContainerElement?.contains(target);
+      const clickedOnBurgerButton = burgerButton?.contains(target);
+
+      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && target.closest('.custom-menu'))) {
+        this.isMenuOpen = false;
+      }
+    }
+
+    if (this.filteredTags.length > 0) {
+      const tagInputContainerElement = this.tagInputContainer?.nativeElement as HTMLElement;
+      const clickedInsideTagInput = tagInputContainerElement?.contains(target);
+
+      if (!clickedInsideTagInput) {
+        this.filteredTags = [];
+        this.tagInput.nativeElement.value = '';
+      }
+    }
+
+    if (this.filteredUsers.length > 0) {
+      const userInputContainerElement = this.userInputContainer?.nativeElement as HTMLElement;
+      const clickedInsideUserInput = userInputContainerElement?.contains(target);
+
+      if (!clickedInsideUserInput) {
+        this.filteredUsers = [];
+        this.userInput.nativeElement.value = '';
+      }
+    }
+
+    if (this.isSortOpen) {
+      const sortContainerElement = this.sortContainer?.nativeElement as HTMLElement;
+      const clickedInsideSortContainer = sortContainerElement?.contains(target);
+
+      if (!clickedInsideSortContainer) {
+        this.isSortOpen = false;
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 <mat-toolbar>
   <span class="pm-label">pm</span>
-  <div class="menu-container">
+  <div class="menu-container" #menuContainer>
     @if (isAuthenticated()) {
       <button class="burger-button" (click)="toggleMenu()">
         <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
@@ -39,7 +39,7 @@
 <div class="container">
   <div class="search-items">
     <div class="search-item">
-      <div class="tag-input-container">
+      <div class="tag-input-container" #tagInputContainer>
         <div class="custom-chip-set">
           @for (tag of tags(); track tag) {
             <div class="custom-chip">
@@ -73,7 +73,7 @@
     </div>
 
     <div class="search-item">
-      <div class="user-input-container">
+      <div class="user-input-container" #userInputContainer>
         <div class="custom-chip-set">
           @for (user of users(); track user) {
             <div class="custom-chip">
@@ -107,7 +107,7 @@
     </div>
 
     <div class="search-item">
-      <div class="sort-container">
+      <div class="sort-container" #sortContainer>
         <label class="sort-label">sorting order</label>
         <div class="sort-wrapper">
           <button class="sort-button" (click)="toggleSortDropdown()">

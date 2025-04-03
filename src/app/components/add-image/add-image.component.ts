@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddImageService } from '../../services/add-image.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -38,6 +38,7 @@ export interface Tag {
 })
 export class AddImageComponent {
   @ViewChild('tagInput') tagInput!: ElementRef;
+  @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef; 
 
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
@@ -82,6 +83,23 @@ export class AddImageComponent {
       this.isMenuVisible = false;
     }
   }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.isMenuOpen) {
+      const target = event.target as HTMLElement;
+      const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
+      const burgerButton = menuContainerElement?.querySelector('.burger-button');
+
+      const clickedInsideMenu = menuContainerElement?.contains(target);
+      const clickedOnBurgerButton = burgerButton?.contains(target);
+
+      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && target.closest('.custom-menu'))) {
+        this.isMenuOpen = false;
+      }
+    }
+  }
+
 
   loadAllTags() {
     this.addImageService.getAllTags().subscribe({

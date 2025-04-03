@@ -1,7 +1,7 @@
 <div class="add-image-page">
   <mat-toolbar>
     <span class="pm-label">pm</span>
-    <div class="menu-container">
+    <div class="menu-container" #menuContainer>
       <button class="burger-button" (click)="toggleMenu()">
         <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </button>
