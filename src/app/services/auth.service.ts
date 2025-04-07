@@ -137,7 +137,7 @@ export class AuthService {
       return null;
     }
 
-    const expiresInMs = parseInt(expiresIn, 10) * 1000;
+    const expiresInMs = parseInt(expiresIn, 10);
     const expirationTime = iat * 1000 + expiresInMs; 
     return expirationTime;
   }
@@ -156,7 +156,6 @@ export class AuthService {
   }
 
   private startTokenRefreshTimer(): void {
-    // Проверяем каждые 30 секунд
     this.refreshInterval = interval(30 * 1000).pipe(
       switchMap(() => {
         if (this.shouldRefreshToken()) {
