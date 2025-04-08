@@ -5,16 +5,20 @@
       <button class="burger-button" (click)="toggleMenu()">
         <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </button>
-      <div class="custom-menu" *ngIf="isMenuVisible" [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" (animationend)="onAnimationEnd($event)">
-        <button class="menu-item" [routerLink]="['/profile']">
+      <div class="custom-menu" *ngIf="isMenuOpen">
+        <button class="menu-item" [routerLink]="['/profile']" (click)="closeMenu()">
           <mat-icon class="color_pink icon-sm">person</mat-icon>
           <span>profile</span>
         </button>
-        <button class="menu-item" [routerLink]="['/gallery']">
+        <button class="menu-item" [routerLink]="['/gallery']" (click)="closeMenu()">
           <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
           <span>gallery</span>
         </button>
-        <button class="menu-item" [routerLink]="['/add-image']">
+        <button class="menu-item" [routerLink]="['/favorites']" (click)="closeMenu()">
+          <mat-icon class="color_pink icon-sm">star</mat-icon>
+          <span>favorites</span>
+        </button>
+        <button class="menu-item" [routerLink]="['/add-image']" (click)="closeMenu()">
           <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
           <span>add-image</span>
         </button>
@@ -23,8 +27,7 @@
           <span>logout</span>
         </button>
       </div>
-    }
-    @else {
+    } @else {
       <div class="auth-buttons">
         <button class="auth-button login-button" (click)="goToLogin()">Log in</button>
         <button class="auth-button signup-button" (click)="goToSignUp()">Sign up</button>

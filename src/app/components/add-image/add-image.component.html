@@ -5,7 +5,7 @@
       <button class="burger-button" (click)="toggleMenu()">
         <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </button>
-      <div class="custom-menu" *ngIf="isMenuVisible" [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" (animationend)="onAnimationEnd($event)">
+      <div class="custom-menu" *ngIf="isMenuOpen">
         <button class="menu-item" [routerLink]="['/profile']">
           <mat-icon class="color_pink icon-sm">person</mat-icon>
           <span>profile</span>
@@ -13,6 +13,10 @@
         <button class="menu-item" [routerLink]="['/gallery']">
           <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
           <span>gallery</span>
+        </button>
+        <button class="menu-item" [routerLink]="['/favorites']">
+          <mat-icon class="color_pink icon-sm">star</mat-icon>
+          <span>favorites</span>
         </button>
         <button class="menu-item" [routerLink]="['/add-image']">
           <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
