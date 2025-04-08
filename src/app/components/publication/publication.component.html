@@ -1,76 +1,97 @@
 <div class="publication-container">
-  <div class="header">
-    <span class="user-login">{{ publication.user.login }}</span>
-    <div class="copy-message" *ngIf="showCopyMessage()">
-      copied to clipboard!
-    </div>
-    <div class="button-group">
-      <button mat-icon-button class="copy-btn" (click)="copyImage()">
-        <mat-icon class="material-icons color_pink">content_copy</mat-icon>
-      </button>
-      <ng-container *ngIf="isProfilePage">
-        <button mat-icon-button class="edit-btn" (click)="startEditing()" *ngIf="!isEditing()">
-          <mat-icon class="material-icons color_pink">edit</mat-icon>
-        </button>
-        <button mat-icon-button class="delete-btn" (click)="deletePublication()">
-          <mat-icon class="material-icons color_pink">delete</mat-icon>
-        </button>
-      </ng-container>
-    </div>
-  </div>
-
-  <div class="image-container" *ngIf="imageLoaded && publication.filePath">
-    <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
-  </div>
-
-  <div class="image-container" *ngIf="!imageLoaded">
-    <p>Loading image...</p>
-  </div>
-
-  <div class="tags-container">
-    @if (!isEditing()) {
-      <div class="custom-chip-set">
-        @for (tag of publication.tags; track tag) {
-          <div class="custom-chip">
-            <span>{{tag.name}}</span>
+  <div class="publication-content" [ngClass]="{'dimmed': isDialogOpen()}">
+      <div class="header">
+          <span class="user-login">{{ publication.user.login }}</span>
+          <div class="copy-message" *ngIf="showCopyMessage()">
+              copied to clipboard!
           </div>
-        }
-      </div>
-    }
-
-    @if (isEditing()) {
-      <div class="custom-chip-set">
-        @for (tag of editableTags(); track tag) {
-          <div class="custom-chip">
-            <span>{{tag.name}}</span>
-            <button class="remove-chip-btn" (click)="removeTag(tag)">
-              <mat-icon>clear</mat-icon>
-            </button>
+          <div class="button-group">
+              <div class="action-buttons" *ngIf="isProfilePage">
+                  <button mat-icon-button class="delete-btn" (click)="deletePublication()">
+                      <mat-icon class="material-icons color_pink">delete</mat-icon>
+                  </button>
+              </div>
+              <button mat-icon-button class="copy-btn" (click)="copyImage()">
+                  <mat-icon class="material-icons color_pink">content_copy</mat-icon>
+              </button>
+              <button *ngIf="isAuthenticated()" mat-icon-button class="favorite-btn" (click)="toggleFavorite()">
+                  <mat-icon class="material-icons color_pink">
+                      {{ isFavorited ? 'star' : 'star_border' }}
+                  </mat-icon>
+              </button>
           </div>
-        }
       </div>
-      <div class="tag-input-container">
-        <div class="input-wrapper">
-          <input
-            type="text"
-            placeholder="new tag.."
-            (keyup.enter)="addTagFromInput($event)"
-            (input)="filterTags($event)"
-            #tagInput
-          >
-          @if (filteredTags.length > 0) {
-            <div class="autocomplete-dropdown">
-              @for (tag of filteredTags; track tag) {
-                <div class="autocomplete-item" (click)="selectTag(tag)">
-                  {{tag.name}}
-                </div>
-              }
-            </div>
+
+      <div class="image-container" *ngIf="imageLoaded && publication.filePath">
+          <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
+      </div>
+
+      <div class="image-container" *ngIf="!imageLoaded">
+          <p>Loading image...</p>
+      </div>
+
+      <div class="tags-container">
+          @if (!isEditing()) {
+              <div class="custom-chip-set">
+                  @for (tag of publication.tags; track tag) {
+                      <div class="custom-chip">
+                          <span>{{tag.name}}</span>
+                      </div>
+                  }
+              </div>
           }
-        </div>
-        <div class="error-message" *ngIf="editableTags().length === 0">add at least one tag</div>
+
+          @if (isEditing()) {
+              <div class="custom-chip-set">
+                  @for (tag of editableTags(); track tag) {
+                      <div class="custom-chip">
+                          <span>{{tag.name}}</span>
+                          <button class="remove-chip-btn" (click)="removeTag(tag)">
+                              <mat-icon>clear</mat-icon>
+                          </button>
+                      </div>
+                  }
+              </div>
+              <div class="tag-input-container">
+                  <div class="input-wrapper">
+                      <input
+                          type="text"
+                          placeholder="new tag.."
+                          (keyup.enter)="addTagFromInput($event)"
+                          (input)="filterTags($event)"
+                          #tagInput
+                      >
+                      @if (filteredTags.length > 0) {
+                          <div class="autocomplete-dropdown">
+                              @for (tag of filteredTags; track tag) {
+                                  <div class="autocomplete-item" (click)="selectTag(tag)">
+                                      {{tag.name}}
+                                  </div>
+                              }
+                          </div>
+                      }
+                  </div>
+                  <div class="error-message" *ngIf="editableTags().length === 0">add at least one tag</div>
+              </div>
+              <button class="save-btn" (click)="saveTags()" [disabled]="editableTags().length === 0">ok</button>
+          }
       </div>
-      <button class="save-btn" (click)="saveTags()" [disabled]="editableTags().length === 0">ok</button>
-    }
+
+      <div class="action-buttons" *ngIf="isProfilePage">
+          <button mat-icon-button class="edit-btn" (click)="startEditing()" *ngIf="!isEditing()">
+              <mat-icon class="material-icons color_pink">edit</mat-icon>
+          </button>
+      </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="isDialogOpen()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+          <h2>Delete publication</h2>
+          <p>Are you sure you want to delete this publication?</p>
+          <div class="modal-actions">
+              <button class="cancel-button" (click)="closeDeleteDialog()">Cancel</button>
+              <button class="delete-button" (click)="confirmDelete()">Delete</button>
+          </div>
+      </div>
   </div>
 </div>

@@ -220,11 +220,19 @@ $font-primary: 'Geologica-Regular', sans-serif;
 
 .copy-btn,
 .edit-btn,
-.delete-btn {
+.delete-btn,
+.favorite-btn {
   width: 26px;
   height: 26px;
   line-height: 26px;
   padding: 0;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+  gap: 10px;
 }
 
 .material-icons.color_pink {
@@ -355,7 +363,8 @@ $font-primary: 'Geologica-Regular', sans-serif;
 
   .copy-btn,
   .edit-btn,
-  .delete-btn {
+  .delete-btn,
+  .favorite-btn {
     width: 24px;
     height: 24px;
     line-height: 24px;
