@@ -103,7 +103,7 @@ export class AuthService {
     }
 
     const expiresInMs = parseInt(expiresIn, 10); 
-    const expirationTime = iat*1000 + expiresInMs; 
+    const expirationTime = iat * 1000 + expiresInMs; 
     const currentTime = new Date().getTime();
 
     console.log('Current time:', currentTime);
@@ -114,6 +114,26 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.id; 
+      if (!userId) {
+        console.error('id not found in token');
+        return null;
+      }
+      return userId;
+    } catch (e) {
+      console.error('Error decoding token:', e);
+      return null;
+    }
   }
 
   getTokenExpirationTime(): number | null {
