@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,12 +12,17 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./auth.component.scss'],
   imports: [ReactiveFormsModule, CommonModule]
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit { 
   form: FormGroup;
   isRegisterMode = false;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private route: ActivatedRoute 
+  ) {
     this.form = this.fb.group({
       login: ['', [
         Validators.required,
@@ -32,6 +37,17 @@ export class AuthComponent {
         Validators.maxLength(50),
         this.noWhitespaceValidator
       ]]
+    });
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const mode = params['mode'];
+      if (mode === 'signup') {
+        this.isRegisterMode = true;
+      } else if (mode === 'signin') {
+        this.isRegisterMode = false;
+      }
     });
   }
 
