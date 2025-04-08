@@ -57,8 +57,6 @@ export class GalleryComponent {
   selectedSort = signal<string>('date,desc');
   isSortOpen = false;
   isMenuOpen = false;
-  isMenuVisible = false;
-  isAuthenticated = signal<boolean>(false);
 
   readonly images = signal<Image[]>([]);
   readonly isLoading = signal<boolean>(true);
@@ -83,16 +81,11 @@ export class GalleryComponent {
   }
 
   toggleMenu(): void {
-    if (!this.isMenuOpen) {
-      this.isMenuVisible = true;
-    }
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  onAnimationEnd(event: AnimationEvent): void {
-    if (event.animationName === 'slideUp') {
-      this.isMenuVisible = false;
-    }
+    closeMenu(): void {
+        this.isMenuOpen = false;
   }
 
   @HostListener('document:click', ['$event'])
@@ -102,11 +95,13 @@ export class GalleryComponent {
     if (this.isMenuOpen) {
       const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
       const burgerButton = menuContainerElement?.querySelector('.burger-button');
+            const customMenu = menuContainerElement?.querySelector('.custom-menu');
       const clickedInsideMenu = menuContainerElement?.contains(target);
       const clickedOnBurgerButton = burgerButton?.contains(target);
+            const clickedInsideCustomMenu = customMenu?.contains(target);
 
-      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && target.closest('.custom-menu'))) {
-        this.isMenuOpen = false;
+            if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
+                this.closeMenu();
       }
     }
 

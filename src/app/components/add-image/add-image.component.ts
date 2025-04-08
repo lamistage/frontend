@@ -60,7 +60,6 @@ export class AddImageComponent {
   showSuccessMessage = signal(false);
 
   isMenuOpen = false;
-  isMenuVisible = false;
 
   constructor() {
     this.checkAuthentication();
@@ -74,31 +73,29 @@ export class AddImageComponent {
   }
 
   toggleMenu(): void {
-    if (!this.isMenuOpen) {
-      this.isMenuVisible = true;
-    }
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  onAnimationEnd(event: AnimationEvent): void {
-    if (event.animationName === 'slideUp') {
-      this.isMenuVisible = false;
-    }
+  closeMenu(): void {
+    this.isMenuOpen = false;
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
     if (this.isMenuOpen) {
-      const target = event.target as HTMLElement;
-      const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
-      const burgerButton = menuContainerElement?.querySelector('.burger-button');
+        const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
+        const burgerButton = menuContainerElement?.querySelector('.burger-button');
+        const customMenu = menuContainerElement?.querySelector('.custom-menu');
+        const clickedInsideMenu = menuContainerElement?.contains(target);
+        const clickedOnBurgerButton = burgerButton?.contains(target);
+        const clickedInsideCustomMenu = customMenu?.contains(target);
 
-      const clickedInsideMenu = menuContainerElement?.contains(target);
-      const clickedOnBurgerButton = burgerButton?.contains(target);
-
-      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && target.closest('.custom-menu'))) {
-        this.isMenuOpen = false;
-      }
+        // Если кликнули вне меню или внутри контейнера меню, но не на кнопке бургера и не внутри самого меню
+        if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
+            this.closeMenu();
+        }
     }
   }
 
@@ -233,10 +230,6 @@ export class AddImageComponent {
 
         this.addImageService.saveImage(imageData).subscribe({
           next: () => {
-            this.showSuccessMessage.set(true);
-            setTimeout(() => {
-              this.showSuccessMessage.set(false);
-            }, 2000);
             console.log('Image added successfully', imageData);
             this.tags.set([]);
             this.selectedFile.set(null);

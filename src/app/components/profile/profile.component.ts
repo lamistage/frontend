@@ -52,7 +52,6 @@ export class ProfileComponent {
   filteredTags: Tag[] = [];
   isSortOpen = false;
   isMenuOpen = false;
-  isMenuVisible = false;
 
   currentPage = signal<number>(0);
   totalPages = signal<number>(1);
@@ -74,16 +73,11 @@ export class ProfileComponent {
   }
 
   toggleMenu(): void {
-    if (!this.isMenuOpen) {
-      this.isMenuVisible = true;
-    }
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  onAnimationEnd(event: AnimationEvent): void {
-    if (event.animationName === 'slideUp') {
-      this.isMenuVisible = false;
-    }
+  closeMenu(): void {
+    this.isMenuOpen = false;
   }
 
   @HostListener('document:click', ['$event'])
@@ -93,13 +87,15 @@ export class ProfileComponent {
     if (this.isMenuOpen) {
       const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
       const burgerButton = menuContainerElement?.querySelector('.burger-button');
+      const customMenu = menuContainerElement?.querySelector('.custom-menu');
       const clickedInsideMenu = menuContainerElement?.contains(target);
       const clickedOnBurgerButton = burgerButton?.contains(target);
+      const clickedInsideCustomMenu = customMenu?.contains(target);
 
-      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && target.closest('.custom-menu'))) {
-        this.isMenuOpen = false;
+      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
+          this.closeMenu();
       }
-    }
+  }
 
     if (this.filteredTags.length > 0) {
       const tagInputContainerElement = this.tagInputContainer?.nativeElement as HTMLElement;
