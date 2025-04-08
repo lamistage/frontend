@@ -388,6 +388,34 @@ p {
   gap: 14px;
 }
 
+.no-photos-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 15vh; 
+  width: 80vw;
+  margin: 0px 10vw ;
+}
+
+.no-photos-message {
+  font-family: $font-primary;
+  font-size: 18px;
+  color: $light-pink;
+  text-align: center;
+  margin: 40px 0;
+
+  .upload-link {
+      color: $primary-pink;
+      text-decoration: none;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+          color: $hover-pink;
+      }
+  }
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -554,6 +582,14 @@ p {
     gap: 14px;
   }
 
+  .no-photos-container {
+    min-height: 15vh;
+  }
+
+  .no-photos-message {
+    font-size: 16px;
+  }
+
   .pagination {
     gap: 12px;
     margin: 30px 10vw 50px;
@@ -680,6 +716,14 @@ p {
     gap: 12px;
   }
 
+  .no-photos-container {
+    min-height: 10vh;
+  }
+
+  .no-photos-message {
+    font-size: 15px;
+  }
+
   .pagination {
     gap: 12px;
     margin: 24px 10vw 30px;
@@ -804,6 +848,14 @@ p {
   .gallery {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+
+  .no-photos-container {
+    min-height: 10vh;
+  }
+
+  .no-photos-message {
+    font-size: 15px;
   }
 
   .pagination {
@@ -936,6 +988,14 @@ p {
   .gallery {
     grid-template-columns: repeat(1, 1fr);
     gap: 10px;
+  }
+
+  .no-photos-container {
+    min-height: 10vh;
+  }
+
+  .no-photos-message {
+    font-size: 13px;
   }
 
   .pagination {
