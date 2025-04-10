@@ -131,7 +131,10 @@
       <p *ngIf="isLoading()">loading...</p>
       @if (!isLoading()) {
           @for (publication of images(); track publication) {
-              <app-publication [publication]="publication"></app-publication>
+              <app-publication 
+                [publication]="publication"
+                (removedFromFavorites)="onRemovedFromFavorites($event)"
+              ></app-publication>
           }
       }
   </div>

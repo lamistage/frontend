@@ -29,6 +29,7 @@ export class PublicationComponent {
     @Input() publication!: Image;
     @Input() isProfilePage: boolean = false;
     @Output() deleted = new EventEmitter<number>();
+    @Output() removedFromFavorites = new EventEmitter<number>();
     @ViewChild('tagInput') tagInput!: ElementRef;
 
     imageBlob!: Blob;
@@ -247,6 +248,7 @@ export class PublicationComponent {
             this.favoritesService.removeFromFavorites(userId, this.publication.id).subscribe({
                 next: () => {
                     this.isFavorited = false;
+                    this.removedFromFavorites.emit(this.publication.id);
                 },
                 error: (err) => {
                     console.error('Failed to remove from favorites:', err);
