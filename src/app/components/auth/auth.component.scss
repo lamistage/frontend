@@ -1,13 +1,4 @@
-$primary-pink: #ffa7b5;
-$hover-pink: #ff8fa3;
-$light-pink: #ffc0cb;
-$border-pink: #ffd9df;
-$background-hover: #fff2f4;
-$disabled-pink: #ffdbdf;
-$error-pink: #ff8da1;
-$error-message-pink: #ff6b81;
-$font-primary: 'Geologica-Regular', sans-serif;
-$font-secondary: 'surgena', sans-serif;
+@use '../../styles/shared-styles.scss' as *;
 
 .auth-container-sign-in,
 .auth-container-sign-up {
@@ -191,25 +182,6 @@ $font-secondary: 'surgena', sans-serif;
   .sign-up-screen,
   .sign-up-form {
     display: block;
-  }
-}
-
-.error-message {
-  font-family: $font-primary;
-  color: $error-message-pink;
-  font-size: 14px;
-  margin: 5px;
-  text-align: center;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
