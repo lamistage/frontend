@@ -79,6 +79,11 @@ $font-primary: 'Geologica-Regular', sans-serif;
   background-color: #fff;
   border-radius: 10px;
   overflow: hidden;
+
+  p {
+    font-family: $font-primary;
+    color: $light-pink;
+  }
 }
 
 .publication-image {

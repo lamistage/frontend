@@ -1,18 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddImageService } from '../../services/add-image.service';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 export interface Tag {
   name: string;
@@ -23,14 +17,10 @@ export interface Tag {
   standalone: true,
   imports: [
     CommonModule,
-    MatFormFieldModule,
-    MatChipsModule,
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    RouterModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule
+        RouterModule
   ],
   templateUrl: './add-image.component.html',
   styleUrls: ['./add-image.component.scss'],
@@ -45,15 +35,11 @@ export class AddImageComponent {
   uploadSuccess: boolean = false;
   imageUrl: string | null = null;
 
-  readonly addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
   readonly tags = signal<Tag[]>([]);
-  readonly announcer = inject(LiveAnnouncer);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly addImageService = inject(AddImageService);
 
-  tagCtrl = new FormControl('');
   allTags: Tag[] = [];
   filteredTags: Tag[] = [];
   showBadFileTypeMessage = signal(false);
@@ -92,13 +78,11 @@ export class AddImageComponent {
         const clickedOnBurgerButton = burgerButton?.contains(target);
         const clickedInsideCustomMenu = customMenu?.contains(target);
 
-        // Если кликнули вне меню или внутри контейнера меню, но не на кнопке бургера и не внутри самого меню
         if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
             this.closeMenu();
         }
     }
   }
-
 
   loadAllTags() {
     this.addImageService.getAllTags().subscribe({

@@ -6,6 +6,7 @@ import { GalleryComponent } from './components/gallery/gallery.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
 
+
 export const routes: Route[] = [
   { path: '', redirectTo: 'gallery', pathMatch: 'full' },
   { path: 'auth', component: AuthComponent },

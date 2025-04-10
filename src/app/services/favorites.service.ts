@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators'; 
 import { Image } from '../models/image';
 
+
 export interface Page<T> {
     content: T[];
     totalPages: number;

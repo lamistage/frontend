@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
 import { RouterModule } from '@angular/router';
 
+
 @Component({
     selector: 'app-favorites',
     imports: [
@@ -86,7 +87,6 @@ export class FavoritesComponent {
           const clickedOnBurgerButton = burgerButton?.contains(target);
           const clickedInsideCustomMenu = customMenu?.contains(target);
 
-          // Если кликнули вне меню или внутри контейнера меню, но не на кнопке бургера и не внутри самого меню
           if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
               this.closeMenu();
           }
@@ -310,5 +310,9 @@ export class FavoritesComponent {
             this.currentPage.update(page => page + 1);
             this.loadFavorites();
         }
+    }
+
+    onRemovedFromFavorites(publicationId:number): void {
+        this.loadFavorites();
     }
 }

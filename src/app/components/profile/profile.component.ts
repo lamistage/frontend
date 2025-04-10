@@ -8,11 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PublicationComponent } from '../publication/publication.component';
-import { FormsModule } from '@angular/forms';
 
-export interface User {
-  login: string;
-}
 
 interface SortType {
   value: string;
@@ -27,8 +23,7 @@ interface SortType {
     MatButtonModule,
     MatIconModule,
     RouterModule,
-    PublicationComponent,
-    FormsModule
+    PublicationComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
