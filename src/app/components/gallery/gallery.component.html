@@ -60,6 +60,7 @@
             placeholder="new tag..."
             (keyup.enter)="addTagFromInput($event)"
             (input)="filterTags($event)"
+            (focus)="onTagInputFocus()"
             #tagInput
           >
           @if (filteredTags.length > 0) {
@@ -94,6 +95,7 @@
             placeholder="new user..."
             (keyup.enter)="addUserFromInput($event)"
             (input)="filterUsers($event)"
+            (focus)="onUserInputFocus()"
             #userInput
           >
           @if (filteredUsers.length > 0) {

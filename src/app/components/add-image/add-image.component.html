@@ -1,91 +1,92 @@
 <div class="add-image-page">
-  <mat-toolbar>
-    <span class="pm-label">pm</span>
-    <div class="menu-container" #menuContainer>
-      <button class="burger-button" (click)="toggleMenu()">
-        <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
-      </button>
-      <div class="custom-menu" *ngIf="isMenuOpen">
-        <button class="menu-item" [routerLink]="['/profile']">
-          <mat-icon class="color_pink icon-sm">person</mat-icon>
-          <span>profile</span>
+    <mat-toolbar>
+        <span class="pm-label">pm</span>
+        <div class="menu-container" #menuContainer>
+        <button class="burger-button" (click)="toggleMenu()">
+            <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
         </button>
-        <button class="menu-item" [routerLink]="['/gallery']">
-          <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
-          <span>gallery</span>
-        </button>
-        <button class="menu-item" [routerLink]="['/favorites']">
-          <mat-icon class="color_pink icon-sm">star</mat-icon>
-          <span>favorites</span>
-        </button>
-        <button class="menu-item" [routerLink]="['/add-image']">
-          <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
-          <span>add-image</span>
-        </button>
-        <button class="menu-item" (click)="logout()">
-          <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
-          <span>logout</span>
-        </button>
-      </div>
-    </div>
-  </mat-toolbar>
-
-  <h1>Upload Your Photo</h1>
-
-  <div class="message" *ngIf="showSuccessMessage()">
-    image uploaded successfully!
-  </div>
-
-  <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
-      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
-      <mat-icon>file_upload</mat-icon>
-      <h3>drag & drop file here</h3>
-      <h3>or</h3>
-      <button mat-flat-button (click)="fileInput.click()">browse for file</button>
-  </div>
-  <div class="message" *ngIf="showBadFileTypeMessage()">
-    please select a .jpg or .png file !
-  </div>
-
-  <div class="image-preview" *ngIf="selectedFile()">
-    <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <div class="image-wrapper">
-      <img [src]="previewUrl()" alt="Selected image" class="preview-image" />
-    </div>
-  </div>
-
-  <div class="tag-input-container">
-      <div class="custom-chip-set">
-        @for (tag of tags(); track tag) {
-          <div class="custom-chip">
-            <span>{{tag.name}}</span>
-            <button class="remove-chip-btn" (click)="remove(tag)">
-              <mat-icon>clear</mat-icon>
+        <div class="custom-menu" *ngIf="isMenuOpen">
+            <button class="menu-item" [routerLink]="['/profile']">
+            <mat-icon class="color_pink icon-sm">person</mat-icon>
+            <span>profile</span>
             </button>
-          </div>
-        }
-      </div>
-      <div class="input-wrapper">
-        <input
-          type="text"
-          placeholder="new tag..."
-          (keyup.enter)="addTagFromInput($event)"
-          (input)="filterTags($event)"
-          #tagInput
-        >
-        @if (filteredTags.length > 0) {
-          <div class="autocomplete-dropdown">
-            @for (tag of filteredTags; track tag) {
-              <div class="autocomplete-item" (click)="selectTag(tag)">
-                {{tag.name}}
-              </div>
-            }
-          </div>
-        }
-      </div>
-  </div>
+            <button class="menu-item" [routerLink]="['/gallery']">
+            <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
+            <span>gallery</span>
+            </button>
+            <button class="menu-item" [routerLink]="['/favorites']">
+            <mat-icon class="color_pink icon-sm">star</mat-icon>
+            <span>favorites</span>
+            </button>
+            <button class="menu-item" [routerLink]="['/add-image']">
+            <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
+            <span>add-image</span>
+            </button>
+            <button class="menu-item" (click)="logout()">
+            <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
+            <span>logout</span>
+            </button>
+        </div>
+        </div>
+    </mat-toolbar>
 
-  <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
+    <h1>Upload Your Photo</h1>
+
+    <div class="message" *ngIf="showSuccessMessage()">
+        image uploaded successfully!
+    </div>
+
+    <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
+        <mat-icon>file_upload</mat-icon>
+        <h3>drag & drop file here</h3>
+        <h3>or</h3>
+        <button mat-flat-button (click)="fileInput.click()">browse for file</button>
+    </div>
+    <div class="message" *ngIf="showBadFileTypeMessage()">
+        please select a .jpg or .png file !
+    </div>
+
+    <div class="image-preview" *ngIf="selectedFile()">
+        <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection">
+        <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="image-wrapper">
+        <img [src]="previewUrl()" alt="Selected image" class="preview-image" />
+        </div>
+    </div>
+
+    <div class="tag-input-container">
+        <div class="custom-chip-set">
+            @for (tag of tags(); track tag) {
+            <div class="custom-chip">
+                <span>{{tag.name}}</span>
+                <button class="remove-chip-btn" (click)="remove(tag)">
+                <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+            }
+        </div>
+        <div class="input-wrapper">
+            <input
+            type="text"
+            placeholder="new tag..."
+            (keyup.enter)="addTagFromInput($event)"
+            (input)="filterTags($event)"
+            (focus)="onTagInputFocus()"
+            #tagInput
+            >
+            @if (filteredTags.length > 0) {
+            <div class="autocomplete-dropdown">
+                @for (tag of filteredTags; track tag) {
+                <div class="autocomplete-item" (click)="selectTag(tag)">
+                    {{tag.name}}
+                </div>
+                }
+            </div>
+            }
+        </div>
+    </div>
+
+    <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
 </div>

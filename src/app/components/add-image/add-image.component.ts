@@ -13,22 +13,22 @@ export interface Tag {
 }
 
 @Component({
-  selector: 'app-add-image',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
+    selector: 'app-add-image',
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatToolbarModule,
         RouterModule
-  ],
-  templateUrl: './add-image.component.html',
-  styleUrls: ['./add-image.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    templateUrl: './add-image.component.html',
+    styleUrls: ['./add-image.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddImageComponent {
   @ViewChild('tagInput') tagInput!: ElementRef;
-  @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef; 
+  @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef;
 
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
@@ -42,6 +42,8 @@ export class AddImageComponent {
 
   allTags: Tag[] = [];
   filteredTags: Tag[] = [];
+  areTagsLoaded = false;
+
   showBadFileTypeMessage = signal(false);
   showSuccessMessage = signal(false);
 
@@ -49,7 +51,6 @@ export class AddImageComponent {
 
   constructor() {
     this.checkAuthentication();
-    this.loadAllTags();
   }
 
   private checkAuthentication(): void {
@@ -71,26 +72,30 @@ export class AddImageComponent {
     const target = event.target as HTMLElement;
 
     if (this.isMenuOpen) {
-        const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
-        const burgerButton = menuContainerElement?.querySelector('.burger-button');
-        const customMenu = menuContainerElement?.querySelector('.custom-menu');
-        const clickedInsideMenu = menuContainerElement?.contains(target);
-        const clickedOnBurgerButton = burgerButton?.contains(target);
-        const clickedInsideCustomMenu = customMenu?.contains(target);
+      const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
+      const burgerButton = menuContainerElement?.querySelector('.burger-button');
+      const customMenu = menuContainerElement?.querySelector('.custom-menu');
+      const clickedInsideMenu = menuContainerElement?.contains(target);
+      const clickedOnBurgerButton = burgerButton?.contains(target);
+      const clickedInsideCustomMenu = customMenu?.contains(target);
 
-        if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
-            this.closeMenu();
-        }
+      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
+        this.closeMenu();
+      }
     }
   }
 
   loadAllTags() {
+    if (this.areTagsLoaded) return;
+
     this.addImageService.getAllTags().subscribe({
       next: (tags) => {
         this.allTags = tags;
+        this.areTagsLoaded = true;
       },
       error: (err) => {
         console.error('Error loading tags:', err);
+        this.areTagsLoaded = true;
       }
     });
   }
@@ -230,6 +235,10 @@ export class AddImageComponent {
         console.error('Error uploading image:', err);
       }
     });
+  }
+
+  onTagInputFocus() {
+    this.loadAllTags();
   }
 
   addTagFromInput(event: Event): void {

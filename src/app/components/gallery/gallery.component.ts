@@ -67,9 +67,11 @@ export class GalleryComponent {
 
     allTags: Tag[] = [];
     filteredTags: Tag[] = [];
+    areTagsLoaded = false;
 
     allUsers: User[] = [];
     filteredUsers: User[] = [];
+    areUsersLoaded = false;
 
     isAuthenticated = signal<boolean>(false);
 
@@ -78,8 +80,6 @@ export class GalleryComponent {
             this.isAuthenticated.set(this.authService.isAuthenticated());
         });
 
-        this.loadAllTags();
-        this.loadAllUsers();
         this.loadImages();
     }
 
@@ -139,23 +139,32 @@ export class GalleryComponent {
     }
 
     loadAllTags() {
+        if (this.areTagsLoaded) return;
+
         this.imageService.getAllTags().subscribe({
             next: (tags) => {
                 this.allTags = tags;
+                this.areTagsLoaded = true;
             },
             error: (err) => {
                 console.error('error loading tags:', err);
+                this.areTagsLoaded = true;
             }
         });
     }
 
     loadAllUsers() {
+
+        if (this.areUsersLoaded) return;
+
         this.imageService.getAllUsers().subscribe({
             next: (users) => {
                 this.allUsers = users;
+                this.areUsersLoaded = true;
             },
             error: (err) => {
                 console.error('error loading users:', err);
+                this.areUsersLoaded = true;
             }
         });
     }
@@ -203,6 +212,14 @@ export class GalleryComponent {
         }
     }
 
+    onTagInputFocus() {
+        this.loadAllTags();
+    }
+
+    onUserInputFocus() {
+        this.loadAllUsers();
+    }
+
     addTagFromInput(event: Event): void {
         const input = event.target as HTMLInputElement;
         const tagName = input.value.trim();
@@ -228,6 +245,8 @@ export class GalleryComponent {
     }
 
     filterTags(event: Event): void {
+        this.loadAllTags();
+
         const input = event.target as HTMLInputElement;
         const value = input.value.trim().toLowerCase();
         if (value) {
@@ -278,6 +297,8 @@ export class GalleryComponent {
     }
 
     filterUsers(event: Event): void {
+        this.loadAllUsers();
+
         const input = event.target as HTMLInputElement;
         const value = input.value.trim().toLowerCase();
         if (value) {
