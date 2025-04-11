@@ -1,11 +1,11 @@
-<mat-toolbar>
+<mat-toolbar #toolbar>
   <span class="pm-label">pm</span>
   <div class="menu-container" #menuContainer>
     @if (isAuthenticated()) {
       <button class="burger-button" (click)="toggleMenu()">
-        <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+        <mat-icon class="color_pink icon-md">{{ isMenuOpen() ? 'close' : 'menu' }}</mat-icon>
       </button>
-      <div class="custom-menu" *ngIf="isMenuOpen">
+      <div class="custom-menu" #customMenu [@menuAnimation]="isMenuOpen() ? 'open' : 'closed'" [style.top.px]="toolbarHeight()">
         <button class="menu-item" [routerLink]="['/profile']" (click)="closeMenu()">
           <mat-icon class="color_pink icon-sm">person</mat-icon>
           <span>profile</span>
@@ -36,10 +36,10 @@
   </div>
 </mat-toolbar>
 
-<h1>Gallery</h1>
-<p>Welcome to the image gallery! Here, you can explore a wide collection of images uploaded by all users.</p>
+<div class="container" [style.marginTop.px]="menuHeight()">
+  <h1>Gallery</h1>
+  <p>Welcome to the image gallery! Here, you can explore a wide collection of images uploaded by all users.</p>
 
-<div class="container">
   <div class="search-items">
     <div class="search-item">
       <div class="tag-input-container" #tagInputContainer>

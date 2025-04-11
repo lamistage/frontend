@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, signal, effect, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal, effect, HostListener, AfterViewInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,6 +9,7 @@ import { PublicationComponent } from '../publication/publication.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 
 export interface Tag {
@@ -35,15 +36,36 @@ interface SortType {
         RouterModule
     ],
     templateUrl: './gallery.component.html',
-    styleUrl: './gallery.component.scss'
+    styleUrl: './gallery.component.scss',
+    animations: [
+        trigger('menuAnimation', [
+            state('closed', style({
+                transform: 'translateY(-100%)',
+                opacity: 0,
+                visibility: 'hidden',
+            })),
+            state('open', style({
+                transform: 'translateY(0)',
+                opacity: 1,
+                visibility: 'visible',
+            })),
+            transition('closed => open', [
+                animate('300ms ease-in')
+            ]),
+            transition('open => closed', [
+                animate('300ms ease-out')
+            ]),
+        ]),
+    ],
 })
-export class GalleryComponent {
+export class GalleryComponent implements AfterViewInit {
     @ViewChild('tagInput') tagInput!: ElementRef;
     @ViewChild('userInput') userInput!: ElementRef;
     @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef;
     @ViewChild('tagInputContainer', { static: false }) tagInputContainer!: ElementRef;
     @ViewChild('userInputContainer', { static: false }) userInputContainer!: ElementRef;
     @ViewChild('sortContainer', { static: false }) sortContainer!: ElementRef;
+    @ViewChild('customMenu', { static: false }) customMenu!: ElementRef;
 
     readonly tags = signal<Tag[]>([]);
     readonly users = signal<User[]>([]);
@@ -57,7 +79,7 @@ export class GalleryComponent {
     ];
     selectedSort = signal<string>('date,desc');
     isSortOpen = false;
-    isMenuOpen = false;
+    isMenuOpen = signal<boolean>(false);
 
     readonly images = signal<Image[]>([]);
     readonly isLoading = signal<boolean>(true);
@@ -75,27 +97,55 @@ export class GalleryComponent {
 
     isAuthenticated = signal<boolean>(false);
 
+    toolbarHeight = signal<number>(0);
+    menuHeight = signal<number>(0);
+
     constructor() {
+        console.log('GalleryComponent initialized');
         effect(() => {
             this.isAuthenticated.set(this.authService.isAuthenticated());
+        });
+
+        effect(() => {
+            if (this.isMenuOpen() && this.customMenu) {
+                setTimeout(() => {
+                    const height = this.customMenu.nativeElement.offsetHeight;
+                    this.menuHeight.set(height);
+                    console.log('Menu height:', height);
+                }, 300);
+            } else {
+                this.menuHeight.set(0);
+            }
         });
 
         this.loadImages();
     }
 
+    ngAfterViewInit(): void {
+        console.log('ngAfterViewInit called');
+        const toolbar = document.querySelector('mat-toolbar');
+        if (toolbar) {
+            const height = toolbar.getBoundingClientRect().height;
+            this.toolbarHeight.set(height);
+            console.log('Toolbar height (direct):', height);
+        } else {
+            console.log('mat-toolbar not found in DOM');
+        }
+    }
+
     toggleMenu(): void {
-        this.isMenuOpen = !this.isMenuOpen;
+        this.isMenuOpen.set(!this.isMenuOpen());
     }
 
     closeMenu(): void {
-        this.isMenuOpen = false;
+        this.isMenuOpen.set(false);
     }
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent): void {
         const target = event.target as HTMLElement;
 
-        if (this.isMenuOpen) {
+        if (this.isMenuOpen()) {
             const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
             const burgerButton = menuContainerElement?.querySelector('.burger-button');
             const customMenu = menuContainerElement?.querySelector('.custom-menu');
@@ -154,7 +204,6 @@ export class GalleryComponent {
     }
 
     loadAllUsers() {
-
         if (this.areUsersLoaded) return;
 
         this.imageService.getAllUsers().subscribe({
