@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, signal, inject, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, signal, inject, HostListener, AfterViewInit } from '@angular/core';
 import { ImageService } from '../../services/image.service';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
@@ -28,11 +28,12 @@ interface SortType {
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent {
+export class ProfileComponent implements AfterViewInit {
   @ViewChild('tagInput') tagInput!: ElementRef;
   @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef;
   @ViewChild('tagInputContainer', { static: false }) tagInputContainer!: ElementRef; 
   @ViewChild('sortContainer', { static: false }) sortContainer!: ElementRef; 
+  @ViewChild('customMenu', { static: false }) customMenu!: ElementRef;
 
   readonly tags = signal<Tag[]>([]);
   readonly images = signal<Image[]>([]);
@@ -46,7 +47,11 @@ export class ProfileComponent {
   allTags: Tag[] = [];
   filteredTags: Tag[] = [];
   isSortOpen = false;
-  isMenuOpen = false;
+  isMenuOpen = signal<boolean>(false);
+
+  toolbarHeight = signal<number>(0);
+  menuHeight = signal<number>(0);
+
 
   currentPage = signal<number>(0);
   totalPages = signal<number>(1);
@@ -67,19 +72,51 @@ export class ProfileComponent {
     }
   }
 
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit called');
+    setTimeout(() => {
+        const toolbar = document.querySelector('mat-toolbar') as HTMLElement | null;
+        if (toolbar) {
+            const offsetHeight = toolbar.offsetHeight;
+            const boundingHeight = toolbar.getBoundingClientRect().height;
+            this.toolbarHeight.set(offsetHeight);
+            console.log('Toolbar offsetHeight:', offsetHeight);
+            console.log('Toolbar boundingHeight:', boundingHeight);
+            console.log('Final toolbarHeight:', this.toolbarHeight());
+        } else {
+            console.log('mat-toolbar not found in DOM');
+        }
+    }, 100); // Даём DOM время на рендеринг
+  }
+
   toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+    this.isMenuOpen.set(!this.isMenuOpen());
+    setTimeout(() => {
+      if (this.isMenuOpen() && this.customMenu) {
+        const menuElement = this.customMenu.nativeElement as HTMLElement;
+        const baseHeight = menuElement.scrollHeight;
+        const totalHeight = baseHeight + 8;
+        this.menuHeight.set(totalHeight);
+        console.log('Menu base height (scrollHeight): ', baseHeight);
+        console.log('Menu total height (with padding): ', totalHeight);
+      } else {
+        this.menuHeight.set(0);
+        console.log('Menu height (closed): 0')
+      }
+    }, 0);
   }
 
   closeMenu(): void {
-    this.isMenuOpen = false;
+    this.isMenuOpen.set(false);
+    this.menuHeight.set(0);
+    console.log('Menu height (closed via closeMenu): 0')
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
-    if (this.isMenuOpen) {
+    if (this.isMenuOpen()) {
       const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
       const burgerButton = menuContainerElement?.querySelector('.burger-button');
       const customMenu = menuContainerElement?.querySelector('.custom-menu');

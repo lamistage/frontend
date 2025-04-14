@@ -1,125 +1,127 @@
 <mat-toolbar>
-  <span class="pm-label">pm</span>
-  <div class="menu-container" #menuContainer>
-      <button class="burger-button" (click)="toggleMenu()">
-          <mat-icon class="color_pink icon-md">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
-      </button>
-      <div class="custom-menu" *ngIf="isMenuOpen">
-          <button class="menu-item" [routerLink]="['/profile']">
-              <mat-icon class="color_pink icon-sm">person</mat-icon>
-              <span>profile</span>
-          </button>
-          <button class="menu-item" [routerLink]="['/gallery']">
-              <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
-              <span>gallery</span>
-          </button>
-          <button class="menu-item" [routerLink]="['/favorites']">
-              <mat-icon class="color_pink icon-sm">star</mat-icon>
-              <span>favorites</span>
-          </button>
-          <button class="menu-item" [routerLink]="['/add-image']">
-              <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
-              <span>add-image</span>
-          </button>
-          <button class="menu-item" (click)="logout()">
-              <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
-              <span>logout</span>
-          </button>
-      </div>
-  </div>
+    <div class="toolbar-content">
+        <span class="pm-label">pm</span>
+        <div class="menu-container" #menuContainer>
+            <button class="burger-button" (click)="toggleMenu()">
+                <mat-icon class="color_pink icon-md">{{ isMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+            </button>
+            <div class="custom-menu" #customMenu [style.top.px]="toolbarHeight()" [style.height.px]="menuHeight()">
+                <button class="menu-item" [routerLink]="['/profile']" (click)="closeMenu()">
+                    <mat-icon class="color_pink icon-sm">person</mat-icon>
+                    <span>profile</span>
+                </button>
+                <button class="menu-item" [routerLink]="['/gallery']" (click)="closeMenu()">
+                    <mat-icon class="color_pink icon-sm">photo_library</mat-icon>
+                    <span>gallery</span>
+                </button>
+                <button class="menu-item" [routerLink]="['/favorites']" (click)="closeMenu()">
+                    <mat-icon class="color_pink icon-sm">star</mat-icon>
+                    <span>favorites</span>
+                </button>
+                <button class="menu-item" [routerLink]="['/add-image']" (click)="closeMenu()">
+                    <mat-icon class="color_pink icon-sm">add_to_photos</mat-icon>
+                    <span>add-image</span>
+                </button>
+                <button class="menu-item" (click)="logout()">
+                    <mat-icon class="color_pink icon-sm">exit_to_app</mat-icon>
+                    <span>logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </mat-toolbar>
 
-<h1>Profile</h1>
-<p>Welcome to your personal image gallery! Here you can manage all the images you've uploaded.</p>
+<div class="container" [style.marginTop.px]="toolbarHeight() + menuHeight()">
+    <h1>Profile</h1>
+    <p>Welcome to your personal image gallery! Here you can manage all the images you've uploaded.</p>
 
-<div class="container">
-  <div class="search-items">
-      <div class="search-item">
-          <div class="tag-input-container" #tagInputContainer>
-              <div class="custom-chip-set">
-                  @for (tag of tags(); track tag) {
-                      <div class="custom-chip">
-                          <span>{{tag.name}}</span>
-                          <button class="remove-chip-btn" (click)="remove_tag(tag)">
-                              <mat-icon class="color_pink icon-sm">clear</mat-icon>
-                          </button>
-                      </div>
-                  }
-              </div>
-              <div class="input-wrapper">
-                  <mat-icon class="prefix-icon color_pink">search</mat-icon>
-                  <input
-                      type="text"
-                      placeholder="new tag..."
-                      (keyup.enter)="addTagFromInput($event)"
-                      (input)="filterTags($event)"
-                      #tagInput
-                  >
-                  @if (filteredTags.length > 0) {
-                      <div class="autocomplete-dropdown">
-                          @for (tag of filteredTags; track tag) {
-                              <div class="autocomplete-item" (click)="selectTag(tag)">
-                                  {{tag.name}}
-                              </div>
-                          }
-                      </div>
-                  }
-              </div>
-          </div>
-      </div>
+    <div class="search-items">
+        <div class="search-item">
+            <div class="tag-input-container" #tagInputContainer>
+                <div class="custom-chip-set">
+                    @for (tag of tags(); track tag) {
+                        <div class="custom-chip">
+                            <span>{{tag.name}}</span>
+                            <button class="remove-chip-btn" (click)="remove_tag(tag)">
+                                <mat-icon class="color_pink icon-sm">clear</mat-icon>
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="input-wrapper">
+                    <mat-icon class="prefix-icon color_pink">search</mat-icon>
+                    <input
+                        type="text"
+                        placeholder="new tag..."
+                        (keyup.enter)="addTagFromInput($event)"
+                        (input)="filterTags($event)"
+                        #tagInput
+                    >
+                    @if (filteredTags.length > 0) {
+                        <div class="autocomplete-dropdown">
+                            @for (tag of filteredTags; track tag) {
+                                <div class="autocomplete-item" (click)="selectTag(tag)">
+                                    {{tag.name}}
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
 
-      <div class="search-item">
-          <div class="sort-container" #sortContainer>
-              <label class="sort-label">sorting order</label>
-              <div class="sort-wrapper">
-                  <button class="sort-button" (click)="toggleSortDropdown()">
-                      <span>{{ getSelectedSortLabel() }}</span>
-                      <mat-icon class="sort-icon color_pink icon-sm">{{ isSortOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-                  </button>
-                  @if (isSortOpen) {
-                      <div class="sort-dropdown">
-                          @for (sortType of sortTypes; track sortType) {
-                              <div
-                                  class="sort-option"
-                                  (click)="selectSort(sortType.value)"
-                              >
-                                  {{ sortType.viewValue }}
-                              </div>
-                          }
-                      </div>
-                  }
-              </div>
-          </div>
-      </div>
-  </div>
+        <div class="search-item">
+            <div class="sort-container" #sortContainer>
+                <label class="sort-label">sorting order</label>
+                <div class="sort-wrapper">
+                    <button class="sort-button" (click)="toggleSortDropdown()">
+                        <span>{{ getSelectedSortLabel() }}</span>
+                        <mat-icon class="sort-icon color_pink icon-sm">{{ isSortOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                    @if (isSortOpen) {
+                        <div class="sort-dropdown">
+                            @for (sortType of sortTypes; track sortType) {
+                                <div
+                                    class="sort-option"
+                                    (click)="selectSort(sortType.value)"
+                                >
+                                    {{ sortType.viewValue }}
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div class="gallery" *ngIf="images().length > 0 || isLoading()">
-      <p *ngIf="isLoading()">loading..</p>
-      @if (!isLoading()) {
-          @for (publication of images(); track publication) {
-              <app-publication 
-                  [publication]="publication" 
-                  [isProfilePage]="true" 
-                  (deleted)="onPublicationDeleted($event)">
-              </app-publication>
-          }
-      }
-  </div>
+    <div class="gallery" *ngIf="images().length > 0 || isLoading()">
+        <p *ngIf="isLoading()">loading..</p>
+        @if (!isLoading()) {
+            @for (publication of images(); track publication) {
+                <app-publication 
+                    [publication]="publication" 
+                    [isProfilePage]="true" 
+                    (deleted)="onPublicationDeleted($event)">
+                </app-publication>
+            }
+        }
+    </div>
 
-  <div class="no-photos-container" *ngIf="!isLoading() && images().length === 0">
-      <p class="no-photos-message">
-          You haven't uploaded any photos yet:(<br>Upload your first photo
-          <a [routerLink]="['/add-image']" class="upload-link">here</a>
-      </p>
-  </div>
+    <div class="no-photos-container" *ngIf="!isLoading() && images().length === 0">
+        <p class="no-photos-message">
+            You haven't uploaded any photos yet:(<br>Upload your first photo
+            <a [routerLink]="['/add-image']" class="upload-link">here</a>
+        </p>
+    </div>
 
-  <div class="pagination" *ngIf="images().length > 0">
-      <button (click)="goToPreviousPage()" [disabled]="currentPage() === 0">
-          <mat-icon>chevron_left</mat-icon>
-      </button>
-      <span>page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
-      <button (click)="goToNextPage()" [disabled]="currentPage() === totalPages() - 1">
-          <mat-icon>chevron_right</mat-icon>
-      </button>
-  </div>
+    <div class="pagination" *ngIf="images().length > 0">
+        <button (click)="goToPreviousPage()" [disabled]="currentPage() === 0">
+            <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span>page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+        <button (click)="goToNextPage()" [disabled]="currentPage() === totalPages() - 1">
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+    </div>
 </div>

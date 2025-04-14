@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, signal, inject, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, signal, inject, HostListener, AfterViewInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Image, Tag, User } from '../../models/image';
@@ -9,6 +9,10 @@ import { CommonModule } from '@angular/common';
 import { PublicationComponent } from '../publication/publication.component';
 import { RouterModule } from '@angular/router';
 
+interface SortType {
+    value: string;
+    viewValue: string;
+}
 
 @Component({
     selector: 'app-favorites',
@@ -22,21 +26,24 @@ import { RouterModule } from '@angular/router';
     templateUrl: './favorites.component.html',
     styleUrl: './favorites.component.scss'
 })
-export class FavoritesComponent {
+export class FavoritesComponent implements AfterViewInit {
     @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef;
     @ViewChild('tagInput') tagInput!: ElementRef;
-    @ViewChild('tagInputContainer', { static: false }) tagInputContainer!: ElementRef; 
+    @ViewChild('tagInputContainer', { static: false }) tagInputContainer!: ElementRef;
     @ViewChild('userInput') userInput!: ElementRef;
     @ViewChild('userInputContainer', { static: false }) userInputContainer!: ElementRef;
     @ViewChild('sortContainer', { static: false }) sortContainer!: ElementRef;
+    @ViewChild('customMenu', { static: false }) customMenu!: ElementRef;
 
     private readonly favoritesService = inject(FavoritesService);
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
-    isMenuOpen = false;
-    isMenuVisible = false;
+    isMenuOpen = signal<boolean>(false);
     isSortOpen = false;
+
+    toolbarHeight = signal<number>(0);
+    menuHeight = signal<number>(0);
 
     readonly images = signal<Image[]>([]);
     readonly isLoading = signal<boolean>(true);
@@ -52,73 +59,132 @@ export class FavoritesComponent {
     allUsers: User[] = [];
     filteredUsers: User[] = [];
 
-    sortTypes = [
+    sortTypes: SortType[] = [
         { value: 'date,desc', viewValue: 'newest first' },
         { value: 'date,asc', viewValue: 'oldest first' }
     ];
 
     constructor() {
+        console.log('FavoritesComponent initialized');
         this.loadFavorites();
     }
 
+    ngAfterViewInit(): void {
+        console.log('ngAfterViewInit called');
+        this.trySetToolbarHeight();
+    }
+
+    private trySetToolbarHeight(attempt: number = 0): void {
+        setTimeout(() => {
+            const toolbar = document.querySelector('mat-toolbar') as HTMLElement | null;
+            if (toolbar) {
+                const offsetHeight = toolbar.offsetHeight;
+                const boundingHeight = toolbar.getBoundingClientRect().height;
+                this.toolbarHeight.set(offsetHeight);
+                console.log('Toolbar offsetHeight:', offsetHeight);
+                console.log('Toolbar boundingHeight:', boundingHeight);
+                console.log('Final toolbarHeight:', this.toolbarHeight());
+            } else {
+                console.log('mat-toolbar not found in DOM, attempt:', attempt);
+                if (attempt < 3) {
+                    this.trySetToolbarHeight(attempt + 1);
+                } else {
+                    console.error('Failed to find mat-toolbar after 3 attempts');
+                }
+            }
+        }, 100 * (attempt + 1));
+    }
+
     toggleMenu(): void {
-        this.isMenuOpen = !this.isMenuOpen;
+        console.log('toggleMenu called, current isMenuOpen:', this.isMenuOpen());
+        this.isMenuOpen.set(!this.isMenuOpen());
+        console.log('isMenuOpen after toggle:', this.isMenuOpen());
+        setTimeout(() => {
+            if (this.isMenuOpen()) {
+                if (!this.customMenu) {
+                    console.error('customMenu is undefined, element not rendered yet');
+                    setTimeout(() => this.updateMenuHeight(), 200);
+                    return;
+                }
+                const menuElement = this.customMenu.nativeElement as HTMLElement;
+                const baseHeight = menuElement.scrollHeight;
+                const totalHeight = baseHeight + 8;
+                this.menuHeight.set(totalHeight);
+                console.log('Menu base height (scrollHeight):', baseHeight);
+                console.log('Menu total height (with padding):', totalHeight);
+                console.log('menuHeight set to:', this.menuHeight());
+            } else {
+                this.menuHeight.set(0);
+                console.log('Menu height (closed): 0');
+            }
+        }, 100); // Увеличиваем задержку до 100ms
+    }
+
+    private updateMenuHeight(): void {
+        if (this.isMenuOpen() && this.customMenu) {
+            const menuElement = this.customMenu.nativeElement as HTMLElement;
+            const baseHeight = menuElement.scrollHeight;
+            const totalHeight = baseHeight + 8;
+            this.menuHeight.set(totalHeight);
+            console.log('Menu base height (scrollHeight):', baseHeight);
+            console.log('Menu total height (with padding):', totalHeight);
+            console.log('menuHeight set to:', this.menuHeight());
+        } else {
+            this.menuHeight.set(0);
+            console.log('Menu height (closed): 0');
+        }
     }
 
     closeMenu(): void {
-      this.isMenuOpen = false;
-    }
-
-    onAnimationEnd(event: AnimationEvent): void {
-        if (event.animationName === 'slideUp') {
-            this.isMenuVisible = false;
-        }
+        this.isMenuOpen.set(false);
+        this.menuHeight.set(0);
+        console.log('Menu height (closed via closeMenu): 0');
     }
 
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: MouseEvent): void {
-      const target = event.target as HTMLElement;
+        const target = event.target as HTMLElement;
 
-        if (this.isMenuOpen) {
-          const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
-          const burgerButton = menuContainerElement?.querySelector('.burger-button');
-          const customMenu = menuContainerElement?.querySelector('.custom-menu');
-          const clickedInsideMenu = menuContainerElement?.contains(target);
-          const clickedOnBurgerButton = burgerButton?.contains(target);
-          const clickedInsideCustomMenu = customMenu?.contains(target);
+        if (this.isMenuOpen()) {
+            const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
+            const burgerButton = menuContainerElement?.querySelector('.burger-button');
+            const customMenu = menuContainerElement?.querySelector('.custom-menu');
+            const clickedInsideMenu = menuContainerElement?.contains(target);
+            const clickedOnBurgerButton = burgerButton?.contains(target);
+            const clickedInsideCustomMenu = customMenu?.contains(target);
 
-          if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
-              this.closeMenu();
-          }
+            if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
+                this.closeMenu();
+            }
         }
 
         if (this.filteredTags.length > 0) {
-          const tagInputContainerElement = this.tagInputContainer?.nativeElement as HTMLElement;
-          const clickedInsideTagInput = tagInputContainerElement?.contains(target);
-    
-          if (!clickedInsideTagInput) {
-            this.filteredTags = [];
-            this.tagInput.nativeElement.value = '';
-          }
+            const tagInputContainerElement = this.tagInputContainer?.nativeElement as HTMLElement;
+            const clickedInsideTagInput = tagInputContainerElement?.contains(target);
+
+            if (!clickedInsideTagInput) {
+                this.filteredTags = [];
+                this.tagInput.nativeElement.value = '';
+            }
         }
 
-        if (this.filterUsers.length > 0) {
-          const userInputContainerElement = this.userInputContainer?.nativeElement as HTMLElement;
-          const clickedInsideUserInput = userInputContainerElement?.contains(target);
+        if (this.filteredUsers.length > 0) {
+            const userInputContainerElement = this.userInputContainer?.nativeElement as HTMLElement;
+            const clickedInsideUserInput = userInputContainerElement?.contains(target);
 
-          if (!clickedInsideUserInput) {
-            this.filteredUsers = [];
-            this.userInput.nativeElement.value = '';
-          }
+            if (!clickedInsideUserInput) {
+                this.filteredUsers = [];
+                this.userInput.nativeElement.value = '';
+            }
         }
 
         if (this.isSortOpen) {
-          const sortContainerElement = this.sortContainer?.nativeElement as HTMLElement;
-          const clickedInsideSortContainer = sortContainerElement?.contains(target);
-    
-          if (!clickedInsideSortContainer) {
-            this.isSortOpen = false;
-          }
+            const sortContainerElement = this.sortContainer?.nativeElement as HTMLElement;
+            const clickedInsideSortContainer = sortContainerElement?.contains(target);
+
+            if (!clickedInsideSortContainer) {
+                this.isSortOpen = false;
+            }
         }
     }
 
@@ -129,7 +195,7 @@ export class FavoritesComponent {
         if (!userId) {
             console.error('User is not authenticated');
             this.isLoading.set(false);
-            this.router.navigate(['/auth']);
+            this.router.navigate(['/gallery']);
             return;
         }
 
@@ -312,7 +378,7 @@ export class FavoritesComponent {
         }
     }
 
-    onRemovedFromFavorites(publicationId:number): void {
+    onRemovedFromFavorites(publicationId: number): void {
         this.loadFavorites();
     }
 }

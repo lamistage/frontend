@@ -9,7 +9,6 @@ import { PublicationComponent } from '../publication/publication.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 
 
 export interface Tag {
@@ -37,26 +36,6 @@ interface SortType {
     ],
     templateUrl: './gallery.component.html',
     styleUrl: './gallery.component.scss',
-    animations: [
-        trigger('menuAnimation', [
-            state('closed', style({
-                transform: 'translateY(-100%)',
-                opacity: 0,
-                visibility: 'hidden',
-            })),
-            state('open', style({
-                transform: 'translateY(0)',
-                opacity: 1,
-                visibility: 'visible',
-            })),
-            transition('closed => open', [
-                animate('300ms ease-in')
-            ]),
-            transition('open => closed', [
-                animate('300ms ease-out')
-            ]),
-        ]),
-    ],
 })
 export class GalleryComponent implements AfterViewInit {
     @ViewChild('tagInput') tagInput!: ElementRef;
@@ -106,39 +85,47 @@ export class GalleryComponent implements AfterViewInit {
             this.isAuthenticated.set(this.authService.isAuthenticated());
         });
 
-        effect(() => {
-            if (this.isMenuOpen() && this.customMenu) {
-                setTimeout(() => {
-                    const height = this.customMenu.nativeElement.offsetHeight;
-                    this.menuHeight.set(height);
-                    console.log('Menu height:', height);
-                }, 300);
-            } else {
-                this.menuHeight.set(0);
-            }
-        });
-
         this.loadImages();
     }
 
     ngAfterViewInit(): void {
         console.log('ngAfterViewInit called');
-        const toolbar = document.querySelector('mat-toolbar');
-        if (toolbar) {
-            const height = toolbar.getBoundingClientRect().height;
-            this.toolbarHeight.set(height);
-            console.log('Toolbar height (direct):', height);
-        } else {
-            console.log('mat-toolbar not found in DOM');
-        }
+        setTimeout(() => {
+            const toolbar = document.querySelector('mat-toolbar') as HTMLElement | null;
+            if (toolbar) {
+                const offsetHeight = toolbar.offsetHeight;
+                const boundingHeight = toolbar.getBoundingClientRect().height;
+                this.toolbarHeight.set(offsetHeight);
+                console.log('Toolbar offsetHeight:', offsetHeight);
+                console.log('Toolbar boundingHeight:', boundingHeight);
+                console.log('Final toolbarHeight:', this.toolbarHeight());
+            } else {
+                console.log('mat-toolbar not found in DOM');
+            }
+        }, 100); // Даём DOM время на рендеринг
     }
 
     toggleMenu(): void {
         this.isMenuOpen.set(!this.isMenuOpen());
+        setTimeout(() => {
+            if (this.isMenuOpen() && this.customMenu) {
+                const menuElement = this.customMenu.nativeElement as HTMLElement;
+                const baseHeight = menuElement.scrollHeight;
+                const totalHeight = baseHeight + 8; // Учитываем padding: 8px сверху и 8px снизу
+                this.menuHeight.set(totalHeight);
+                console.log('Menu base height (scrollHeight):', baseHeight);
+                console.log('Menu total height (with padding):', totalHeight);
+            } else {
+                this.menuHeight.set(0);
+                console.log('Menu height (closed): 0');
+            }
+        }, 0);
     }
 
     closeMenu(): void {
         this.isMenuOpen.set(false);
+        this.menuHeight.set(0);
+        console.log('Menu height (closed via closeMenu): 0');
     }
 
     @HostListener('document:click', ['$event'])

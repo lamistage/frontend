@@ -29,6 +29,7 @@ export interface Tag {
 export class AddImageComponent {
   @ViewChild('tagInput') tagInput!: ElementRef;
   @ViewChild('menuContainer', { static: false }) menuContainer!: ElementRef;
+  @ViewChild('customMenu', { static: false }) customMenu!: ElementRef;
 
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
@@ -47,7 +48,9 @@ export class AddImageComponent {
   showBadFileTypeMessage = signal(false);
   showSuccessMessage = signal(false);
 
-  isMenuOpen = false;
+  isMenuOpen = signal<boolean>(false);
+  toolbarHeight = signal<number>(0);
+  menuHeight = signal<number>(0);
 
   constructor() {
     this.checkAuthentication();
@@ -59,28 +62,70 @@ export class AddImageComponent {
     }
   }
 
+  ngAfterViewInit(): void {
+    console.log('ngAfterViewInit called');
+    setTimeout(() => {
+        const toolbar = document.querySelector('mat-toolbar') as HTMLElement | null;
+        if (toolbar) {
+            const offsetHeight = toolbar.offsetHeight;
+            const boundingHeight = toolbar.getBoundingClientRect().height;
+            this.toolbarHeight.set(offsetHeight);
+            console.log('Toolbar offsetHeight:', offsetHeight);
+            console.log('Toolbar boundingHeight:', boundingHeight);
+            console.log('Final toolbarHeight:', this.toolbarHeight());
+        } else {
+            console.log('mat-toolbar not found in DOM');
+        }
+    }, 100);
+  }
+
   toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+    this.isMenuOpen.set(!this.isMenuOpen());
+    setTimeout(() => {
+        if (this.isMenuOpen() && this.customMenu) {
+            const menuElement = this.customMenu.nativeElement as HTMLElement;
+            const baseHeight = menuElement.scrollHeight;
+            const totalHeight = baseHeight + 8;
+            this.menuHeight.set(totalHeight);
+            console.log('Menu base height (scrollHeight):', baseHeight);
+            console.log('Menu total height (with padding):', totalHeight);
+        } else {
+            this.menuHeight.set(0);
+            console.log('Menu height (closed): 0');
+        }
+    }, 0);
   }
 
   closeMenu(): void {
-    this.isMenuOpen = false;
+      this.isMenuOpen.set(false);
+      this.menuHeight.set(0);
+      console.log('Menu height (closed via closeMenu): 0');
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
-    if (this.isMenuOpen) {
-      const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
-      const burgerButton = menuContainerElement?.querySelector('.burger-button');
-      const customMenu = menuContainerElement?.querySelector('.custom-menu');
-      const clickedInsideMenu = menuContainerElement?.contains(target);
-      const clickedOnBurgerButton = burgerButton?.contains(target);
-      const clickedInsideCustomMenu = customMenu?.contains(target);
+    if (this.isMenuOpen()) {
+        const menuContainerElement = this.menuContainer?.nativeElement as HTMLElement;
+        const burgerButton = menuContainerElement?.querySelector('.burger-button');
+        const customMenu = menuContainerElement?.querySelector('.custom-menu');
+        const clickedInsideMenu = menuContainerElement?.contains(target);
+        const clickedOnBurgerButton = burgerButton?.contains(target);
+        const clickedInsideCustomMenu = customMenu?.contains(target);
 
-      if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
-        this.closeMenu();
+        if (!clickedInsideMenu || (clickedInsideMenu && !clickedOnBurgerButton && !clickedInsideCustomMenu)) {
+            this.closeMenu();
+        }
+    }
+
+    if (this.filteredTags.length > 0) {
+      const tagInputElement = this.tagInput?.nativeElement as HTMLElement;
+      const clickedInsideTagInput = tagInputElement?.contains(target);
+
+      if (!clickedInsideTagInput) {
+          this.filteredTags = [];
+          this.tagInput.nativeElement.value = '';
       }
     }
   }
