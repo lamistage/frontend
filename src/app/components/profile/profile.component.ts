@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PublicationComponent } from '../publication/publication.component';
+import { ChangePasswordComponent } from '../change-password/change-password.component';
 
 
 interface SortType {
@@ -23,7 +24,8 @@ interface SortType {
     MatButtonModule,
     MatIconModule,
     RouterModule,
-    PublicationComponent
+    PublicationComponent,
+    ChangePasswordComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -34,6 +36,7 @@ export class ProfileComponent implements AfterViewInit {
   @ViewChild('tagInputContainer', { static: false }) tagInputContainer!: ElementRef; 
   @ViewChild('sortContainer', { static: false }) sortContainer!: ElementRef; 
   @ViewChild('customMenu', { static: false }) customMenu!: ElementRef;
+  @ViewChild(ChangePasswordComponent) changePasswordComponent!: ChangePasswordComponent;
 
   readonly tags = signal<Tag[]>([]);
   readonly images = signal<Image[]>([]);
@@ -110,6 +113,10 @@ export class ProfileComponent implements AfterViewInit {
     this.isMenuOpen.set(false);
     this.menuHeight.set(0);
     console.log('Menu height (closed via closeMenu): 0')
+  }
+
+  openChangePasswordDialog(): void {
+    this.changePasswordComponent.openChangePasswordDialog();
   }
 
   @HostListener('document:click', ['$event'])
