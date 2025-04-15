@@ -111,6 +111,11 @@
     color: white;
   }
 
+  .sign-in-form p,
+  .sign-up-form p {
+    color: $primary-pink;
+  }
+
   .error {
     color: $error-pink;
     font-size: 14px;
