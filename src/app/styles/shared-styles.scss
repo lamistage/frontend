@@ -51,9 +51,11 @@ mat-toolbar {
 .menu-container {
     position: relative;
     z-index: 1100;
+    display: flex;
+    align-items: center;
 }
 
-.burger-button {
+.burger-button, .setting-button {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -65,10 +67,6 @@ mat-toolbar {
     cursor: pointer;
     overflow: visible;
     box-sizing: border-box;
-
-    &:hover {
-        border-color: $primary-pink;
-    }
 }
 
 .icon-md {
@@ -489,7 +487,7 @@ p {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffdbe1bb;
+    background-color: #ffdbe1ad;
     border-radius: 16px;
     display: flex;
     justify-content: center;
@@ -572,7 +570,7 @@ p {
         font-size: 3.2vw;
     }
   
-    .burger-button {
+    .burger-button, .setting-button {
         width: 40px;
         height: 40px;
     }
@@ -743,7 +741,7 @@ p {
         font-size: 3.6vw;
     }
   
-    .burger-button {
+    .burger-button, .setting-button {
         width: 40px;
         height: 40px;
     }
@@ -904,7 +902,7 @@ p {
         font-size: 4vw;
     }
   
-    .burger-button {
+    .burger-button, .setting-button {
         width: 30px;
         height: 30px;
     }
@@ -1081,7 +1079,7 @@ p {
         font-size: 5vw;
     }
   
-    .burger-button {
+    .burger-button, .setting-button {
         width: 30px;
         height: 30px;
     }

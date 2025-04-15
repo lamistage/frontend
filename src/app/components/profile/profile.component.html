@@ -2,6 +2,9 @@
     <div class="toolbar-content">
         <span class="pm-label">pm</span>
         <div class="menu-container" #menuContainer>
+            <button class="setting-button" (click)="openChangePasswordDialog()">
+                <mat-icon class="color_pink icon-md">settings</mat-icon>
+            </button>
             <button class="burger-button" (click)="toggleMenu()">
                 <mat-icon class="color_pink icon-md">{{ isMenuOpen() ? 'close' : 'menu' }}</mat-icon>
             </button>
@@ -125,3 +128,5 @@
         </button>
     </div>
 </div>
+
+<app-change-password></app-change-password>

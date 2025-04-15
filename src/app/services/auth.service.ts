@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError, interval } from 'rxjs';
 import { Router } from '@angular/router';
 import { catchError, tap, switchMap } from 'rxjs/operators';
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +83,32 @@ export class AuthService {
         this.router.navigate(['/auth']);
         return of(null);
       })
+    );
+  }
+
+  changePassword(data: ChangePasswordRequest): Observable<string> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('No token found in localStorage');
+        return throwError(() => new Error('User is not authenticated'));
+    }
+
+    console.log('Sending change password request with token:', token);
+    return this.http.post(`${this.apiUrl}/change-password`, data, {
+        headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }),
+        responseType: 'text',
+        observe: 'response'
+    }).pipe(
+        tap((response: any) => {
+            console.log('Change Password response:', response);
+        }),
+        catchError((err: HttpErrorResponse) => {
+            console.error('Change password error:', err);
+            const errorMessage = err.error instanceof Blob || typeof err.error === 'string'
+                ? err.error.toString()
+                : 'Failed to change password';
+            return throwError(() => new Error(errorMessage));
+        })
     );
   }
 
