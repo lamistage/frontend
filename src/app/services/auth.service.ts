@@ -4,6 +4,34 @@ import { Observable, of, throwError, interval } from 'rxjs';
 import { Router } from '@angular/router';
 import { catchError, tap, switchMap } from 'rxjs/operators';
 
+export interface SignInRequest {
+  login: string;
+  password: string;
+}
+
+export interface SignInResponse {
+  token: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
+export interface SignUpRequest {
+  login: string;
+  password: string;
+  email: string;
+  verificationCode: number;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  token: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
 export interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
@@ -20,23 +48,47 @@ export class AuthService {
     this.startTokenRefreshTimer();
   }
 
-  signIn(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/sign-in`, data).pipe(
-      tap((response: any) => {
+  signIn(data: SignInRequest): Observable<SignInResponse> {
+    return this.http.post<SignInResponse>(`${this.apiUrl}/sign-in`, data).pipe(
+      tap((response: SignInResponse) => {
         console.log('Sign-in response:', response);
         localStorage.setItem('token', response.token);
         localStorage.setItem('refreshToken', response.refreshToken);
         localStorage.setItem('expiresIn', response.expiresIn.toString());
         console.log('Stored expiresIn:', response.expiresIn);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Sign-in error:', err);
+        return throwError(() => err);
       })
     );
   }
 
-  signUp(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/sign-up`, data);
+  signUp(data: SignUpRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/sign-up`, data).pipe(
+      tap(() => {
+        console.log('Sign-up successful');
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Sign-up error:', err);
+        return throwError(() => err);
+      })
+    );
   }
 
-  refreshToken(): Observable<any> {
+  confirmEmail(email: string): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/email-confirmation`, { email }).pipe(
+      tap((code: number) => {
+        console.log('Verification code sent:', code);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Confirm email error:', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  refreshToken(): Observable<RefreshTokenResponse> {
     const refreshToken = localStorage.getItem('refreshToken');
     console.log('Sending refresh token:', refreshToken);
     if (!refreshToken) {
@@ -44,15 +96,16 @@ export class AuthService {
       return throwError(() => new Error('No refresh token available'));
     }
 
-    return this.http.post(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
-      tap((response: any) => {
+    const request: RefreshTokenRequest = { refreshToken };
+    return this.http.post<RefreshTokenResponse>(`${this.apiUrl}/refresh`, request).pipe(
+      tap((response: RefreshTokenResponse) => {
         console.log('Refresh response:', response);
         localStorage.setItem('token', response.token);
-        localStorage.setItem('refreshToken', response.refreshToken); 
+        localStorage.setItem('refreshToken', response.refreshToken);
         localStorage.setItem('expiresIn', response.expiresIn.toString());
         console.log('Stored expiresIn after refresh:', response.expiresIn);
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         console.error('Refresh token error:', err);
         this.logout();
         return throwError(() => err);
