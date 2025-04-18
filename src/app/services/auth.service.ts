@@ -37,6 +37,16 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
+export interface RecoverPasswordRequest {
+  login: string;
+}
+
+export interface ResetPasswordRequest {
+  login: string;
+  code: string;
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -84,6 +94,32 @@ export class AuthService {
       catchError((err: HttpErrorResponse) => {
         console.error('Confirm email error:', err);
         return throwError(() => err);
+      })
+    );
+  }
+
+  recoverPassword(login: string): Observable<string> {
+    const request: RecoverPasswordRequest = { login };
+    return this.http.post(`${this.apiUrl}/recovery-password`, request, { responseType: 'text' }).pipe(
+      tap((response: string) => {
+        console.log('Recovery email sent:', response);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Recover password error:', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  resetPassword(data: ResetPasswordRequest): Observable<string> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data, { responseType: 'text' }).pipe(
+      tap((response: string) => {
+        console.log('Password reset successful:', response);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Reset password error:', err);
+        const errorMessage = err.error?.message || 'Failed to reset password';
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
@@ -142,26 +178,26 @@ export class AuthService {
   changePassword(data: ChangePasswordRequest): Observable<string> {
     const token = localStorage.getItem('token');
     if (!token) {
-        console.error('No token found in localStorage');
-        return throwError(() => new Error('User is not authenticated'));
+      console.error('No token found in localStorage');
+      return throwError(() => new Error('User is not authenticated'));
     }
 
     console.log('Sending change password request with token:', token);
     return this.http.post(`${this.apiUrl}/change-password`, data, {
-        headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }),
-        responseType: 'text',
-        observe: 'response'
+      headers: new HttpHeaders({ 'Authorization': `Bearer ${token}` }),
+      responseType: 'text',
+      observe: 'response'
     }).pipe(
-        tap((response: any) => {
-            console.log('Change Password response:', response);
-        }),
-        catchError((err: HttpErrorResponse) => {
-            console.error('Change password error:', err);
-            const errorMessage = err.error instanceof Blob || typeof err.error === 'string'
-                ? err.error.toString()
-                : 'Failed to change password';
-            return throwError(() => new Error(errorMessage));
-        })
+      tap((response: any) => {
+        console.log('Change Password response:', response);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Change password error:', err);
+        const errorMessage = err.error instanceof Blob || typeof err.error === 'string'
+          ? err.error.toString()
+          : 'Failed to change password';
+        return throwError(() => new Error(errorMessage));
+      })
     );
   }
 
@@ -176,7 +212,7 @@ export class AuthService {
     let iat: number;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      iat = payload.iat; 
+      iat = payload.iat;
       if (!iat) {
         console.error('iat not found in token');
         return false;
@@ -186,8 +222,8 @@ export class AuthService {
       return false;
     }
 
-    const expiresInMs = parseInt(expiresIn, 10); 
-    const expirationTime = iat * 1000 + expiresInMs; 
+    const expiresInMs = parseInt(expiresIn, 10);
+    const expirationTime = iat * 1000 + expiresInMs;
     const currentTime = new Date().getTime();
 
     console.log('Current time:', currentTime);
@@ -208,7 +244,7 @@ export class AuthService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const userId = payload.id; 
+      const userId = payload.id;
       if (!userId) {
         console.error('id not found in token');
         return null;
@@ -242,7 +278,7 @@ export class AuthService {
     }
 
     const expiresInMs = parseInt(expiresIn, 10);
-    const expirationTime = iat * 1000 + expiresInMs; 
+    const expirationTime = iat * 1000 + expiresInMs;
     return expirationTime;
   }
 
@@ -254,7 +290,7 @@ export class AuthService {
 
     const currentTime = new Date().getTime();
     const timeUntilExpiration = expirationTime - currentTime;
-    const refreshThreshold = 60 * 1000; 
+    const refreshThreshold = 60 * 1000;
 
     return timeUntilExpiration < refreshThreshold;
   }

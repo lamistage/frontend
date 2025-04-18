@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
     imports: [
         ReactiveFormsModule, 
         CommonModule,
+        FormsModule,
         MatIconModule
     ]
 })
@@ -23,6 +25,10 @@ export class AuthComponent implements OnInit {
     errorMessage: string | null = null;
     emailSent = false;
     isConfirming = false;
+    isForgotPasswordModalOpen = false;
+    isRecoveryEmailSent = false;
+    forgotPasswordLogin: string = '';
+    forgotPasswordError: string | null = null;
 
     constructor(
         private fb: FormBuilder,
@@ -139,6 +145,38 @@ export class AuthComponent implements OnInit {
                     this.errorMessage = err.error || 'Failed to send verification code. Please try again.';
                 }
             });
+        }
+    }
+
+    openForgotPasswordModal() {
+        console.log("Forgot password clicked")
+        this.isForgotPasswordModalOpen = true;
+        this.isRecoveryEmailSent = false;
+        this.forgotPasswordLogin = '';
+        this.forgotPasswordError = null;
+    }
+
+    closeForgotPasswordModal() {
+        this.isForgotPasswordModalOpen = false;
+        this.isRecoveryEmailSent = false;
+        this.forgotPasswordLogin = '';
+        this.forgotPasswordError = null;
+    }
+
+    sendResetPasswordLink() {
+        if (this.forgotPasswordLogin && this.forgotPasswordLogin.match(/^[a-zA-Z0-9]+$/)) {
+            this.forgotPasswordError = null;
+            this.authService.recoverPassword(this.forgotPasswordLogin).subscribe({
+                next: () => {
+                    this.isRecoveryEmailSent = true;
+                    this.forgotPasswordError = null;
+                },
+                error: (err: HttpErrorResponse) => {
+                    this.forgotPasswordError = err.error || "Faild to send recovery email. Please try again.";
+                }
+            });
+        } else {
+            this.forgotPasswordError = "Please enter a valid login (only latin letters and numbers)."
         }
     }
 

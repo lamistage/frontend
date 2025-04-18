@@ -5,6 +5,7 @@ import { AuthGuard } from './services/auth.guard';
 import { GalleryComponent } from './components/gallery/gallery.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 export const routes: Route[] = [
@@ -13,5 +14,6 @@ export const routes: Route[] = [
   { path: 'add-image', component: AddImageComponent, canActivate: [AuthGuard] },
   { path: 'gallery', component: GalleryComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'favorites', component: FavoritesComponent, canActivate: [AuthGuard] }
+  { path: 'favorites', component: FavoritesComponent, canActivate: [AuthGuard] },
+  { path: 'reset-password', component: ResetPasswordComponent }
 ];

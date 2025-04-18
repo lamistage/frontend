@@ -22,6 +22,7 @@
         @if (errorMessage) {
           <p class="error-message">{{ errorMessage }}</p>
         }
+        <p class="forgot-password" (click)="openForgotPasswordModal()">Forgot password?</p>
         <button type="submit" [disabled]="form.invalid" (click)="onSubmit()">Sign In</button>
       </form>
     </div>
@@ -105,5 +106,34 @@
         <button type="submit" [disabled]="!canSubmit()" (click)="onSubmit()">Sign Up</button>
       </form>
     </div>
+  </div>
+</div>
+
+<div *ngIf="isForgotPasswordModalOpen" class="forgot-password-modal modal-overlay">
+  <div class="modal-content">
+    @if (!isRecoveryEmailSent) {
+      <h2>Reset Password</h2>
+      <div class="input-container">
+        <input 
+          type="text" 
+          placeholder="Login" 
+          [(ngModel)]="forgotPasswordLogin"
+          (input)="onInputLogin($event)"
+        >
+      </div>
+      @if (forgotPasswordError) {
+        <p class="error-message">{{ forgotPasswordError }}</p>
+      }
+      <div class="modal-actions">
+        <button class="cancel-button" (click)="closeForgotPasswordModal()">Cancel</button>
+        <button class="send-button" (click)="sendResetPasswordLink()">Send reset password link</button>
+      </div>
+    } @else {
+      <h2>Check your email</h2>
+      <p>We’ve sent a password reset link to the email associated with your account.</p>
+      <div class="modal-actions">
+        <button class="cancel-button" (click)="closeForgotPasswordModal()">Close</button>
+      </div>
+    }
   </div>
 </div>

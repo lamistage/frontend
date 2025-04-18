@@ -509,7 +509,7 @@ p {
         font-family: $font-primary;
         font-size: 18px; 
         font-weight: 500;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         color: $primary-pink;
     }
   
@@ -518,6 +518,46 @@ p {
         font-size: 14px; 
         color: $light-pink;
         margin-bottom: 20px;
+    }
+
+    .input-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        align-items: center;
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 80%;
+            padding: 4px 10px;
+            border: 1px solid $border-pink;
+            border-radius: 20px;
+            font-family: $font-primary;
+            font-size: 14px;
+            background-color: #fff;
+            color: $primary-pink;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+
+            &::placeholder {
+            color: $primary-pink;
+            font-family: $font-primary;
+            font-size: 16px;
+            }
+
+            &:focus {
+            outline: none;
+            border-color: $primary-pink;
+            box-shadow: 0 0 5px rgba(255, 167, 181, 0.5);
+            }
+        }
     }
 }
   
@@ -541,7 +581,7 @@ p {
         }
     }
   
-    .delete-button {
+    .delete-button, .send-button {
         padding: 4px 10px;
         background-color: $light-pink;
         color: #fff;
