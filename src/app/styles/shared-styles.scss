@@ -501,7 +501,7 @@ p {
     padding: 10px;
     border-radius: 12px;
     width: calc(100% - 28px); 
-    max-width: 100%; 
+    max-width: 500px; 
     text-align: center;
     box-sizing: border-box;
   
@@ -518,6 +518,7 @@ p {
         font-size: 14px; 
         color: $light-pink;
         margin-bottom: 20px;
+        margin: 20px 50px 40px;
     }
 
     .input-container {
@@ -559,12 +560,17 @@ p {
             }
         }
     }
+
+    .input-container + .modal-actions {
+        margin-top: 20px;
+    }
 }
   
 .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    margin: 5px;
   
     .cancel-button {
         padding: 4px 10px;
@@ -628,8 +634,8 @@ p {
     }
   
     p {
-        font-size: clamp(15px, 1.4vw, 16px);
-        margin: 20px 26vw 40px;
+        font-size: clamp(16px, 1.6vw, 17px);
+        margin: 20px 50px 40px;
     }
   
     .search-items {
@@ -799,8 +805,8 @@ p {
     }
   
     p {
-        font-size: clamp(14px, 1.5vw, 15px);
-        margin: 18px 20vw 30px;
+        font-size: clamp(15px, 1.8vw, 16px);
+        margin: 18px 30px 30px;
     }
   
     .search-items {

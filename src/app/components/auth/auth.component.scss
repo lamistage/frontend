@@ -227,7 +227,8 @@
   display: flex;
   align-items: center;
   gap: 10px; 
-  width: 50%;  
+  width: calc(50% + 40px);  
+  max-width: 340px;
 }
 
 .email-input-group input {
@@ -238,6 +239,7 @@
 }
 
 .confirm-button {
+  flex-shrink: 0;
   height: 40px !important;
   width: 40px !important;
   margin-top: 0 !important; 
@@ -390,6 +392,10 @@
       height: 30px !important;
       width: 30px !important;
     }
+
+    .email-input-group {
+      max-width: 280px;
+    }
   }
 
   .error-message {
@@ -449,6 +455,10 @@
       font-size: 10px;
       width: 80%;
       margin-bottom: 10px;
+    }
+
+    .email-input-group {
+      max-width: 220px;
     }
   }
 
