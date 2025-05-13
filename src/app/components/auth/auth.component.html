@@ -115,10 +115,10 @@
       <h2>Reset Password</h2>
       <div class="input-container">
         <input 
-          type="text" 
-          placeholder="Login" 
-          [(ngModel)]="forgotPasswordLogin"
-          (input)="onInputLogin($event)"
+          type="email" 
+          placeholder="Email" 
+          [(ngModel)]="forgotPasswordEmail"
+          (input)="onInputEmail($event)"
         >
       </div>
       @if (forgotPasswordError) {

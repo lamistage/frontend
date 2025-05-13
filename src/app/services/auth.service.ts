@@ -38,11 +38,11 @@ export interface ChangePasswordRequest {
 }
 
 export interface RecoverPasswordRequest {
-  login: string;
+  email: string;
 }
 
 export interface ResetPasswordRequest {
-  login: string;
+  email: string;
   code: string;
   newPassword: string;
 }
@@ -98,8 +98,8 @@ export class AuthService {
     );
   }
 
-  recoverPassword(login: string): Observable<string> {
-    const request: RecoverPasswordRequest = { login };
+  recoverPassword(email: string): Observable<string> {
+    const request: RecoverPasswordRequest = { email };
     return this.http.post(`${this.apiUrl}/recovery-password`, request, { responseType: 'text' }).pipe(
       tap((response: string) => {
         console.log('Recovery email sent:', response);

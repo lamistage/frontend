@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -24,7 +24,7 @@ export class ResetPasswordComponent implements OnInit {
     private authService: AuthService
   ) {
     this.resetForm = this.fb.group({
-      login: ['', Validators.required],
+      email: ['', Validators.required, Validators.email],
       newPassword: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -38,10 +38,10 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  onInputLogin(event: Event): void {
+  onInputEmail(event: Event): void {
     this.errorMessage = null;
     const input = event.target as HTMLInputElement;
-    this.resetForm.get('login')?.setValue(input.value);
+    this.resetForm.get('email')?.setValue(input.value);
   }
 
   onInputNewPassword(event: Event): void {
@@ -56,9 +56,9 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    const { login, newPassword } = this.resetForm.value;
+    const { email, newPassword } = this.resetForm.value;
 
-    this.authService.resetPassword({ login, code: this.code, newPassword }).subscribe({
+    this.authService.resetPassword({ email, code: this.code, newPassword }).subscribe({
       next: (response: string) => {
         if (response === 'Password reset successfully') {
           this.router.navigate(['/auth'], { queryParams: { mode: 'signin' } });

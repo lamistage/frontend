@@ -27,7 +27,7 @@ export class AuthComponent implements OnInit {
     isConfirming = false;
     isForgotPasswordModalOpen = false;
     isRecoveryEmailSent = false;
-    forgotPasswordLogin: string = '';
+    forgotPasswordEmail: string = '';
     forgotPasswordError: string | null = null;
 
     constructor(
@@ -152,21 +152,22 @@ export class AuthComponent implements OnInit {
         console.log("Forgot password clicked")
         this.isForgotPasswordModalOpen = true;
         this.isRecoveryEmailSent = false;
-        this.forgotPasswordLogin = '';
+        this.forgotPasswordEmail = '';
         this.forgotPasswordError = null;
     }
 
     closeForgotPasswordModal() {
         this.isForgotPasswordModalOpen = false;
         this.isRecoveryEmailSent = false;
-        this.forgotPasswordLogin = '';
+        this.forgotPasswordEmail = '';
         this.forgotPasswordError = null;
     }
 
     sendResetPasswordLink() {
-        if (this.forgotPasswordLogin && this.forgotPasswordLogin.match(/^[a-zA-Z0-9]+$/)) {
+        const emailPattern = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$/;
+        if (this.forgotPasswordEmail && emailPattern.test(this.forgotPasswordEmail)) {
             this.forgotPasswordError = null;
-            this.authService.recoverPassword(this.forgotPasswordLogin).subscribe({
+            this.authService.recoverPassword(this.forgotPasswordEmail).subscribe({
                 next: () => {
                     this.isRecoveryEmailSent = true;
                     this.forgotPasswordError = null;
@@ -176,7 +177,7 @@ export class AuthComponent implements OnInit {
                 }
             });
         } else {
-            this.forgotPasswordError = "Please enter a valid login (only latin letters and numbers)."
+            this.forgotPasswordError = "Please enter a valid email address."
         }
     }
 
