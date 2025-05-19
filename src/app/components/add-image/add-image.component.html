@@ -35,6 +35,8 @@
     <div class="content" [style.marginTop.px]="toolbarHeight() + menuHeight()">
         <h1>Upload Your Photo</h1>
 
+        <p>Here, you can upload your pictures, and then find them on gallery or on profile pages.</p>
+
         <div class="message" *ngIf="showSuccessMessage()">
             image uploaded successfully!
         </div>
@@ -88,6 +90,7 @@
                         }
                     </div>
                 }
+                <button class="add-tag-button" (click)="onAddTagButtonClick()">+</button>
             </div>
         </div>
 

@@ -302,6 +302,12 @@ export class AddImageComponent {
     }
   }
 
+  onAddTagButtonClick(): void {
+    if (this.tagInput && this.tagInput.nativeElement) {
+      this.addTagFromInput({ target: this.tagInput.nativeElement } as any);
+    }
+  }
+
   remove(tag: Tag): void {
     this.tags.update(tags => tags.filter(t => t !== tag));
   }
