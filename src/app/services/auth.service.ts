@@ -51,7 +51,7 @@ export interface ResetPasswordRequest {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/auth';
+  private apiUrl = '/api/auth';
   private refreshInterval: any;
 
   constructor(private http: HttpClient, private router: Router) {
