@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-HUB_USER='lamistage'
-HUB_PASSWORD='ch=Y,E+JKt)g7Q6'
-PROJECT='pick-me-frontend'
-
 DIR="`dirname "$(readlink -f "$0")"`"
+
+cd '../../backend'
+
+HUB_USER=$(grep 'HUB_USER=' .env | cut -c10-)
+HUB_PASSWORD=$(grep 'HUB_PASSWORD=' .env | cut -c14-)
+PROJECT=$(grep 'PROJECT_FRONTEND=' .env | cut -c18-)
 
 if [[ -z "${project}" ]]; then
     project=$PROJECT
