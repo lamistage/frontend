@@ -1,5 +1,10 @@
 @use '../../styles/shared-styles.scss' as *;
 
+h1 {
+  margin: 0 auto 20px;
+  max-width: 70vw;
+}
+
 .add-image-page {
   width: 100vw;
   height: 100vh;
@@ -342,8 +347,8 @@ img {
   }
 
   .add-image-button {
-    font-size: clamp(14px, 4vw, 1rem);
-    padding: 3px 20px;
+    font-size: clamp(14px, 3.6vw, 15px);
+    padding: 0 20px;
     margin-top: 30px;
   }
 

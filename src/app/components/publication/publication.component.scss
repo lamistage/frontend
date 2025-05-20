@@ -263,7 +263,7 @@
 
 @media (max-width: 480px) {
   .publication-container {
-    padding: 12px;
+    padding: 10px;
   }
 
   .header {
@@ -271,10 +271,30 @@
   }
 
   .user-login {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .image-container {
     margin-bottom: 12px;
+  }
+
+  .copy-message{
+    font-size: 10px;
+  }
+
+  .copy-btn,
+  .edit-btn,
+  .delete-btn,
+  .favorite-btn {
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+
+  .custom-chip,
+  .tag-input-container input,
+  .autocomplete-item,
+  .save-btn {
+    font-size: 13px;
   }
 }

@@ -26,6 +26,17 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 991px) {
+  .setting-button {
+    .icon-md {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+  }
+}
+
 @media (max-width: 767px) {
   .search-items {
     .search-item {
