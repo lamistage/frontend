@@ -36,36 +36,54 @@ export class AuthComponent implements OnInit {
         private authService: AuthService,
         private route: ActivatedRoute 
     ) {
-        this.form = this.fb.group({
-            login: ['', [
-                Validators.required,
-                Validators.pattern(/^[a-zA-Z0-9]+$/),
-                Validators.maxLength(50),
-                this.noWhitespaceValidator
-            ]],
-            password: ['', [
-                Validators.required,
-                Validators.pattern(/^[a-zA-Z0-9]+$/),
-                Validators.minLength(6),
-                Validators.maxLength(50),
-                this.noWhitespaceValidator
-            ]],
-            email: ['', []],
-            verificationCode: ['', []]
-        });
+        this.form = this.fb.group({ });
+        this.initForm();
     }
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            const mode = params['mode'];
-            if (mode === 'signup') {
-                this.isRegisterMode = true;
-                this.updateEmailValidators();
-            } else if (mode === 'signin') {
-                this.isRegisterMode = false;
-                this.updateEmailValidators();
-            }
-        });
+    private initForm() {
+        if (this.isRegisterMode) {
+            this.form = this.fb.group({
+                login: ['', [
+                    Validators.required,
+                    Validators.pattern(/^[a-zA-Z0-9]+$/),
+                    Validators.maxLength(50),
+                    this.noWhitespaceValidator
+                ]],
+                password: ['', [
+                    Validators.required,
+                    Validators.pattern(/^[a-zA-Z0-9]+$/),
+                    Validators.minLength(6),
+                    Validators.maxLength(50),
+                    this.noWhitespaceValidator
+                ]],
+                email: ['', [
+                    Validators.required,
+                    Validators.email,
+                    Validators.maxLength(100),
+                    this.noWhitespaceValidator
+                ]],
+                verificationCode: ['', [
+                    Validators.required,
+                    Validators.pattern(/^[0-9]{4}$/)
+                ]]
+            });
+        } else {
+            this.form = this.fb.group({
+                loginOrEmail: ['', [
+                    Validators.required,
+                    Validators.maxLength(100),
+                    this.loginOrEmailValidator,
+                    this.noWhitespaceValidator
+                ]],
+                password: ['', [
+                    Validators.required,
+                    Validators.pattern(/^[a-zA-Z0-9]+$/),
+                    Validators.minLength(6),
+                    Validators.maxLength(50),
+                    this.noWhitespaceValidator
+                ]]
+            });
+        }
     }
 
     toggleMode() {
@@ -73,9 +91,19 @@ export class AuthComponent implements OnInit {
         this.errorMessage = null;
         this.emailSent = false;
         this.isConfirming = false;
-        this.updateEmailValidators();
-        this.form.get('email')?.setValue('');
-        this.form.get('verificationCode')?.setValue('');
+        this.initForm();
+    }
+
+    ngOnInit(): void {
+        this.route.queryParams.subscribe(params => {
+            const mode = params['mode'];
+            if (mode === 'signup') {
+                this.isRegisterMode = true;
+            } else if (mode === 'signin') {
+                this.isRegisterMode = false;
+            }
+            this.initForm();
+        });
     }
 
     updateEmailValidators() {
@@ -123,10 +151,29 @@ export class AuthComponent implements OnInit {
         this.form.get('verificationCode')?.setValue(input.value);
     }
 
+    onInputLoginOrEmail(event: any) {
+        const input = event.target;
+        this.form.get('login-or-email')?.setValue(input.value);
+    }
+
     noWhitespaceValidator(control: any) {
         const isWhitespace = (control.value || '').trim().length === 0;
         const isValid = !isWhitespace;
         return isValid ? null : { whitespace: true };
+    }
+
+    loginOrEmailValidator(control: any) {
+        const value = control.value;
+        if (!value) return { required: true };
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const loginRegex = /^[a-zA-Z0-9]+$/;
+
+        if (emailRegex.test(value) || loginRegex.test(value)) {
+            return null;
+        } else {
+            return { invalidLoginOrEmail: true };
+        }
     }
 
     confirmEmail() {
@@ -217,7 +264,7 @@ export class AuthComponent implements OnInit {
                 });
             } else {
                 const loginData = {
-                    login: formData.login,
+                    loginOrEmail: formData.loginOrEmail,
                     password: formData.password
                 };
                 this.authService.signIn(loginData).subscribe({

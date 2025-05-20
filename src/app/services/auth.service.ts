@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { catchError, tap, switchMap } from 'rxjs/operators';
 
 export interface SignInRequest {
-  login: string;
+  loginOrEmail: string;
   password: string;
 }
 
