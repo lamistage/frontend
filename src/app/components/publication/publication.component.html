@@ -22,12 +22,13 @@
             </div>
         </div>
 
-        <div class="image-container" *ngIf="imageLoaded && publication.filePath">
-            <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
-        </div>
-
-        <div class="image-container" *ngIf="!imageLoaded">
-            <p>Loading image...</p>
+        <div class="image-container">
+            <ng-container *ngIf="!imageLoaded; else imageBlock">
+                <div class="image-sceleton shimmer"></div>
+            </ng-container>
+            <ng-template #imageBlock>
+                <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />
+            </ng-template>
         </div>
 
         <div class="tags-container">
@@ -87,7 +88,7 @@
     <div class="modal-overlay" *ngIf="isDialogOpen()">
         <div class="modal-content" (click)="$event.stopPropagation()">
             <h2>Delete publication</h2>
-            <p>Are you sure you want to delete this publication?</p>
+            <p class="delete-confirmation">Are you sure you want to delete this publication?</p>
             <div class="modal-actions">
                 <button class="cancel-button" (click)="closeDeleteDialog()">Cancel</button>
                 <button class="delete-button" (click)="confirmDelete()">Delete</button>

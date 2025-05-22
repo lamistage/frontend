@@ -52,6 +52,8 @@ export class GalleryComponent implements AfterViewInit {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
+    skeletonArray = Array(10);
+
     sortTypes: SortType[] = [
         { value: 'date,desc', viewValue: 'newest first' },
         { value: 'date,asc', viewValue: 'oldest first' }
