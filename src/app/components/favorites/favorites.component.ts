@@ -51,7 +51,7 @@ export class FavoritesComponent implements AfterViewInit {
     readonly users = signal<User[]>([]);
     readonly currentPage = signal<number>(0);
     readonly totalPages = signal<number>(1);
-    readonly pageSize = 20;
+    readonly pageSize = 10;
     readonly sort = signal<string>('date,desc');
 
     allTags: Tag[] = [];

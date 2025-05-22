@@ -58,7 +58,7 @@ export class ProfileComponent implements AfterViewInit {
 
   currentPage = signal<number>(0);
   totalPages = signal<number>(1);
-  pageSize = 20;
+  pageSize = 10;
 
   private readonly imageService = inject(ImageService);
   private readonly authService = inject(AuthService);

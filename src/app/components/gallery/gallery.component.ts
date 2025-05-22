@@ -64,7 +64,7 @@ export class GalleryComponent implements AfterViewInit {
     readonly isLoading = signal<boolean>(true);
     currentPage = signal<number>(0);
     totalPages = signal<number>(1);
-    pageSize = 20;
+    pageSize = 10;
 
     allTags: Tag[] = [];
     filteredTags: Tag[] = [];
