@@ -1,6 +1,6 @@
 <mat-toolbar>
     <div class="toolbar-content">
-        <span class="pm-label">pm</span>
+        <span class="pm-label" [routerLink]="['/gallery']" style="cursor:pointer">pm</span>
         <div class="menu-container" #menuContainer>
             <button class="setting-button" (click)="openChangePasswordDialog()">
                 <mat-icon class="color_pink icon-md">settings</mat-icon>

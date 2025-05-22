@@ -1,6 +1,6 @@
 <mat-toolbar #toolbar>
     <div class="toolbar-content">
-        <span class="pm-label">pm</span>
+        <span class="pm-label" [routerLink]="['/gallery']" style="cursor:pointer">pm</span>
         <div class="menu-container" #menuContainer>
             <button class="burger-button" (click)="toggleMenu()">
                 <mat-icon class="color_pink icon-md">{{ isMenuOpen() ? 'close' : 'menu' }}</mat-icon>
