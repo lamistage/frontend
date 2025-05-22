@@ -37,23 +37,32 @@
 
         <p>Here, you can upload your pictures, and then find them on gallery or on profile pages.</p>
 
-        <div class="message" *ngIf="showSuccessMessage()">
-            image uploaded successfully!
+        <div *ngIf="uploadCompleted()" class="upload-success-message">
+            Image uploaded successfully!
+            <a [routerLink]="['/profile']" class="profile-link">Go to profile</a>
+            <div class="image-preview" *ngIf="selectedFile() && !uploadCompleted()">
+                <div class="image-wrapper">
+                    <img [src]="previewUrl()" alt="Uploaded image" class="preview-image" />
+                </div>
+                <div class="tag-list">
+                    <span *ngFor="let tag of tags()">{{ tag.name }}</span>
+                </div>
+            </div>
         </div>
 
         <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
-            <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" />
+            <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept=".jpg,.png" [disabled]="isUploading() || uploadCompleted()" />
             <mat-icon>file_upload</mat-icon>
             <h3>drag & drop file here</h3>
             <h3>or</h3>
-            <button mat-flat-button (click)="fileInput.click()">browse for file</button>
+            <button mat-flat-button (click)="fileInput.click()" [disabled]="isUploading() || uploadCompleted()">browse for file</button>
         </div>
-        <div class="message" *ngIf="showBadFileTypeMessage()">
+        <div class="message" *ngIf="showBadFileTypeMessage() && !uploadCompleted()">
             please select a .jpg or .png file !
         </div>
 
-        <div class="image-preview" *ngIf="selectedFile()">
-            <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection">
+        <div class="image-preview" *ngIf="selectedFile() && !uploadCompleted()">
+            <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection" [disabled]="isUploading() || uploadCompleted()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
             <div class="image-wrapper">
@@ -61,12 +70,12 @@
             </div>
         </div>
 
-        <div class="tag-input-container">
+        <div class="tag-input-container" *ngIf="!uploadCompleted()">
             <div class="custom-chip-set">
                 @for (tag of tags(); track tag) {
                     <div class="custom-chip">
                         <span>{{tag.name}}</span>
-                        <button class="remove-chip-btn" (click)="remove(tag)">
+                        <button class="remove-chip-btn" (click)="remove(tag)" [disabled]="isUploading() || uploadCompleted()">
                             <mat-icon>clear</mat-icon>
                         </button>
                     </div>
@@ -79,6 +88,7 @@
                     (keyup.enter)="addTagFromInput($event)"
                     (input)="filterTags($event)"
                     (focus)="onTagInputFocus()"
+                    [disabled]="isUploading() || uploadCompleted()"
                     #tagInput
                 >
                 @if (filteredTags.length > 0) {
@@ -90,10 +100,14 @@
                         }
                     </div>
                 }
-                <button class="add-tag-button" (click)="onAddTagButtonClick()">+</button>
+                <button class="add-tag-button" (click)="onAddTagButtonClick()" [disabled]="isUploading() || uploadCompleted()">+</button>
             </div>
         </div>
 
-        <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled">Add Image</button>
+        <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled || isUploading() || uploadCompleted()">Add Image</button>
+    
+        <div *ngIf="isUploading()" class="upload-progress">
+            Uploading photo to the server...
+        </div>   
     </div>
 </div>

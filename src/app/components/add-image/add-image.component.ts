@@ -33,7 +33,6 @@ export class AddImageComponent {
 
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
-  uploadSuccess: boolean = false;
   imageUrl: string | null = null;
 
   readonly tags = signal<Tag[]>([]);
@@ -51,6 +50,10 @@ export class AddImageComponent {
   isMenuOpen = signal<boolean>(false);
   toolbarHeight = signal<number>(0);
   menuHeight = signal<number>(0);
+
+  isUploading = signal(false);
+  uploadCompleted = signal(false);
+  successTimeout: any = null;
 
   constructor() {
     this.checkAuthentication();
@@ -242,9 +245,11 @@ export class AddImageComponent {
     }
 
     const file = this.selectedFile()!;
-
     const formData = new FormData();
     formData.append('image', file);
+
+    this.isUploading.set(true);
+    this.uploadCompleted.set(false);
 
     this.addImageService.uploadImage(formData).subscribe({
       next: (uploadResponse) => {
@@ -264,19 +269,28 @@ export class AddImageComponent {
 
         this.addImageService.saveImage(imageData).subscribe({
           next: () => {
-            console.log('Image added successfully', imageData);
-            this.tags.set([]);
-            this.selectedFile.set(null);
-            this.previewUrl.set(null);
-            const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-            if (fileInput) fileInput.value = '';
+            this.isUploading.set(false);
+            this.uploadCompleted.set(true);
+
+            this.successTimeout = setTimeout(() => {
+              this.uploadCompleted.set(false);
+              this.tags.set([]);
+              this.selectedFile.set(null);
+              this.previewUrl.set(null);
+              const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+              if (fileInput) fileInput.value = '';
+            }, 3000);
           },
           error: (err) => {
+            this.isUploading.set(false);
+            alert('Error saving image!');
             console.error('Error saving image:', err);
           }
         });
       },
       error: (err) => {
+        this.isUploading.set(false);
+        alert('Error uploading image!');
         console.error('Error uploading image:', err);
       }
     });
