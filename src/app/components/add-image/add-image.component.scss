@@ -7,7 +7,7 @@ h1 {
 
 .add-image-page {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .file-selector {
@@ -156,7 +156,7 @@ img {
 
 .add-image-button {
   display: block;
-  margin: 40px auto 60px;
+  margin: 40px auto 30px;
   background-color: $primary-pink;
   color: #ffffff;
   font-family: $font-secondary;
@@ -440,7 +440,7 @@ img {
   }
 
   .add-image-button {
-    margin: 20px auto 60px;
+    margin: 20px auto;
     font-size: clamp(12px, 4vw, 1rem);
     padding: 3px 20px;
   }
