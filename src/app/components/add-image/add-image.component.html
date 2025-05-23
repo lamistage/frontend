@@ -35,19 +35,10 @@
     <div class="content" [style.marginTop.px]="toolbarHeight() + menuHeight()">
         <h1>Upload Your Photo</h1>
 
-        <p>Here, you can upload your pictures, and then find them on gallery or on profile pages.</p>
+        <p>Here, you can upload your pictures, and then find them on <a [routerLink]="['/gallery']" class="profile-link">gallery</a> or on <a [routerLink]="['/profile']" class="profile-link">profile page.</a></p>
 
         <div *ngIf="uploadCompleted()" class="upload-success-message">
             Image uploaded successfully!
-            <a [routerLink]="['/profile']" class="profile-link">Go to profile</a>
-            <div class="image-preview" *ngIf="selectedFile() && !uploadCompleted()">
-                <div class="image-wrapper">
-                    <img [src]="previewUrl()" alt="Uploaded image" class="preview-image" />
-                </div>
-                <div class="tag-list">
-                    <span *ngFor="let tag of tags()">{{ tag.name }}</span>
-                </div>
-            </div>
         </div>
 
         <div class="dropzone" *ngIf="!selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
@@ -61,7 +52,7 @@
             please select a .jpg or .png file !
         </div>
 
-        <div class="image-preview" *ngIf="selectedFile() && !uploadCompleted()">
+        <div class="image-preview" *ngIf="selectedFile()">
             <button mat-icon-button class="back-button" (click)="clearFile()" aria-label="Back to file selection" [disabled]="isUploading() || uploadCompleted()">
                 <mat-icon>arrow_back</mat-icon>
             </button>
@@ -104,7 +95,7 @@
             </div>
         </div>
 
-        <button class="add-image-button" (click)="uploadPhoto()" [disabled]="isUploadDisabled || isUploading() || uploadCompleted()">Add Image</button>
+        <button class="add-image-button"  *ngIf="!uploadCompleted()" (click)="uploadPhoto()" [disabled]="isUploadDisabled || isUploading() || uploadCompleted()">Add Image</button>
     
         <div *ngIf="isUploading()" class="upload-progress">
             Uploading photo to the server...

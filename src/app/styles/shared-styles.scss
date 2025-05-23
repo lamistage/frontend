@@ -294,6 +294,10 @@ p {
             height: 16px;
             color: #fff;
         }
+
+        &:disabled {
+            cursor: not-allowed;
+        }
     }
 }
 
