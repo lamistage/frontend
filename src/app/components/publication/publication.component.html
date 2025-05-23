@@ -24,7 +24,9 @@
 
         <div class="image-container">
             <ng-container *ngIf="!imageLoaded; else imageBlock">
-                <div class="image-sceleton shimmer"></div>
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                  </div>
             </ng-container>
             <ng-template #imageBlock>
                 <img *ngIf="imageLoaded" [src]="publication.filePath" alt="Publication Image" class="publication-image" />

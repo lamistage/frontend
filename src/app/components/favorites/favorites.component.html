@@ -130,7 +130,6 @@
     </div>
 
     <div class="gallery" *ngIf="images().length > 0 || isLoading()">
-        <p *ngIf="isLoading()">loading...</p>
         @if (!isLoading()) {
             @for (publication of images(); track publication) {
                 <app-publication 
