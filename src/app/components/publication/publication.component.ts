@@ -120,7 +120,6 @@ export class PublicationComponent {
                 }, 'image/png', 0.8)
             );
             
-
             await navigator.clipboard.write([
                 new ClipboardItem({ [blob.type]: blob }),
             ]);

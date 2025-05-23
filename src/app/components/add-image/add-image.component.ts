@@ -148,6 +148,38 @@ export class AddImageComponent {
     });
   }
 
+  async compressImage(file: File): Promise<File> {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = ()=> resolve();
+      img.onerror = reject;
+    });
+
+    const MAX_WIDTH = 1600;
+    const scale = Math.min(1, MAX_WIDTH / img.width);
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    return new Promise<File>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(new File([blob], file.name, { type: blob.type }));
+          } else {
+            reject('Compression failed');
+          }
+        },
+        file.type,
+        0.8
+      );
+    });
+  }
+
   onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
@@ -176,14 +208,20 @@ export class AddImageComponent {
     }
   }
 
-  onFileSelected(event: Event) {
+  async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       if (this.isValidFileType(file)) {
-        this.selectedFile.set(file);
-        this.previewUrl.set(URL.createObjectURL(file));
-        console.log('File selected:', this.selectedFile());
+        try {
+          const compressedFile = await this.compressImage(file);
+          this.selectedFile.set(compressedFile);
+          this.previewUrl.set(URL.createObjectURL(compressedFile));
+          console.log('File selected (compressed):', this.selectedFile());
+        } catch (err) {
+          alert('Failed to compress image!');
+          console.error(err);
+        }
       } else {
         this.showBadFileTypeMessage.set(true);
         setTimeout(() => {
