@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, signal, ViewChild, ElementRef } from '@angular/core';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Image, Tag } from '../../models/image';
+import { Tag } from '../../models/image';
+import { Image as ImageModel } from '../../models/image';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
@@ -26,7 +27,7 @@ import { AuthService } from '../../services/auth.service';
     standalone: true
 })
 export class PublicationComponent {
-    @Input() publication!: Image;
+    @Input() publication!: ImageModel;
     @Input() isProfilePage: boolean = false;
     @Output() deleted = new EventEmitter<number>();
     @Output() removedFromFavorites = new EventEmitter<number>();
@@ -99,8 +100,29 @@ export class PublicationComponent {
 
     async copyImage() {
         try {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = this.publication.filePath;
+            await img.decode();
+
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 1200;
+            const scale = Math.min(1, MAX_WIDTH / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            const ctx = canvas.getContext('2d')!;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            const blob = await new Promise<Blob>((resolve, reject) => 
+                canvas.toBlob((b) => {
+                    if (b) resolve(b);
+                    else reject(new Error('Failed to create blob from canvas'));
+                }, 'image/png', 0.8)
+            );
+            
+
             await navigator.clipboard.write([
-                new ClipboardItem({ [this.imageBlob.type]: this.imageBlob }),
+                new ClipboardItem({ [blob.type]: blob }),
             ]);
             this.showCopyMessage.set(true);
             setTimeout(() => {
@@ -108,7 +130,7 @@ export class PublicationComponent {
             }, 1000);
         } catch (err) {
             console.error('Copy error:', err);
-            alert('Failed to copy the image.');
+            alert('Failed to copy the image.')
         }
     }
 
